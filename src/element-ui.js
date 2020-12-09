@@ -17,6 +17,7 @@ import {
   ElCol,
   ElCard,
   ElButton,
+  ElBadge,
 } from "element-plus";
 
 const components = [
@@ -38,6 +39,7 @@ const components = [
   ElCol,
   ElCard,
   ElButton,
+  ElBadge,
 ];
 
 function useElementUi(app) {

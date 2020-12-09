@@ -224,7 +224,6 @@ export default {
       search();
     }, 500);
     function search() {
-      debugger;
       if (state.level !== "" && state.type !== "" && state.date !== "") {
         const option = {
           startTime: formatDate(state.date[0], "yyyy-MM-dd HH:mm:ss"),
@@ -244,18 +243,18 @@ export default {
     }
     async function getWarnings(option) {
       if (state.isLoading) {
-        ElMessage.warning({
-          message: "您的操作太快了~",
-        });
+        // ElMessage.warning({
+        //   message: "您的操作太快了~",
+        // });
         return;
       }
       state.isLoading = true;
       const result = await getWarningMessage(option);
       if (result.status === 200) {
         state.warningMessage = result.data?.dataArray?.slice(0, state.pageSize);
-        state.totalCount = result.data?.totalCount < 1000 ? 1000 : 100;
+        state.totalCount = result.data?.totalCount;
       }
-      await sleep(1000);
+      await sleep(800);
       state.isLoading = false;
     }
     return {

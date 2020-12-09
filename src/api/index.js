@@ -88,20 +88,20 @@ export const getTkyData = ({
 export function getWarningAlarmLevel() {
   let url = "/api/history/getWarningAlarmLevel";
   return Promise.resolve(levels);
-  // return request.get(url)
+  // return request.get(url);
 }
 
 export function getWarningAlarmComponent() {
   let url = "/api/history/getWarningAlarmComponent";
   return Promise.resolve(types);
-  // return request.get(url)
+  // return request.get(url);
 }
 
 // /api/history/getActiveWarningMessage
 export function getActiveWarningMessage() {
   let url = "/api/history/getActiveWarningMessage";
   return Promise.resolve(activeWarningMessage);
-  // return request.get(url)
+  // return request.get(url);
 }
 
 // /api/history/getWarningMessage

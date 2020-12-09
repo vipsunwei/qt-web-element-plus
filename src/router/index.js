@@ -24,6 +24,12 @@ const routes = [
       import(/* webpackChunkName "alert" */ "../views/Alert.vue"),
   },
   {
+    path: "/devices",
+    name: "Devices",
+    component: () =>
+      import(/* webpackChunkName "devices" */ "../views/DeviceMonitor.vue"),
+  },
+  {
     path: "/",
     name: "Empty",
     component: Empty,

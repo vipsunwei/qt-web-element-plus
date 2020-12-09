@@ -58,7 +58,7 @@ export default {
       if (result.status === 200) {
         state.tableData = result.data;
       }
-      await sleep(1000);
+      await sleep(800);
       state.isLoading = false;
     }
     const state = reactive({

@@ -1,6 +1,6 @@
 <template>
   <el-container style="height: 100vh">
-    <el-aside class="left" width="240px">
+    <el-aside class="left" width="200px">
       <el-menu
         style="height: 100%"
         background-color="#009ac6"
@@ -8,15 +8,9 @@
         active-text-color="#fff"
         :default-active="active"
       >
-        <el-menu-item index="/home" @click="navTo('/home')">
-          探空仪数据查询
-        </el-menu-item>
-        <!-- <el-menu-item index="2" @click="navTo('/about')">
-          地面观测数据查询
-        </el-menu-item> -->
-        <el-menu-item index="/alert" @click="navTo('/alert')">
-          告警信息管理
-        </el-menu-item>
+        <el-menu-item index="/home" @click="navTo('/home')">探空仪数据查询</el-menu-item>
+        <el-menu-item index="/alert" @click="navTo('/alert')">告警信息管理</el-menu-item>
+        <el-menu-item index="/devices" @click="navTo('/devices')">设备监控</el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -41,9 +35,9 @@ export default {
     }
     return {
       navTo,
-      active,
+      active
     };
-  },
+  }
 };
 </script>
 

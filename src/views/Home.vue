@@ -8,8 +8,7 @@
       end-placeholder="结束日期"
       unlink-panels
       @change="handleDatePickerChange"
-    >
-    </el-date-picker>
+    ></el-date-picker>
 
     <div v-if="isShowSelectTkyid" style="padding: 20px 0">探空仪编号</div>
     <el-select
@@ -25,8 +24,7 @@
         :key="item.tkyid"
         :label="item.tkyid"
         :value="item.tkyid"
-      >
-      </el-option>
+      ></el-option>
     </el-select>
 
     <div v-if="!isRadioDisabled" style="padding: 20px 0">选择查询数据类型</div>
@@ -41,7 +39,7 @@
       <el-radio-button label="基测报告"></el-radio-button>
     </el-radio-group>
 
-    <div v-if="isTCSJ" style="margin-top: 20px">
+    <div v-show="isTCSJ" style="margin-top: 20px">
       <el-date-picker
         v-model="dateForTCSJ"
         type="datetimerange"
@@ -51,8 +49,7 @@
         :unlink-panels="false"
         :disabled-date="disabledDate"
         @change="handleDateForTCSJChange"
-      >
-      </el-date-picker>
+      ></el-date-picker>
       <el-table
         :data="tableData"
         :max-height="maxHeight"
@@ -60,13 +57,28 @@
         stripe
         style="width: 100%; margin-top: 20px"
       >
-        <el-table-column type="index" width="80"></el-table-column>
+        <el-table-column
+          type="index"
+          width="60"
+          align="center"
+          label="#"
+          fixed
+        ></el-table-column>
         <el-table-column
           v-for="col in tkyDataColumns"
           :key="col.prop"
-          :prop="col.prop"
           :label="col.label"
+          :width="
+            col.prop === 'dataTime' ? 180 : col.prop === 'tkyid' ? 120 : ''
+          "
         >
+          <template #default="scope">
+            <span v-if="col.prop === 'dataTime'">{{
+              scope.row.dataTime &&
+              formatDate(new Date(scope.row.dataTime), "yyyy-MM-dd HH:mm:ss")
+            }}</span>
+            <span v-else>{{ scope.row[col.prop] || "" }}</span>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -79,19 +91,18 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalCount"
         background
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
-    <div v-else-if="isSSZ" style="margin-top: 20px">
+    <div v-show="isSSZ" style="margin-top: 20px">
       <el-table :data="instantInfo" :show-header="false" border stripe>
-        <el-table-column prop="label"> </el-table-column>
-        <el-table-column prop="value"> </el-table-column>
+        <el-table-column prop="label"></el-table-column>
+        <el-table-column prop="value"></el-table-column>
       </el-table>
     </div>
-    <div v-else-if="isJCBG" style="margin-top: 20px">
+    <div v-show="isJCBG" style="margin-top: 20px">
       <el-table :data="baseTestReport" :show-header="false" border stripe>
-        <el-table-column prop="label"> </el-table-column>
-        <el-table-column prop="value"> </el-table-column>
+        <el-table-column prop="label"></el-table-column>
+        <el-table-column prop="value"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -176,6 +187,7 @@ export default {
     /** 基测报告 start */
     const jcResultRecordColumns = {
       tkyid: "探空仪id",
+      jcResultStatus: "基测结果状态",
       jcxPressure: "基测箱压力",
       jcxTemperature: "基测箱温度",
       jcxHumidity: "基测箱湿度",
@@ -189,7 +201,7 @@ export default {
       passedTemperature: "温度是否通过",
       passedHumidity: "湿度是否通过",
       passed: "是否通过",
-      cTime: "创建时间",
+      // cTime: "创建时间",
     };
     const baseTestReport = ref(null);
     async function showBaseTestReport() {
@@ -199,6 +211,9 @@ export default {
       const jcResultRecord = result.data?.jcResultRecord;
       if (!jcResultRecord.ctime) {
         jcResultRecord.ctime = result.data?.ctime;
+      }
+      if (!jcResultRecord.jcResultStatus) {
+        jcResultRecord.jcResultStatus = result.data?.jcResultStatus;
       }
       jcResultRecord.cTime = formatDate(
         new Date(jcResultRecord.ctime),
@@ -214,7 +229,7 @@ export default {
         }
       }
       baseTestReport.value = baseTestReportFormatted;
-      await sleep(1000);
+      await sleep(500);
       state.isLoading = false;
     }
     function passedfilter(key, value) {
@@ -237,6 +252,7 @@ export default {
       weatherPhenomenon: "天气现象",
       visibility: "能见度",
       memo: "瞬时信息备忘录",
+      ctime: "创建时间",
     };
     const instantInfo = ref(null);
     async function showInstantInfo() {
@@ -244,6 +260,7 @@ export default {
       state.isLoading = true;
       const result = await getInstantInfo(tkyid.value);
       const data = result.data;
+      data.ctime = formatDate(new Date(data.ctime), "yyyy-MM-dd HH:mm:ss");
       const instantInfoFormatted = [];
       for (const key in data) {
         if (instantInfoColumns[key]) {
@@ -254,7 +271,7 @@ export default {
         }
       }
       instantInfo.value = instantInfoFormatted;
-      await sleep(1000);
+      await sleep(500);
       state.isLoading = false;
     }
     /** 探测数据 start */
@@ -289,8 +306,8 @@ export default {
       showTkyData();
     }
     function disabledDate(time) {
-      let st = date.value[0].getTime();
-      let et = date.value[1].getTime();
+      let st = date.value[0]?.getTime();
+      let et = date.value[1]?.getTime();
       return time.getTime() > et || time.getTime() < st;
     }
     /** 探测数据 - 分页器 */
@@ -306,7 +323,7 @@ export default {
     const tkyDataColumns = [
       {
         prop: "tkyid",
-        label: "探空仪id",
+        label: "探空仪编号",
       },
       {
         prop: "stationNumber",
@@ -314,7 +331,7 @@ export default {
       },
       {
         prop: "freqz",
-        label: "freqz",
+        label: "频率值",
       },
       {
         prop: "dataTime",
@@ -322,11 +339,51 @@ export default {
       },
       {
         prop: "lng",
-        label: "lng",
+        label: "经度",
       },
       {
-        prop: "ctime",
-        label: "创建时间",
+        prop: "lat",
+        label: "纬度",
+      },
+      {
+        prop: "altitude",
+        label: "海拔高度",
+      },
+      {
+        prop: "nspeed",
+        label: "北向速度",
+      },
+      {
+        prop: "espeed",
+        label: "东向速度",
+      },
+      {
+        prop: "vspeed",
+        label: "vspeed",
+      },
+      {
+        prop: "satellitesNum",
+        label: "卫星数",
+      },
+      {
+        prop: "temperature",
+        label: "气温",
+      },
+      {
+        prop: "humidity",
+        label: "湿度",
+      },
+      {
+        prop: "pressure",
+        label: "气压",
+      },
+      {
+        prop: "batteryVol",
+        label: "电池电压",
+      },
+      {
+        prop: "boxTemperature",
+        label: "盒内温度",
       },
     ];
 
@@ -343,7 +400,7 @@ export default {
         pageSize: state.pageSize,
         pageNumber: state.pageNumber,
       };
-      await sleep(1500);
+      await sleep(500);
       const result = await getTkyData(option);
       tkyData.value = result.data;
       state.isLoading = false;
@@ -373,6 +430,7 @@ export default {
       handlePageNumberChange,
       disabledDate,
       maxHeight,
+      formatDate,
     };
   },
 };
