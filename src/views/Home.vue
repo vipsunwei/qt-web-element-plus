@@ -9,35 +9,35 @@
       unlink-panels
       @change="handleDatePickerChange"
     ></el-date-picker>
-
-    <div v-if="isShowSelectTkyid" style="padding: 20px 0">探空仪编号</div>
-    <el-select
-      v-if="isShowSelectTkyid"
-      v-model="tkyid"
-      filterable
-      :remote="false"
-      placeholder="请选择探空仪编号"
-      @change="handleTkyidChange"
-    >
-      <el-option
-        v-for="item in tkyids"
-        :key="item.tkyid"
-        :label="item.tkyid"
-        :value="item.tkyid"
-      ></el-option>
-    </el-select>
-
-    <div v-if="!isRadioDisabled" style="padding: 20px 0">选择查询数据类型</div>
-    <el-radio-group
-      v-if="!isRadioDisabled"
-      v-model="dataType"
-      :disabled="isRadioDisabled"
-      @change="handleDataTypeChange"
-    >
-      <el-radio-button label="探测数据"></el-radio-button>
-      <el-radio-button label="瞬时值"></el-radio-button>
-      <el-radio-button label="基测报告"></el-radio-button>
-    </el-radio-group>
+    <div v-if="isShowSelectTkyid">
+      <div style="padding: 20px 0">探空仪编号</div>
+      <el-select
+        v-model="tkyid"
+        filterable
+        :remote="false"
+        placeholder="请选择探空仪编号"
+        @change="handleTkyidChange"
+      >
+        <el-option
+          v-for="item in tkyids"
+          :key="item.tkyid"
+          :label="item.tkyid"
+          :value="item.tkyid"
+        ></el-option>
+      </el-select>
+    </div>
+    <div v-if="!isRadioDisabled">
+      <div style="padding: 20px 0">选择查询数据类型</div>
+      <el-radio-group
+        v-model="dataType"
+        :disabled="isRadioDisabled"
+        @change="handleDataTypeChange"
+      >
+        <el-radio-button label="探测数据"></el-radio-button>
+        <el-radio-button label="瞬时值"></el-radio-button>
+        <el-radio-button label="基测报告"></el-radio-button>
+      </el-radio-group>
+    </div>
 
     <div v-show="isTCSJ" style="margin-top: 20px">
       <el-date-picker
@@ -77,7 +77,7 @@
               scope.row.dataTime &&
               formatDate(new Date(scope.row.dataTime), "yyyy-MM-dd HH:mm:ss")
             }}</span>
-            <span v-else>{{ scope.row[col.prop] || "" }}</span>
+            <span v-else>{{ scope.row[col.prop] }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -93,12 +93,14 @@
         background
       ></el-pagination>
     </div>
+
     <div v-show="isSSZ" style="margin-top: 20px">
       <el-table :data="instantInfo" :show-header="false" border stripe>
         <el-table-column prop="label"></el-table-column>
         <el-table-column prop="value"></el-table-column>
       </el-table>
     </div>
+
     <div v-show="isJCBG" style="margin-top: 20px">
       <el-table :data="baseTestReport" :show-header="false" border stripe>
         <el-table-column prop="label"></el-table-column>
@@ -120,7 +122,6 @@ import {
 
 export default {
   name: "Home",
-  components: {},
   setup() {
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
@@ -145,7 +146,7 @@ export default {
       if (state.isLoading) return;
       state.isLoading = true;
       const result = await getTkyInfo(st, et);
-      console.log(result);
+      console.log("getTkyInfo -- ", result);
       if (result.status === 200) {
         tkyids.value = result.data;
       } else {
@@ -162,7 +163,7 @@ export default {
       // tkyid.value = curTkyid;
       dataType.value = "";
       state.dateForTCSJ = "";
-      state.pageSize = 100;
+      state.pageSize = 20;
       state.pageNumber = 1;
     }
     /** 选择查询数据类型 */
@@ -229,7 +230,7 @@ export default {
         }
       }
       baseTestReport.value = baseTestReportFormatted;
-      await sleep(500);
+      // await sleep(500);
       state.isLoading = false;
     }
     function passedfilter(key, value) {
@@ -271,20 +272,20 @@ export default {
         }
       }
       instantInfo.value = instantInfoFormatted;
-      await sleep(500);
+      // await sleep(500);
       state.isLoading = false;
     }
     /** 探测数据 start */
     const tkyData = ref({
       dataArray: [],
       totalCount: 0,
-      pageSize: 100,
+      pageSize: 20,
     });
     const state = reactive({
       dateForTCSJ: "",
       startTime: "",
       endTime: "",
-      pageSize: 100,
+      pageSize: 20,
       pageNumber: 1,
       isShowTable: false,
       isLoading: false,
@@ -293,7 +294,7 @@ export default {
       () => tkyData.value?.dataArray?.slice(0, state.pageSize) || []
     );
     const totalCount = computed(() => tkyData.value?.totalCount || 0);
-    const maxHeight = ref("100vh");
+    const maxHeight = ref(null);
     /** 探测数据 - 时间选择框 */
     function handleDateForTCSJChange(dates) {
       if (!dates) {
@@ -400,7 +401,6 @@ export default {
         pageSize: state.pageSize,
         pageNumber: state.pageNumber,
       };
-      await sleep(500);
       const result = await getTkyData(option);
       tkyData.value = result.data;
       state.isLoading = false;

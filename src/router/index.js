@@ -21,13 +21,19 @@ const routes = [
     path: "/alert",
     name: "Alert",
     component: () =>
-      import(/* webpackChunkName "alert" */ "../views/Alert.vue"),
+      import(/* webpackChunkName: "alert" */ "../views/Alert.vue"),
   },
   {
     path: "/devices",
     name: "Devices",
     component: () =>
-      import(/* webpackChunkName "devices" */ "../views/DeviceMonitor.vue"),
+      import(/* webpackChunkName: "devices" */ "../views/DeviceMonitor.vue"),
+  },
+  {
+    path: "/env",
+    name: "Env",
+    component: () =>
+      import(/* webpackChunkName: "env" */ "../views/EnvCheck.vue"),
   },
   {
     path: "/",

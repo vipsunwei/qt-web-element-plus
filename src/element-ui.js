@@ -18,6 +18,10 @@ import {
   ElCard,
   ElButton,
   ElBadge,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElSwitch,
 } from "element-plus";
 
 const components = [
@@ -40,6 +44,10 @@ const components = [
   ElCard,
   ElButton,
   ElBadge,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElSwitch,
 ];
 
 function useElementUi(app) {

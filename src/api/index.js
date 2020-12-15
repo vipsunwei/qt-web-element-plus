@@ -30,12 +30,15 @@ export const getTkyInfo = (st, et) => {
   let url = "/api/history/getTkyInfo";
 
   return Promise.resolve(tkyInfo);
-  // return request.get(url, {
-  //   params: {
-  //     startTime: st,
-  //     endTime: et,
-  //   },
-  // });
+  // return request
+  //   .get(url, {
+  //     params: {
+  //       startTime: st,
+  //       endTime: et,
+  //     },
+  //   })
+  //   .then((res) => res)
+  //   .catch((err) => err);
 };
 
 // /api/history/getBaseTestReport?tkyid=11
@@ -43,11 +46,14 @@ export const getBaseTestReport = (tkyid) => {
   console.log("tkyid: ", tkyid);
   let url = "/api/history/getBaseTestReport";
   return Promise.resolve(baseTestReport);
-  // return request.get(url, {
-  //   params: {
-  //     tkyid,
-  //   },
-  // });
+  // return request
+  //   .get(url, {
+  //     params: {
+  //       tkyid,
+  //     },
+  //   })
+  //   .then((res) => res)
+  //   .catch((err) => err);
 };
 
 // /api/history/getInstantInfo?tkyid=11
@@ -55,11 +61,14 @@ export const getInstantInfo = (tkyid) => {
   console.log("tkyid: ", tkyid);
   let url = "/api/history/getInstantInfo";
   return Promise.resolve(instantInfo);
-  // return request.get(url, {
-  //   params: {
-  //     tkyid,
-  //   },
-  // });
+  // return request
+  //   .get(url, {
+  //     params: {
+  //       tkyid,
+  //     },
+  //   })
+  //   .then((res) => res)
+  //   .catch((err) => err);
 };
 
 // /api/history/getTkyData?
@@ -74,34 +83,46 @@ export const getTkyData = ({
   console.log(tkyid, startTime, endTime, pageSize, pageNumber);
   let url = "/api/history/getTkyData";
   return Promise.resolve(tkyData);
-  // return request.get(url, {
-  //   params: {
-  //     tkyid,
-  //     startTime,
-  //     endTime,
-  //     pageSize,
-  //     pageNumber,
-  //   },
-  // });
+  // return request
+  //   .get(url, {
+  //     params: {
+  //       tkyid,
+  //       startTime,
+  //       endTime,
+  //       pageSize,
+  //       pageNumber,
+  //     },
+  //   })
+  //   .then((res) => res)
+  //   .catch((err) => err);
 };
 
 export function getWarningAlarmLevel() {
   let url = "/api/history/getWarningAlarmLevel";
   return Promise.resolve(levels);
-  // return request.get(url);
+  // return request
+  //   .get(url)
+  //   .then((res) => res)
+  //   .catch((err) => err);
 }
 
 export function getWarningAlarmComponent() {
   let url = "/api/history/getWarningAlarmComponent";
   return Promise.resolve(types);
-  // return request.get(url);
+  // return request
+  //   .get(url)
+  //   .then((res) => res)
+  //   .catch((err) => err);
 }
 
 // /api/history/getActiveWarningMessage
 export function getActiveWarningMessage() {
   let url = "/api/history/getActiveWarningMessage";
   return Promise.resolve(activeWarningMessage);
-  // return request.get(url);
+  // return request
+  //   .get(url)
+  //   .then((res) => res)
+  //   .catch((err) => err);
 }
 
 // /api/history/getWarningMessage
@@ -117,14 +138,17 @@ export function getWarningMessage({
   console.log(startTime, endTime, level, typeCode, pageNumber, pageSize);
   let url = "/api/history/getWarningMessage";
   return Promise.resolve(warningMessage);
-  // return request.get(url, {
-  //   params: {
-  //     startTime,
-  //     endTime,
-  //     level,
-  //     typeCode,
-  //     pageNumber,
-  //     pageSize,
-  //   },
-  // });
+  // return request
+  //   .get(url, {
+  //     params: {
+  //       startTime,
+  //       endTime,
+  //       level,
+  //       typeCode,
+  //       pageNumber,
+  //       pageSize,
+  //     },
+  //   })
+  //   .then((res) => res)
+  //   .catch((err) => err);
 }

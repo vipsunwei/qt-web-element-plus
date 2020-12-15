@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy": "cross-env DEPLOY_ENV=vipsunwei DEPLOY_METHOD=delete node ./deploy.js",
+    "build:deploy": "yarn build && cross-env DEPLOY_ENV=vipsunwei DEPLOY_METHOD=delete node ./deploy.js"
   },
   "dependencies": {
     "axios": "^0.20.0-0",
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.1-beta.5",
+    "element-plus": "^1.0.1-beta.8",
     "vertx3-eventbus-client": "^3.9.4",
     "vue": "3.0.3",
     "vue-router": "4.0.0-beta.4"
@@ -22,6 +24,7 @@
     "@vue/compiler-sfc": "3.0.3",
     "babel-plugin-component": "^1.1.1",
     "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "scp2": "^0.5.0"
   }
 }

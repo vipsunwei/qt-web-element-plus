@@ -143,7 +143,7 @@ export default {
       types: [],
       warningMessage: [],
       totalCount: 0,
-      pageSize: 100,
+      pageSize: 20,
       pageNumber: 1,
       isLoading: false,
     });

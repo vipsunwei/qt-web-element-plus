@@ -1,0 +1,151 @@
+	/**
+	 * 接收机类报警事件
+	 */
+	// 接收机下线报警
+	public static Alarm RECEIVER_OFFINE_ALARM = new Alarm(
+			AlarmComponent.RECEIVER, AlarmLevel.VERY_SERIOUS, "接收机下线");
+	// 没有频谱数据报警： 没有收到数据报警
+	public static Alarm RECEIVER_NO_SA_DATA_ALARM = new Alarm(
+			AlarmComponent.RECEIVER, AlarmLevel.VERY_SERIOUS, "接收机没有频谱数据");	
+	// 频谱数据到报率不够报警。
+	public static Alarm RECEIVER_LACK_SA_DATA_ALARM = new Alarm(
+			AlarmComponent.RECEIVER, AlarmLevel.VERY_SERIOUS, "接收机频谱数据到报率不足");	
+	/**
+	 * 基测箱类报警事件
+	 */
+	// 基测箱下线报警
+	public static Alarm JCX_OFFINE_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱下线");
+	// 没有基测箱数据报警
+	public static Alarm JCX_NO_DATA_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱无数据");
+	// 基测箱压温湿数据异常报警
+	public static Alarm JCX_LACK_DATA_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱数据到报率不足");
+	// 基测箱压温湿数据异常报警
+	public static Alarm JCX_DATA_P_ERROR_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱气压数据异常");
+	// 基测箱压温湿数据异常报警
+	public static Alarm JCX_DATA_T_ERROR_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱气温数据异常");
+	// 基测箱压温湿数据异常报警
+	public static Alarm JCX_DATA_U_ERROR_ALARM = new Alarm(
+			AlarmComponent.JCX, AlarmLevel.GENERAL, "基测箱湿度数据异常");
+	
+	/**
+	 * 自动气象站类报警事件
+	 */
+	// 自动气象站下线报警
+	public static Alarm AWS_OFFINE_ALARM = new Alarm(
+			AlarmComponent.AWS, AlarmLevel.SERIOUS, "自动气象站下线");
+	// 自动气象站无数据报警： 5分钟没有收到数据报警
+	public static Alarm AWS_NO_DATA_ALARM = new Alarm(
+			AlarmComponent.AWS, AlarmLevel.SERIOUS, "自动气象站无数据异常");	
+	// 自动气象站数据到报率不够报警。
+	public static Alarm AWS_LACK_DATA_ALARM = new Alarm(
+			AlarmComponent.AWS, AlarmLevel.SERIOUS, "自动气象站数据到报率不足");
+	// 自动气象站数据异常报警
+	public static Alarm AWS_DATA_ERROR_ALARM = new Alarm(
+			AlarmComponent.AWS, AlarmLevel.SERIOUS, "自动气象站压温湿数据异常");	
+	
+	// GPS无数据报警： 收到的数据不在2分钟内数据报警
+	public static Alarm GPS_NO_DATA_ALARM = new Alarm(
+			AlarmComponent.AWS, AlarmLevel.SERIOUS, "GPS无数据异常");	
+	
+	/**
+	 * 充气装置类报警事件
+	 */
+	// 充气装置下线报警
+	public static Alarm GAS_CHARGING_OFFINE_ALARM = new Alarm(
+			AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置下线");
+	// 充气装置无数据报警： 15秒钟没有收到数据报警
+	public static Alarm GAS_CHARGING_NO_DATA_ALARM = new Alarm(
+			AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置无数据异常");	
+	// 充气装置数据到报率不够报警。
+	public static Alarm GAS_CHARGING_LACK_DATA_ALARM = new Alarm(
+			AlarmComponent.GAS_CHARGING, AlarmLevel.SERIOUS, "充气装置数据到报率不足");
+	// 充气装置充气暂停报警
+	public static Alarm GAS_CHARGING_INFLATE_PAUSE_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.GENERAL, "充气装置充气暂停");
+	// 充气装置充气故障报警
+	public static Alarm GAS_CHARGING_INFLATE_FAULT_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置充气故障");	
+	// 充气装置充气阀故障报警
+	public static Alarm GAS_CHARGING_CHARGE_VALVE_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置充气阀故障报警");	
+	// 充气装置放气阀故障报警
+	public static Alarm GAS_CHARGING_AIR_RELRASE_VALVE_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置放气阀故障报警");	
+	// 充气装置称重设备状态错误报警
+	public static Alarm GAS_CHARGING_WEIGHTING_EQUIPMENT_STATUS_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置称重设备状态错误报警");	
+	// 充气装置流量计状态错误报警
+	public static Alarm GAS_CHARGING_FLOW_METER_STATUS_ALARM = new Alarm(
+				AlarmComponent.GAS_CHARGING, AlarmLevel.VERY_SERIOUS, "充气装置称重设备状态错误报警");	
+	
+	
+	/**
+	 * 环境检测装置报警事件
+	 */
+	// 环境检测装置下线报警
+	public static Alarm GAS_CHECKING_OFFINE_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING, AlarmLevel.VERY_SERIOUS, "环境检测装置下线");
+	// 环境检测系统无数据报警： 15秒钟没有收到数据报警
+	public static Alarm GAS_CHECKING_NO_DATA_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING, AlarmLevel.VERY_SERIOUS, "环境检测装置无数据异常");
+	// 充气装置数据到报率不够报警。
+	public static Alarm GAS_CHECKING_LACK_DATA_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING, AlarmLevel.SERIOUS, "环境检测装置数据到报率不足");
+	// 烟雾报警器1报警
+	public static Alarm SMOKE_DETECTOR_ALARM1 = new Alarm(
+			AlarmComponent.GAS_CHECHING_SMOKE_DETECTOR1, AlarmLevel.VERY_SERIOUS, "烟雾报警器烟雾浓度高报警");
+	// 烟雾报警器2报警
+	public static Alarm SMOKE_DETECTOR_ALARM2 = new Alarm(
+			AlarmComponent.GAS_CHECHING_SMOKE_DETECTOR2, AlarmLevel.VERY_SERIOUS, "烟雾报警器状态报警");
+	// 氢气浓度1高报警
+	public static Alarm GAS_DENSITY_HIGH_ALARM1 = new Alarm(
+			AlarmComponent.GAS_CHECHING_GAS_DENSITY1, AlarmLevel.VERY_SERIOUS, "氢气浓度高报警");
+	// 氢气浓度2高报警
+	public static Alarm GAS_DENSITY_HIGH_ALARM2 = new Alarm(
+			AlarmComponent.GAS_CHECHING_GAS_DENSITY2, AlarmLevel.VERY_SERIOUS, "氢气浓度高报警");
+	// 管道压力高报警
+	public static Alarm GAS_CHECHING_PIPE_PRESS_HIGH_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS, AlarmLevel.VERY_SERIOUS, "管道压力高报警");	
+	// 管道压力低报警
+	public static Alarm GAS_CHECHING_PIPE_PRESS_LOW_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS, AlarmLevel.VERY_SERIOUS, "管道压力低报警");
+	// 环境设备状态报警
+	public static Alarm GAS_CHECHING_STATUS_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_STATUS, AlarmLevel.VERY_SERIOUS, "环境设备状态报警");	
+	// 探空站水浸报警
+	public static Alarm WATER_LEAK_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_WATER_LEAK, AlarmLevel.VERY_SERIOUS, "探空站水浸报警");
+	
+	// 氢气房烟雾报警器2报警
+	public static Alarm ROOM_SMOKE_DETECTOR_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_SMOKE_DETECTOR_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房烟雾报警器状态报警");
+	// 氢气房氢气浓度1高报警
+	public static Alarm GAS_DENSITY_ROOM_HIGH_ALARM1 = new Alarm(
+			AlarmComponent.GAS_CHECHING_GAS_DENSITY1_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房氢气浓度高报警");
+	// 氢气房氢气浓度2高报警
+	public static Alarm GAS_DENSITY_ROOM_HIGH_ALARM2 = new Alarm(
+			AlarmComponent.GAS_CHECHING_GAS_DENSITY2_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房氢气浓度高报警");
+	// 氢气房支路1管道压力高报警
+	public static Alarm GAS_CHECHING_ROOM_PIPE_PRESS_HIGH_ALARM1 = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS1_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房支路1管道压力高报警");
+	// 氢气房支路1管道压力低报警
+	public static Alarm GAS_CHECHING_ROOM_PIPE_PRESS_LOW_ALARM1 = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS1_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房支路1管道压力低报警");
+	// 氢气房支路2管道压力高报警
+	public static Alarm GAS_CHECHING_ROOM_PIPE_PRESS_HIGH_ALARM2 = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS2_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房支路2管道压力高报警");
+	// 氢气房支路2管道压力低报警
+	public static Alarm GAS_CHECHING_ROOM_PIPE_PRESS_LOW_ALARM2 = new Alarm(
+			AlarmComponent.GAS_CHECHING_PIPE_PRESS2_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房支路2管道压力低报警");
+	// 氢气房环境设备状态报警
+	public static Alarm GAS_CHECHING_ROOM_STATUS_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_STATUS_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房设备状态报警");
+	// 氢气房水浸报警
+	public static Alarm ROOM_WATER_LEAK_ALARM = new Alarm(
+			AlarmComponent.GAS_CHECHING_WATER_LEAK_ROOM, AlarmLevel.VERY_SERIOUS, "氢气房水浸报警");
+	
