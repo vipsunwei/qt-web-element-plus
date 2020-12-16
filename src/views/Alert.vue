@@ -13,10 +13,13 @@ import ActiveWarningMessage from "../components/ActiveWarningMessage.vue";
 import WarningMessage from "../components/WarningMessage.vue";
 import { onMounted, onUnmounted } from "vue";
 import eventbusClient from "vertx3-eventbus-client";
+
+import voiceMap from "../assets/voice/voiceMap.js";
+import { Howl } from "howler";
 export default {
   components: {
     ActiveWarningMessage,
-    WarningMessage
+    WarningMessage,
   },
   setup() {
     const warning = {
@@ -25,7 +28,7 @@ export default {
         alarmComponent: "RECEIVER",
         alarmLevel: "VERY_SERIOUS",
         alarmName: "接收机频谱数据到报率不足",
-        key: "1_4_接收机频谱数据到报率不足"
+        key: "1_4_接收机频谱数据到报率不足",
       },
       startTime: 1606537349016,
       endTime: null,
@@ -34,9 +37,10 @@ export default {
       ackTime: null,
       ackUser: null,
       ctime: 1606537351908,
-      mtime: 1606537351908
+      mtime: 1606537351908,
     };
     let eb = null;
+    let audio1 = null;
     onMounted(() => {
       listenWarnings();
     });
@@ -51,10 +55,12 @@ export default {
     }
     let timer = null;
     function listenWarnings() {
+      timer && clearInterval(timer);
       timer = setInterval(() => {
         showWarnings(warning);
+        playVoice(warning);
         console.log(111);
-      }, 10000);
+      }, 30000);
       /** *
       const host = process.env.VUE_APP_EVENT_BUS;
       const options = {
@@ -89,7 +95,7 @@ export default {
     function showWarnings(o) {
       const alarm = o.alarm;
       const colorMap = {
-        VERY_SERIOUS: { background: "#f40", color: "#fff" }
+        VERY_SERIOUS: { background: "#f40", color: "#fff" },
       };
       notificationInstance = ElNotification({
         title: alarm.alarmComponent,
@@ -99,15 +105,30 @@ export default {
           alarm.alarmName
         }</div>`,
         dangerouslyUseHTMLString: true,
-        onClick: function() {
+        onClick: function () {
           closeWarnings();
-        }
+          // play();
+        },
       });
     }
     function closeWarnings() {
       notificationInstance.close();
     }
-  }
+
+    function playVoice({ alarm }) {
+      console.log(voiceMap);
+      const src = voiceMap[alarm.alarmName];
+      console.info(src);
+      audio1 = new Howl({
+        src: [src],
+        autoplay: true,
+        onend: function (id) {
+          audio1 = null;
+          console.log("Finished!", id, audio1);
+        },
+      });
+    }
+  },
 };
 </script>
 
