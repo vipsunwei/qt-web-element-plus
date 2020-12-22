@@ -33,4 +33,4 @@ const data = [
   },
 ];
 
-export default { data, status: 200 };
+module.exports = { data, status: 200 };

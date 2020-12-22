@@ -6,4 +6,7 @@ module.exports = {
     // 修复HMR
     config.resolve.symlinks(true);
   },
+  // devServer: {
+  //   before: require("./mock/index.js"),
+  // },
 };

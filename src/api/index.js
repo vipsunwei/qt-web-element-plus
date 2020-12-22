@@ -19,6 +19,8 @@ import warningMessage from "../data/warningMessage";
 
 const host = process.env.VUE_APP_HOST;
 console.log("🚀 ~ file: index.js ~ line 13 ~ host", host);
+// const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
+const IS_MOCK = true; // 切换假数据开关
 
 const request = axios.create({
   baseURL: host,
@@ -27,48 +29,47 @@ const request = axios.create({
 
 // /api/history/getTkyInfo?startTime=2020-11-11 12:23:23&endTime=2020-11-19 23:00:15
 export const getTkyInfo = (st, et) => {
-  let url = "/api/history/getTkyInfo";
-
-  return Promise.resolve(tkyInfo);
-  // return request
-  //   .get(url, {
-  //     params: {
-  //       startTime: st,
-  //       endTime: et,
-  //     },
-  //   })
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(tkyInfo)
+    : request
+        .get("/api/history/getTkyInfo", {
+          params: {
+            startTime: st,
+            endTime: et,
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
 };
 
 // /api/history/getBaseTestReport?tkyid=11
 export const getBaseTestReport = (tkyid) => {
   console.log("tkyid: ", tkyid);
-  let url = "/api/history/getBaseTestReport";
-  return Promise.resolve(baseTestReport);
-  // return request
-  //   .get(url, {
-  //     params: {
-  //       tkyid,
-  //     },
-  //   })
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(baseTestReport)
+    : request
+        .get("/api/history/getBaseTestReport", {
+          params: {
+            tkyid,
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
 };
 
 // /api/history/getInstantInfo?tkyid=11
 export const getInstantInfo = (tkyid) => {
   console.log("tkyid: ", tkyid);
-  let url = "/api/history/getInstantInfo";
-  return Promise.resolve(instantInfo);
-  // return request
-  //   .get(url, {
-  //     params: {
-  //       tkyid,
-  //     },
-  //   })
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(instantInfo)
+    : request
+        .get("/api/history/getInstantInfo", {
+          params: {
+            tkyid,
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
 };
 
 // /api/history/getTkyData?
@@ -81,48 +82,49 @@ export const getTkyData = ({
   pageNumber,
 }) => {
   console.log(tkyid, startTime, endTime, pageSize, pageNumber);
-  let url = "/api/history/getTkyData";
-  return Promise.resolve(tkyData);
-  // return request
-  //   .get(url, {
-  //     params: {
-  //       tkyid,
-  //       startTime,
-  //       endTime,
-  //       pageSize,
-  //       pageNumber,
-  //     },
-  //   })
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(tkyData)
+    : request
+        .get("/api/history/getTkyData", {
+          params: {
+            tkyid,
+            startTime,
+            endTime,
+            pageSize,
+            pageNumber,
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
 };
 
 export function getWarningAlarmLevel() {
   let url = "/api/history/getWarningAlarmLevel";
-  return Promise.resolve(levels);
-  // return request
-  //   .get(url)
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(levels)
+    : request
+        .get(url)
+        .then((res) => res)
+        .catch((err) => err);
 }
 
 export function getWarningAlarmComponent() {
-  let url = "/api/history/getWarningAlarmComponent";
-  return Promise.resolve(types);
-  // return request
-  //   .get(url)
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(types)
+    : request
+        .get("/api/history/getWarningAlarmComponent")
+        .then((res) => res)
+        .catch((err) => err);
 }
 
 // /api/history/getActiveWarningMessage
 export function getActiveWarningMessage() {
-  let url = "/api/history/getActiveWarningMessage";
-  return Promise.resolve(activeWarningMessage);
-  // return request
-  //   .get(url)
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(activeWarningMessage)
+    : request
+        .get("/api/history/getActiveWarningMessage")
+        .then((res) => res)
+        .catch((err) => err);
 }
 
 // /api/history/getWarningMessage
@@ -136,19 +138,19 @@ export function getWarningMessage({
   pageSize,
 }) {
   console.log(startTime, endTime, level, typeCode, pageNumber, pageSize);
-  let url = "/api/history/getWarningMessage";
-  return Promise.resolve(warningMessage);
-  // return request
-  //   .get(url, {
-  //     params: {
-  //       startTime,
-  //       endTime,
-  //       level,
-  //       typeCode,
-  //       pageNumber,
-  //       pageSize,
-  //     },
-  //   })
-  //   .then((res) => res)
-  //   .catch((err) => err);
+  return IS_MOCK
+    ? Promise.resolve(warningMessage)
+    : request
+        .get("/api/history/getWarningMessage", {
+          params: {
+            startTime,
+            endTime,
+            level,
+            typeCode,
+            pageNumber,
+            pageSize,
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
 }

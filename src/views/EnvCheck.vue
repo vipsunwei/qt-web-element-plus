@@ -331,7 +331,7 @@
                     v-model="formData1.GNZHGNA"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNA')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -356,7 +356,7 @@
                     v-model="formData1.GNZHGNB"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNB')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -381,7 +381,7 @@
                     v-model="formData1.GNZHGNE"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNE')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -406,7 +406,7 @@
                     v-model="formData1.GNZHGND"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GND')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -431,7 +431,7 @@
                     v-model="formData1.GNZHGNI"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNI')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -456,7 +456,7 @@
                     v-model="formData1.GNZHGNJ"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNJ')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -483,7 +483,7 @@
                     v-model="formData1.GNZHGNK"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNK')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -508,7 +508,7 @@
                     v-model="formData1.GNZHGNN"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNN')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -533,7 +533,7 @@
                     v-model="formData1.GNZHGNP"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNP')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -558,7 +558,7 @@
                     v-model="formData1.GNZHGNL"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNL')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -583,7 +583,7 @@
                     v-model="formData1.GNZHGNM"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNM')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -601,14 +601,14 @@
             </el-row>
           </el-form-item>
           <el-form-item style="margin-bottom: 0" label="氢气房管道压力总:">
-            <el-row>
+            <el-row v-show="formData1.GNZHGNC !== undefined">
               <el-col :span="12">
                 <el-form-item prop="GNZHGNC">
                   <el-switch
                     v-model="formData1.GNZHGNC"
                     active-text="开"
                     inactive-text="关"
-                    @change="A"
+                    @change="onEnableChange($event, 'GNC')"
                   >
                   </el-switch>
                 </el-form-item>
@@ -634,12 +634,15 @@
 <script>
 import { computed, onMounted, onUnmounted, reactive, toRefs } from "vue";
 import { debounce, formatDate } from "../utils/utils";
+import { getResetEnableParam, getEnable, setEnable } from "../api/envCheck";
+import { ElMessage } from "element-plus";
 
 export default {
   setup() {
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();
+      getEnableData();
     });
     onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
     const getMaxHeight = debounce(function () {
@@ -649,6 +652,8 @@ export default {
     const state = reactive({
       tableData: [],
       maxHeight: null,
+      resetEnableParams: [],
+      enables: [],
       formData: {
         GNZA: "",
         GNZB: "",
@@ -664,30 +669,30 @@ export default {
         warningGNZI: false,
       },
       formData1: {
-        GNZHGNA: true,
+        GNZHGNA: false,
         GNZHGNB: false,
         GNZHGNE: false,
-        GNZHGND: true,
+        GNZHGND: false,
         GNZHGNI: false,
-        GNZHGNJ: true,
+        GNZHGNJ: false,
         GNZHGNK: false,
         GNZHGNN: false,
         GNZHGNP: false,
         GNZHGNL: false,
         GNZHGNM: false,
-        GNZHGNC: false,
-        GNZJGNA: true,
-        GNZJGNB: false,
-        GNZJGNE: false,
-        GNZJGND: false,
-        GNZJGNI: false,
-        GNZJGNJ: false,
-        GNZJGNK: false,
-        GNZJGNN: false,
-        GNZJGNP: false,
-        GNZJGNL: false,
-        GNZJGNM: false,
-        GNZJGNC: false,
+        // GNZHGNC: false,
+        // GNZJGNA: true,
+        // GNZJGNB: false,
+        // GNZJGNE: false,
+        // GNZJGND: false,
+        // GNZJGNI: false,
+        // GNZJGNJ: false,
+        // GNZJGNK: false,
+        // GNZJGNN: false,
+        // GNZJGNP: false,
+        // GNZJGNL: false,
+        // GNZJGNM: false,
+        // GNZJGNC: false,
       },
       rules: {
         GNZA: [
@@ -785,14 +790,52 @@ export default {
         label: "备注",
       },
     ];
-    function A(value) {
-      console.log(value, "value");
+    function onEnableChange(value, name) {
+      console.log(name, ":", value);
+      const s = !!value
+        ? state.enables.includes(name)
+          ? state.enables.join(",")
+          : state.enables.push(name) && state.enables.join(",")
+        : state.enables.includes(name)
+        ? state.enables.splice(state.enables.indexOf(name), 1) &&
+          state.enables.join(",")
+        : state.enables.join(",");
+      console.log("string: ", s);
+      setEnable(s).then((res) => {
+        console.log(res);
+        if (res.setEnable) {
+          ElMessage.success({
+            message: "操作成功",
+            duration: 2000,
+          });
+          state.formData1["GNZH" + name] = value;
+        } else {
+          ElMessage.warning({
+            message: "操作失败",
+            duration: 3000,
+          });
+          state.formData1["GNZH" + name] = !value;
+        }
+      });
+    }
+    async function getEnableData() {
+      const params = await getResetEnableParam();
+      state.resetEnableParams = params.map((v) => {
+        state.formData1["GNZH" + v.param] = false;
+        return v.param;
+      });
+      const enables = await getEnable();
+      state.enables = enables.map((v) => {
+        state.formData1["GNZH" + v.param] = true;
+        return v.param;
+      });
+      console.log(state.formData1, "formdata1");
     }
 
     return {
       ...toRefs(state),
       columns,
-      A,
+      onEnableChange,
       GNZDDisabled,
       GNZFDisabled,
       GNZGDisabled,
