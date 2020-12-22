@@ -39,8 +39,6 @@ export default {
       ctime: 1606537351908,
       mtime: 1606537351908,
     };
-    let eb = null;
-    let audio1 = null;
     onMounted(() => {
       listenWarnings();
     });
@@ -53,6 +51,8 @@ export default {
       // console.log(eb);
       // eb.close && typeof eb.close === "function" && eb.close();
     }
+    let audio1 = null;
+    let eb = null;
     let timer = null;
     function listenWarnings() {
       timer && clearInterval(timer);

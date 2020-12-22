@@ -135,8 +135,8 @@
   <div style="margin-top: 20px">
     <div class="title">阈值设置</div>
     <el-form
-      :model="formData"
-      :rules="rules"
+      :model="threshold"
+      :rules="thresholdRules"
       label-width="240px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
@@ -144,24 +144,24 @@
       <el-row>
         <el-col :span="12" :offset="0">
           <el-form-item label="氢气浓度上限(0-9999Ppm):" prop="GNZA">
-            <el-input v-model.number="formData.GNZA"></el-input>
+            <el-input v-model.number="threshold.GNZA"></el-input>
           </el-form-item>
           <el-form-item label="管道压力上限(0-30000kPa):" prop="GNZB">
-            <el-input v-model.number="formData.GNZB"></el-input>
+            <el-input v-model.number="threshold.GNZB"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-form-item label="烟雾报警器上限(0-5000Ppm):" prop="GNZC">
-            <el-input v-model.number="formData.GNZC"></el-input>
+            <el-input v-model.number="threshold.GNZC"></el-input>
           </el-form-item>
           <el-form-item label="开启时间上限设置(0-1800S):" prop="GNZE">
-            <el-input v-model.number="formData.GNZE"></el-input>
+            <el-input v-model.number="threshold.GNZE"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-form-item style="margin-bottom: 0">
-        <el-button>提交</el-button>
+        <el-button @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -169,8 +169,7 @@
   <div style="margin-top: 20px">
     <div class="title">安全阀门开关</div>
     <el-form
-      :model="formData"
-      :rules="rules"
+      :model="valve"
       label-width="240px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
@@ -197,13 +196,14 @@
             </svg>
             <el-switch
               style="margin: 0 20px"
-              v-model="formData.GNZD"
+              v-model="valve.GNZD"
               active-text="开"
               inactive-text="关"
               :disabled="GNZDDisabled"
+              @change="onValveStateChange($event, 'GNZD')"
             ></el-switch>
             <i
-              v-show="formData.warningGNZD"
+              v-show="valve.warningGNZD"
               class="el-icon-warning"
               style="color: #f40; font-size: 24px; vertical-align: middle"
               title="异常"
@@ -229,13 +229,14 @@
             </svg>
             <el-switch
               style="margin: 0 20px"
-              v-model="formData.GNZF"
+              v-model="valve.GNZF"
               active-text="开"
               inactive-text="关"
               :disabled="GNZFDisabled"
+              @change="onValveStateChange($event, 'GNZF')"
             ></el-switch>
             <i
-              v-show="formData.warningGNZF"
+              v-show="valve.warningGNZF"
               class="el-icon-warning"
               style="color: #f40; font-size: 24px; vertical-align: middle"
               title="异常"
@@ -263,13 +264,14 @@
             </svg>
             <el-switch
               style="margin: 0 20px"
-              v-model="formData.GNZG"
+              v-model="valve.GNZG"
               active-text="开"
               inactive-text="关"
               :disabled="GNZGDisabled"
+              @change="onValveStateChange($event, 'GNZG')"
             ></el-switch>
             <i
-              v-show="formData.warningGNZG"
+              v-show="valve.warningGNZG"
               class="el-icon-warning"
               style="color: #f40; font-size: 24px; vertical-align: middle"
               title="异常"
@@ -295,13 +297,14 @@
             </svg>
             <el-switch
               style="margin: 0 20px"
-              v-model="formData.GNZI"
+              v-model="valve.GNZI"
               active-text="开"
               inactive-text="关"
               :disabled="GNZIDisabled"
+              @change="onValveStateChange($event, 'GNZI')"
             ></el-switch>
             <i
-              v-show="formData.warningGNZI"
+              v-show="valve.warningGNZI"
               class="el-icon-warning"
               style="color: #f40; font-size: 24px; vertical-align: middle"
               title="异常"
@@ -315,48 +318,30 @@
   <div style="margin-top: 20px">
     <div class="title">报警使能复位开关</div>
     <el-form
-      :model="formData1"
-      :rules="rules1"
       label-width="240px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
     >
       <el-row>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="放球仓氢气检测1:">
+        <el-col
+          :span="12"
+          :offset="0"
+          v-for="(col, index) in enableResetData"
+          :key="index"
+        >
+          <el-form-item
+            v-for="item in col"
+            :key="item.param"
+            :label="item.name + ':'"
+          >
             <el-row>
               <el-col :span="12" :offset="0">
-                <el-form-item prop="GNZHGNA">
+                <el-form-item :prop="item.param">
                   <el-switch
-                    v-model="formData1.GNZHGNA"
+                    v-model="item.state"
                     active-text="开"
                     inactive-text="关"
-                    @change="onEnableChange($event, 'GNA')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12" :offset="0">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNADisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="放球仓氢气检测2:">
-            <el-row>
-              <el-col :span="12" :offset="0">
-                <el-form-item prop="GNZHGNB">
-                  <el-switch
-                    v-model="formData1.GNZHGNB"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNB')"
+                    @change="onEnableChange($event, item.param)"
                   >
                   </el-switch>
                 </el-form-item>
@@ -366,259 +351,7 @@
                   class="reset_button"
                   circle
                   type="primary"
-                  :disabled="GNZJGNBDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="放球仓烟雾报警:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNE">
-                  <el-switch
-                    v-model="formData1.GNZHGNE"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNE')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNEDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="操作室烟雾报警器:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGND">
-                  <el-switch
-                    v-model="formData1.GNZHGND"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GND')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNDDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="操作室水进传感器:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNI">
-                  <el-switch
-                    v-model="formData1.GNZHGNI"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNI')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNIDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="氢气房氢气检测1:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNJ">
-                  <el-switch
-                    v-model="formData1.GNZHGNJ"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNJ')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNJDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="氢气房氢气检测2:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNK">
-                  <el-switch
-                    v-model="formData1.GNZHGNK"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNK')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNKDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="氢气房烟雾报警:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNN">
-                  <el-switch
-                    v-model="formData1.GNZHGNN"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNN')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNNDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="氢气房水进传感器:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNP">
-                  <el-switch
-                    v-model="formData1.GNZHGNP"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNP')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNPDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="氢气房管道压力1:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNL">
-                  <el-switch
-                    v-model="formData1.GNZHGNL"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNL')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNLDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="氢气房管道压力2:">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNM">
-                  <el-switch
-                    v-model="formData1.GNZHGNM"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNM')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNMDisabled"
-                >
-                  复位
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 0" label="氢气房管道压力总:">
-            <el-row v-show="formData1.GNZHGNC !== undefined">
-              <el-col :span="12">
-                <el-form-item prop="GNZHGNC">
-                  <el-switch
-                    v-model="formData1.GNZHGNC"
-                    active-text="开"
-                    inactive-text="关"
-                    @change="onEnableChange($event, 'GNC')"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-button
-                  class="reset_button"
-                  circle
-                  type="primary"
-                  :disabled="GNZJGNCDisabled"
+                  :disabled="!item.state"
                 >
                   复位
                 </el-button>
@@ -633,32 +366,27 @@
 
 <script>
 import { computed, onMounted, onUnmounted, reactive, toRefs } from "vue";
-import { debounce, formatDate } from "../utils/utils";
-import { getResetEnableParam, getEnable, setEnable } from "../api/envCheck";
+import {
+  getResetEnableParam,
+  getEnable,
+  setEnable,
+  setValveState,
+} from "../api/envCheck";
+import { getEnableResetDataMap, getValveTypes } from "../data-map/envCheck";
 import { ElMessage } from "element-plus";
 
 export default {
   setup() {
-    onMounted(() => {
-      window.addEventListener("resize", getMaxHeight);
-      getMaxHeight();
-      getEnableData();
-    });
-    onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
-    const getMaxHeight = debounce(function () {
-      const height = document.body.offsetHeight;
-      state.maxHeight = height * 0.9;
-    });
     const state = reactive({
-      tableData: [],
-      maxHeight: null,
-      resetEnableParams: [],
-      enables: [],
-      formData: {
+      // 阈值数据
+      threshold: {
         GNZA: "",
         GNZB: "",
         GNZC: "",
         GNZE: "",
+      },
+      // 阀门开关数据
+      valve: {
         GNZD: false,
         GNZF: true,
         GNZG: false,
@@ -668,33 +396,10 @@ export default {
         warningGNZG: true,
         warningGNZI: false,
       },
-      formData1: {
-        GNZHGNA: false,
-        GNZHGNB: false,
-        GNZHGNE: false,
-        GNZHGND: false,
-        GNZHGNI: false,
-        GNZHGNJ: false,
-        GNZHGNK: false,
-        GNZHGNN: false,
-        GNZHGNP: false,
-        GNZHGNL: false,
-        GNZHGNM: false,
-        // GNZHGNC: false,
-        // GNZJGNA: true,
-        // GNZJGNB: false,
-        // GNZJGNE: false,
-        // GNZJGND: false,
-        // GNZJGNI: false,
-        // GNZJGNJ: false,
-        // GNZJGNK: false,
-        // GNZJGNN: false,
-        // GNZJGNP: false,
-        // GNZJGNL: false,
-        // GNZJGNM: false,
-        // GNZJGNC: false,
-      },
-      rules: {
+      // 使能复位开关数据
+      enableResetData: [],
+      // 阈值校验规则
+      thresholdRules: {
         GNZA: [
           { type: "number", message: "规定范围0-9999" },
           {
@@ -744,62 +449,59 @@ export default {
           },
         ],
       },
-      rules1: [],
     });
     // 安全阀门开关
-    const GNZDDisabled = computed(() => state.formData.warningGNZD);
-    const GNZFDisabled = computed(() => state.formData.warningGNZF);
-    const GNZGDisabled = computed(() => state.formData.warningGNZG);
-    const GNZIDisabled = computed(() => state.formData.warningGNZI);
-    // 使能、复位
-    const GNZJGNADisabled = computed(() => !state.formData1.GNZHGNA);
-    const GNZJGNBDisabled = computed(() => !state.formData1.GNZHGNB);
-    const GNZJGNEDisabled = computed(() => !state.formData1.GNZHGNE);
-    const GNZJGNDDisabled = computed(() => !state.formData1.GNZHGND);
-    const GNZJGNIDisabled = computed(() => !state.formData1.GNZHGNI);
-    const GNZJGNJDisabled = computed(() => !state.formData1.GNZHGNJ);
-    const GNZJGNKDisabled = computed(() => !state.formData1.GNZHGNK);
-    const GNZJGNNDisabled = computed(() => !state.formData1.GNZHGNN);
-    const GNZJGNPDisabled = computed(() => !state.formData1.GNZHGNP);
-    const GNZJGNLDisabled = computed(() => !state.formData1.GNZHGNL);
-    const GNZJGNMDisabled = computed(() => !state.formData1.GNZHGNM);
-    const GNZJGNCDisabled = computed(() => !state.formData1.GNZHGNC);
-    const columns = [
-      {
-        prop: "col0",
-        label: "观测要素变量编码",
-      },
-      {
-        prop: "col1",
-        label: "观测要素变量名称",
-      },
-      {
-        prop: "col2",
-        label: "单位",
-      },
-      {
-        prop: "col3",
-        label: "乘数因子",
-      },
-      {
-        prop: "col4",
-        label: "字节长度",
-      },
-      {
-        prop: "col5",
-        label: "备注",
-      },
-    ];
+    const GNZDDisabled = computed(() => state.valve.warningGNZD);
+    const GNZFDisabled = computed(() => state.valve.warningGNZF);
+    const GNZGDisabled = computed(() => state.valve.warningGNZG);
+    const GNZIDisabled = computed(() => state.valve.warningGNZI);
+    /**
+     * 设置阈值范围
+     */
+    function submit() {
+      console.log("state.threshold -- ", state.threshold);
+      ElMessage({
+        type: "info",
+        message: "提交阈值范围",
+      });
+    }
+
+    /**
+     * 设置阀门开关
+     */
+    function onValveStateChange(value, name) {
+      if (state.valve["warning" + name]) {
+        return;
+      }
+      const valveState = value ? 1 : 0;
+      const valveType = getValveTypes()[name].type;
+      const actionName = !!value ? "打开" : "关闭";
+      const valveName = getValveTypes()[name].name;
+      setValveState(valveType, valveState).then((r) => {
+        console.log("setValveState result: ", r);
+        const message = `${actionName}${valveName}${
+          r.setValveState ? "成功" : "失败"
+        }`;
+        const type = r.setValveState ? "success" : "error";
+        ElMessage({
+          type: type,
+          message: message,
+          duration: 2000,
+        });
+      });
+    }
+    /**
+     * 设置使能开关
+     */
     function onEnableChange(value, name) {
       console.log(name, ":", value);
-      const s = !!value
-        ? state.enables.includes(name)
-          ? state.enables.join(",")
-          : state.enables.push(name) && state.enables.join(",")
-        : state.enables.includes(name)
-        ? state.enables.splice(state.enables.indexOf(name), 1) &&
-          state.enables.join(",")
-        : state.enables.join(",");
+      let arr = [...state.enableResetData[0], ...state.enableResetData[1]];
+      arr = arr.filter((value) => value.state);
+      let s = arr.reduce((prev, curr) => {
+        return prev + "," + curr.param;
+      }, "");
+      s = s.slice(1);
+
       console.log("string: ", s);
       setEnable(s).then((res) => {
         console.log(res);
@@ -808,50 +510,115 @@ export default {
             message: "操作成功",
             duration: 2000,
           });
-          state.formData1["GNZH" + name] = value;
+          console.log(state.enableResetData);
         } else {
           ElMessage.warning({
             message: "操作失败",
             duration: 3000,
           });
-          state.formData1["GNZH" + name] = !value;
+          const [left, right] = state.enableResetData;
+          let enable = left.find((value) => value.param === name);
+          if (enable) {
+            enable.state = !value;
+            return;
+          }
+          enable = right.find((value) => value.param === name);
+          enable.state = !value;
         }
       });
     }
+    /**
+     * 获取全部使能和存活使能
+     */
     async function getEnableData() {
-      const params = await getResetEnableParam();
-      state.resetEnableParams = params.map((v) => {
-        state.formData1["GNZH" + v.param] = false;
-        return v.param;
+      let params = await getResetEnableParam();
+      params = params.map(({ param }) => {
+        const item = getEnableResetDataMap()[param];
+        return {
+          id: item.id,
+          name: item.name,
+          state: item.state,
+          param,
+        };
       });
+
       const enables = await getEnable();
-      state.enables = enables.map((v) => {
-        state.formData1["GNZH" + v.param] = true;
-        return v.param;
+      enables.map(({ param }) => {
+        const cur = params.find((value) => {
+          return value.param === param;
+        });
+        cur.state = true;
       });
-      console.log(state.formData1, "formdata1");
+
+      state.enableResetData = generateEnableResetData(params);
+    }
+    function generateEnableResetData(arr) {
+      const splitPoint = Math.ceil(arr.length / 2);
+      const left = arr.slice(0, splitPoint);
+      const right = arr.slice(splitPoint);
+      return [left, right];
+    }
+    onMounted(() => {
+      getEnableData();
+      listenEnvironmentalInfo();
+    });
+    onUnmounted(() => {
+      removeListenEnvironmentalInfo();
+    });
+    function removeListenEnvironmentalInfo() {
+      timer && clearInterval(timer);
+      timer = null;
+      // console.log(eb);
+      // eb.close && typeof eb.close === "function" && eb.close();
+    }
+
+    let eb = null;
+    let timer = null;
+    function listenEnvironmentalInfo() {
+      timer && clearInterval(timer);
+      timer = setInterval(() => {
+        console.log("模拟eventbus");
+      }, 30000);
+      /** *
+      const host = process.env.VUE_APP_EVENT_BUS;
+      const options = {
+        vertxbus_reconnect_attempts_max: 5, // Max reconnect attempts
+        vertxbus_reconnect_delay_min: 1000, // Initial delay (in ms) before first reconnect attempt
+        vertxbus_reconnect_delay_max: 5000, // Max delay (in ms) between reconnect attempts
+        vertxbus_reconnect_exponent: 2, // Exponential backoff factor
+        vertxbus_randomization_factor: 0.5 // Randomization factor between 0 and 1
+      };
+      eb = new eventbusClient(`${host}/eventbus`, options);
+      eb.enableReconnect(true);
+      eb.onopen = function() {
+        // 监听数据
+        eb.registerHandler("EnvironmentalInfo", function(err, msg) {
+          console.log("Warning err -- ", err);
+          console.log("Warning message -- ", msg); // 在这里对接收的数据进行一些操作
+          showWarnings(JSON.parse(msg.body));
+        });
+        // eb.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
+      };
+      eb.onreconnect = function(err, msg) {
+        console.log("onreconnect err -- ", err);
+        console.log("onreconnect msg -- ", msg);
+      }; // Optional, will only be called on reconnections
+      eb.onerror = function(err, msg) {
+        console.log("onerror err -- ", err);
+        console.log("onerror msg -- ", msg);
+      };
+      /**/
     }
 
     return {
       ...toRefs(state),
-      columns,
+      submit,
+      onValveStateChange,
       onEnableChange,
       GNZDDisabled,
       GNZFDisabled,
       GNZGDisabled,
       GNZIDisabled,
-      GNZJGNADisabled,
-      GNZJGNBDisabled,
-      GNZJGNEDisabled,
-      GNZJGNDDisabled,
-      GNZJGNIDisabled,
-      GNZJGNJDisabled,
-      GNZJGNKDisabled,
-      GNZJGNNDisabled,
-      GNZJGNPDisabled,
-      GNZJGNLDisabled,
-      GNZJGNMDisabled,
-      GNZJGNCDisabled,
     };
   },
 };

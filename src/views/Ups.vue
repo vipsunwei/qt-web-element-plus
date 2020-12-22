@@ -16,6 +16,7 @@
       >
         <span class="ups-name">{{ item.label }}：</span>
         <el-switch
+          :disabled="disabled && item.label !== '所有电源'"
           v-model="item.state"
           active-text="开"
           inactive-text="关"
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
+import { computed, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 export default {
@@ -65,11 +66,19 @@ export default {
       ],
     });
 
+    const disabled = computed(() => {
+      let r = null;
+      if (!state.ups[0][0].state) {
+        r = true;
+      }
+      return r;
+    });
+
     function onUpsChange(v, item) {
       if (state.loading) return;
       state.loading = true;
       console.log(v, item);
-      if (item.label !== "所有电源") {
+      if (item.label !== "工作室电源") {
         setTimeout(() => {
           const message = `${!!v ? "打开" : "关闭"}${item.label}成功`;
           ElMessage({
@@ -99,7 +108,7 @@ export default {
       router.go(-1);
     }
 
-    return { ...toRefs(state), onUpsChange, back };
+    return { ...toRefs(state), disabled, onUpsChange, back };
   },
 };
 </script>

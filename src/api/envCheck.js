@@ -12,6 +12,134 @@ const request = axios.create({
 });
 
 /**
+ * 查看烟雾阈值
+ * @description /api/environment/getSmokeThreshold
+ * @returns {"Threshold": 60}
+ */
+export function getSmokeThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getSmokeThreshold")
+        .then((res) => res.data)
+        .catch((error) => error);
+}
+/**
+ * 设置烟雾阈值
+ * @description /api/environment/setSmokeThreshold
+ * @param {number|string} smoke 烟雾阈值 取值范围：0~5000
+ * @returns {"setSmokeThreshold": true}
+ */
+export function setSmokeThreshold(smoke) {
+  return IS_MOCK
+    ? Promise.resolve({ setSmokeThreshold: true })
+    : request
+        .get("/api/environment/setSmokeThreshold", {
+          params: {
+            smoke,
+          },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+
+/**
+ * 查看压力阈值
+ * @description /api/environment/getPressThreshold
+ * @returns {"Threshold": 60}
+ */
+export function getPressThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getPressThreshold")
+        .then((res) => res.data)
+        .catch((error) => error);
+}
+/**
+ * 设置压力阈值
+ * @description /api/environment/setPressThreshold
+ * @param {number|string} press 压力阈值 取值范围：0~30000
+ * @returns {"setPressThreshold":true}
+ */
+export function setPressThreshold(press) {
+  return IS_MOCK
+    ? Promise.resolve({ setPressThreshold: true })
+    : request
+        .get("/api/environment/setPressThreshold", {
+          params: {
+            press,
+          },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+
+/**
+ * 查看氢气阈值
+ * @description /api/environment/getHydrogenThreshold
+ * @returns {"Threshold": 60}
+ */
+export function getHydrogenThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getHydrogenThreshold")
+        .then((res) => res.data)
+        .catch((error) => error);
+}
+/**
+ * 设置氢气浓度阈值
+ * @description /api/environment/setHydrogenThreshold
+ * @param {number|string} hydrogen 氢气浓度阈值 取值范围：0~9999
+ * @returns {"setHydrogenThreshold":true}
+ */
+export function setHydrogenThreshold(hydrogen) {
+  return IS_MOCK
+    ? Promise.resolve({ setHydrogenThreshold: true })
+    : request
+        .get("/api/environment/setHydrogenThreshold", {
+          params: {
+            hydrogen,
+          },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+
+/**
+ * 查看时间阈值
+ * @description /api/environment/getOpenTimeThreshold
+ * @returns {"Threshold": 60}
+ */
+export function getOpenTimeThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getOpenTimeThreshold")
+        .then((res) => res.data)
+        .catch((error) => error);
+}
+/**
+ * 设置时间阈值
+ * @description /api/environment/setOpenTimeThreshold
+ * @param {number|string} seconds 时间阈值 取值范围：0~1800秒
+ * @returns 返回值:{"setOpenTimeThreshold":true}
+ */
+export function setOpenTimeThreshold(seconds) {
+  return IS_MOCK
+    ? Promise.resolve({ setOpenTimeThreshold: true })
+    : request
+        .get("/api/environment/setOpenTimeThreshold", {
+          params: {
+            seconds,
+          },
+        })
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+
+/**
  * 设置阀门开关状态
  * @description  /api/environment/setValveState?valveType=3&valveState=1
  * @param {number|string} valveType 阀门类别 1:支路1号阀门,2: 支路2号阀门 ,3: 总阀门 ,4: 安全阀门
@@ -19,6 +147,15 @@ const request = axios.create({
  * @returns 返回值：{ setValveState: true }
  */
 export const setValveState = (valveType, valveState) => {
+  console.log(
+    "🚀 ~ file: envCheck.js ~ line 22 ~ setValveState ~ valveState",
+    valveState
+  );
+  console.log(
+    "🚀 ~ file: envCheck.js ~ line 22 ~ setValveState ~ valveType",
+    valveType
+  );
+
   return IS_MOCK
     ? Promise.resolve({ setValveState: true })
     : request
@@ -79,59 +216,21 @@ export const setEnable = (params) => {
         .catch((err) => err);
 };
 
-export function getWarningAlarmLevel() {
-  let url = "/api/history/getWarningAlarmLevel";
+/**
+ * 报警复位重置功能
+ * @description /api/environment/setReset
+ * @param {string} param 使能编码 例："GNA"
+ * @returns 返回值:{"setReset":true}
+ */
+export function setReset(param) {
   return IS_MOCK
-    ? Promise.resolve(levels)
+    ? Promise.resolve({ setReset: true })
     : request
-        .get(url)
-        .then((res) => res)
-        .catch((err) => err);
-}
-
-export function getWarningAlarmComponent() {
-  return IS_MOCK
-    ? Promise.resolve(types)
-    : request
-        .get("/api/history/getWarningAlarmComponent")
-        .then((res) => res)
-        .catch((err) => err);
-}
-
-// /api/history/getActiveWarningMessage
-export function getActiveWarningMessage() {
-  return IS_MOCK
-    ? Promise.resolve(activeWarningMessage)
-    : request
-        .get("/api/history/getActiveWarningMessage")
-        .then((res) => res)
-        .catch((err) => err);
-}
-
-// /api/history/getWarningMessage
-// ?typeCode=2&startTime=2020-11-10 12:23:23&endTime=2020-11-27 23:00:15&pageSize=10&pageNumber=1&level=2
-export function getWarningMessage({
-  startTime,
-  endTime,
-  level,
-  typeCode,
-  pageNumber,
-  pageSize,
-}) {
-  console.log(startTime, endTime, level, typeCode, pageNumber, pageSize);
-  return IS_MOCK
-    ? Promise.resolve(warningMessage)
-    : request
-        .get("/api/history/getWarningMessage", {
+        .get("/api/environment/setReset", {
           params: {
-            startTime,
-            endTime,
-            level,
-            typeCode,
-            pageNumber,
-            pageSize,
+            param,
           },
         })
-        .then((res) => res)
+        .then((res) => res.data)
         .catch((err) => err);
 }
