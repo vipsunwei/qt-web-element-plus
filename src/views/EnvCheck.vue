@@ -283,9 +283,14 @@ import {
   getPressThreshold,
   getHydrogenThreshold,
   getOpenTimeThreshold,
+  setSmokeThreshold,
+  setPressThreshold,
+  setHydrogenThreshold,
+  setOpenTimeThreshold,
 } from "../api/envCheck";
 import { getEnableResetDataMap, getValveTypes } from "../data-map/envCheck";
 import { ElMessage } from "element-plus";
+import { debounce, sleep } from "../utils/utils";
 
 export default {
   setup() {
@@ -350,7 +355,7 @@ export default {
       },
     });
     /**
-     * 一份阈值数据用户判断阈值是否有修改
+     * 备份一份阈值数据用于判断阈值是否有修改
      */
     const oldThresholdData = {
       smoke: "",
@@ -380,16 +385,100 @@ export default {
       });
     }
     /**
-     * 设置阈值范围
+     * 处理设置阈值范围
+     * @description 做了防抖处理触发立即执行，1000毫秒内不重复触发
      */
-    function onThresholdSubmit() {
-      console.log("state.threshold -- ", state.threshold);
-      ElMessage({
-        type: "info",
-        message: "提交阈值范围",
+    const onThresholdSubmit = debounce(
+      function () {
+        for (const key in oldThresholdData) {
+          if (+oldThresholdData[key] !== thresholdState.threshold[key]) {
+            thresholdFunctions[key](thresholdState.threshold[key]);
+          }
+        }
+      },
+      1000,
+      true
+    );
+    function smokeFn(smoke) {
+      setSmokeThreshold(smoke).then((res) => {
+        console.log("set smoke result -- ", res);
+        if (res.setSmokeThreshold) {
+          oldThresholdData.smoke = smoke;
+        } else {
+          // thresholdState.threshold.smoke = oldThresholdData.smoke;
+        }
+        ElMessage({
+          type: res.setSmokeThreshold ? "success" : "error",
+          message: res.setSmokeThreshold
+            ? "设置烟雾报警器上限成功"
+            : "设置烟雾报警器上限失败",
+          duration: res.setSmokeThreshold ? 2000 : 3000,
+        });
       });
     }
-    // 阀门开关数据
+    function pressFn(press) {
+      setPressThreshold(press).then((res) => {
+        console.log("set press result -- ", res);
+        if (res.setPressThreshold) {
+          oldThresholdData.press = press;
+        } else {
+          // thresholdState.threshold.press = oldThresholdData.press;
+        }
+        ElMessage({
+          type: res.setPressThreshold ? "success" : "error",
+          message: res.setPressThreshold
+            ? "设置管道压力上限成功"
+            : "设置管道压力上限失败",
+          duration: res.setPressThreshold ? 2000 : 3000,
+        });
+      });
+    }
+    function hydrogenFn(hydrogen) {
+      setHydrogenThreshold(hydrogen).then((res) => {
+        console.log("set hydrogen result -- ", res);
+        if (res.setHydrogenThreshold) {
+          oldThresholdData.hydrogen = hydrogen;
+        } else {
+          // thresholdState.threshold.hydrogen = oldThresholdData.hydrogen;
+        }
+        ElMessage({
+          type: res.setHydrogenThreshold ? "success" : "error",
+          message: res.setHydrogenThreshold
+            ? "设置氢气浓度上限成功"
+            : "设置氢气浓度上限失败",
+          duration: res.setHydrogenThreshold ? 2000 : 3000,
+        });
+      });
+    }
+    function openTimeFn(openTime) {
+      setOpenTimeThreshold(openTime).then((res) => {
+        console.log("set open time result -- ", res);
+        if (res.setOpenTimeThreshold) {
+          oldThresholdData.openTime = openTime;
+        } else {
+          // thresholdState.threshold.openTime = oldThresholdData.openTime;
+        }
+        ElMessage({
+          type: res.setOpenTimeThreshold ? "success" : "error",
+          message: res.setOpenTimeThreshold
+            ? "设置时间上限成功"
+            : "设置时间上限失败",
+          duration: res.setOpenTimeThreshold ? 2000 : 3000,
+        });
+      });
+    }
+    /**
+     * 阈值项与处理设置阈值的函数的对应关系
+     * 方便在循环遍历中调用
+     */
+    const thresholdFunctions = {
+      smoke: smokeFn,
+      press: pressFn,
+      hydrogen: hydrogenFn,
+      openTime: openTimeFn,
+    };
+
+    // 阀门开关数据,从event bus获取
     const valveState = reactive({
       valve: [
         [
@@ -416,6 +505,10 @@ export default {
       if (valveState.warning[param]) return;
       setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
         console.log("setValveState result: ", r);
+        if (!r.setValveState) {
+          // 还原开关之前的状态
+          item.status = !value;
+        }
         ElMessage({
           type: r.setValveState ? "success" : "error",
           message: `${value ? "打开" : "关闭"}${getValveTypes()[param].name}${
@@ -450,26 +543,14 @@ export default {
       console.log("string: ", s);
       setEnable(s).then((res) => {
         console.log(res);
-        if (res.setEnable) {
-          ElMessage.success({
-            message: "操作成功",
-            duration: 2000,
-          });
-          console.log(enableResetState.enableResetData);
-        } else {
-          ElMessage.warning({
-            message: "操作失败",
-            duration: 3000,
-          });
-          const [left, right] = enableResetState.enableResetData;
-          let enable = left.find((value) => value.param === item.param);
-          if (enable) {
-            enable.status = !value;
-            return;
-          }
-          enable = right.find((value) => value.param === item.param);
-          enable.status = !value;
+        if (!res.setEnable) {
+          item.status = !value;
         }
+        ElMessage({
+          type: res.setEnable ? "success" : "error",
+          message: res.setEnable ? "操作成功" : "操作失败",
+          duration: res.setEnable ? 2000 : 3000,
+        });
       });
     }
     /**
@@ -481,19 +562,11 @@ export default {
       enableResetState.isResetLoading = true;
       setReset(item.param).then((res) => {
         enableResetState.isResetLoading = false;
-        if (res.setReset) {
-          ElMessage({
-            type: "success",
-            message: "操作成功",
-            duration: 2000,
-          });
-        } else {
-          ElMessage({
-            type: "error",
-            message: "操作失败",
-            duration: 3000,
-          });
-        }
+        ElMessage({
+          type: res.setReset ? "success" : "error",
+          message: res.setReset ? "操作成功" : "操作失败",
+          duration: res.setReset ? 2000 : 3000,
+        });
       });
     }
     /**
@@ -566,9 +639,9 @@ export default {
       eb.onopen = function() {
         // 监听数据
         eb.registerHandler("EnvironmentalInfo", function(err, msg) {
-          console.log("Warning err -- ", err);
-          console.log("Warning message -- ", msg); // 在这里对接收的数据进行一些操作
-          showWarnings(JSON.parse(msg.body));
+          console.log("EnvironmentalInfo err -- ", err);
+          console.log("EnvironmentalInfo message -- ", msg); // 在这里对接收的数据进行一些操作
+          console.log(JSON.parse(msg.body));
         });
         // eb.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
       };
