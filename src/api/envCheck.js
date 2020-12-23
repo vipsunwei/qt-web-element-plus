@@ -14,7 +14,7 @@ const request = axios.create({
 /**
  * 查看烟雾阈值
  * @description /api/environment/getSmokeThreshold
- * @returns {"Threshold": 60}
+ * @returns {object} {"Threshold": 60}
  */
 export function getSmokeThreshold() {
   return IS_MOCK
@@ -28,7 +28,7 @@ export function getSmokeThreshold() {
  * 设置烟雾阈值
  * @description /api/environment/setSmokeThreshold
  * @param {number|string} smoke 烟雾阈值 取值范围：0~5000
- * @returns {"setSmokeThreshold": true}
+ * @returns {object} {"setSmokeThreshold": true}
  */
 export function setSmokeThreshold(smoke) {
   return IS_MOCK
@@ -46,7 +46,7 @@ export function setSmokeThreshold(smoke) {
 /**
  * 查看压力阈值
  * @description /api/environment/getPressThreshold
- * @returns {"Threshold": 60}
+ * @returns {object} {"Threshold": 60}
  */
 export function getPressThreshold() {
   return IS_MOCK
@@ -60,7 +60,7 @@ export function getPressThreshold() {
  * 设置压力阈值
  * @description /api/environment/setPressThreshold
  * @param {number|string} press 压力阈值 取值范围：0~30000
- * @returns {"setPressThreshold":true}
+ * @returns {object} {"setPressThreshold":true}
  */
 export function setPressThreshold(press) {
   return IS_MOCK
@@ -78,7 +78,7 @@ export function setPressThreshold(press) {
 /**
  * 查看氢气阈值
  * @description /api/environment/getHydrogenThreshold
- * @returns {"Threshold": 60}
+ * @returns {object} {"Threshold": 60}
  */
 export function getHydrogenThreshold() {
   return IS_MOCK
@@ -92,7 +92,7 @@ export function getHydrogenThreshold() {
  * 设置氢气浓度阈值
  * @description /api/environment/setHydrogenThreshold
  * @param {number|string} hydrogen 氢气浓度阈值 取值范围：0~9999
- * @returns {"setHydrogenThreshold":true}
+ * @returns {object} {"setHydrogenThreshold":true}
  */
 export function setHydrogenThreshold(hydrogen) {
   return IS_MOCK
@@ -110,7 +110,7 @@ export function setHydrogenThreshold(hydrogen) {
 /**
  * 查看时间阈值
  * @description /api/environment/getOpenTimeThreshold
- * @returns {"Threshold": 60}
+ * @returns {object} {"Threshold": 60}
  */
 export function getOpenTimeThreshold() {
   return IS_MOCK
@@ -223,6 +223,7 @@ export const setEnable = (params) => {
  * @returns 返回值:{"setReset":true}
  */
 export function setReset(param) {
+  console.log("param: ", param);
   return IS_MOCK
     ? Promise.resolve({ setReset: true })
     : request

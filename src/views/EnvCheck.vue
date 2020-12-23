@@ -143,25 +143,24 @@
     >
       <el-row>
         <el-col :span="12" :offset="0">
-          <el-form-item label="氢气浓度上限(0-9999Ppm):" prop="GNZA">
-            <el-input v-model.number="threshold.GNZA"></el-input>
+          <el-form-item label="氢气浓度上限(0-9999Ppm):" prop="hydrogen">
+            <el-input v-model.number="threshold.hydrogen"></el-input>
           </el-form-item>
-          <el-form-item label="管道压力上限(0-30000kPa):" prop="GNZB">
-            <el-input v-model.number="threshold.GNZB"></el-input>
+          <el-form-item label="管道压力上限(0-30000kPa):" prop="press">
+            <el-input v-model.number="threshold.press"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12" :offset="0">
-          <el-form-item label="烟雾报警器上限(0-5000Ppm):" prop="GNZC">
-            <el-input v-model.number="threshold.GNZC"></el-input>
+          <el-form-item label="烟雾报警器上限(0-5000Ppm):" prop="smoke">
+            <el-input v-model.number="threshold.smoke"></el-input>
           </el-form-item>
-          <el-form-item label="开启时间上限设置(0-1800S):" prop="GNZE">
-            <el-input v-model.number="threshold.GNZE"></el-input>
+          <el-form-item label="开启时间上限设置(0-1800S):" prop="openTime">
+            <el-input v-model.number="threshold.openTime"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-form-item style="margin-bottom: 0">
-        <el-button @click="submit">提交</el-button>
+        <el-button @click="onThresholdSubmit">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -169,14 +168,22 @@
   <div style="margin-top: 20px">
     <div class="title">安全阀门开关</div>
     <el-form
-      :model="valve"
       label-width="240px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
     >
       <el-row>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="总阀门:" prop="GNZD">
+        <el-col
+          :span="12"
+          :offset="0"
+          v-for="(col, index) in valve"
+          :key="index"
+        >
+          <el-form-item
+            v-for="item in col"
+            :key="item.type"
+            :label="item.name + ':'"
+          >
             <svg
               style="vertical-align: middle"
               t="1607683926625"
@@ -196,115 +203,14 @@
             </svg>
             <el-switch
               style="margin: 0 20px"
-              v-model="valve.GNZD"
+              v-model="item.status"
               active-text="开"
               inactive-text="关"
-              :disabled="GNZDDisabled"
-              @change="onValveStateChange($event, 'GNZD')"
+              :disabled="warning[item.param]"
+              @change="onValveChange($event, item)"
             ></el-switch>
             <i
-              v-show="valve.warningGNZD"
-              class="el-icon-warning"
-              style="color: #f40; font-size: 24px; vertical-align: middle"
-              title="异常"
-            ></i>
-          </el-form-item>
-          <el-form-item label="支路1阀门:" prop="GNZF">
-            <svg
-              style="vertical-align: middle"
-              t="1607683926625"
-              class="icon"
-              viewBox="0 0 1137 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="941"
-              width="24"
-              height="24"
-            >
-              <path
-                d="M511.650982 227.403885V113.684852H170.562245A56.842426 56.842426 0 1 1 170.562245 0h795.862325a56.842426 56.842426 0 1 1 0 113.684852H625.506737v113.719033h56.842426a56.876607 56.876607 0 0 1 56.876607 56.842426v170.561458h66.51555a170.595639 170.595639 0 0 1 331.552335 56.842426v341.088737a170.527278 170.527278 0 0 1-331.552335 56.842426H331.553121a170.62982 170.62982 0 0 1-331.552335-56.842426v-341.088737a170.561459 170.561459 0 0 1 331.552335-56.842426h66.48137v-170.561458a56.876607 56.876607 0 0 1 56.876607-56.842426z m-56.842426 341.088736H341.089523v227.403885h454.807769v-227.403885z m-227.403885-56.842426a56.876607 56.876607 0 0 0-113.719033 0v341.088737a56.876607 56.876607 0 0 0 113.719033 0z m682.177473 341.088737a56.876607 56.876607 0 0 0 113.719033 0v-341.088737a56.876607 56.876607 0 0 0-113.719033 0zM511.650982 454.807769H625.506737V341.088737h-113.855755z m0 0"
-                p-id="942"
-                fill="#707070"
-              ></path>
-            </svg>
-            <el-switch
-              style="margin: 0 20px"
-              v-model="valve.GNZF"
-              active-text="开"
-              inactive-text="关"
-              :disabled="GNZFDisabled"
-              @change="onValveStateChange($event, 'GNZF')"
-            ></el-switch>
-            <i
-              v-show="valve.warningGNZF"
-              class="el-icon-warning"
-              style="color: #f40; font-size: 24px; vertical-align: middle"
-              title="异常"
-            ></i>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="支路2阀门:" prop="GNZG">
-            <svg
-              style="vertical-align: middle"
-              t="1607683926625"
-              class="icon"
-              viewBox="0 0 1137 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="941"
-              width="24"
-              height="24"
-            >
-              <path
-                d="M511.650982 227.403885V113.684852H170.562245A56.842426 56.842426 0 1 1 170.562245 0h795.862325a56.842426 56.842426 0 1 1 0 113.684852H625.506737v113.719033h56.842426a56.876607 56.876607 0 0 1 56.876607 56.842426v170.561458h66.51555a170.595639 170.595639 0 0 1 331.552335 56.842426v341.088737a170.527278 170.527278 0 0 1-331.552335 56.842426H331.553121a170.62982 170.62982 0 0 1-331.552335-56.842426v-341.088737a170.561459 170.561459 0 0 1 331.552335-56.842426h66.48137v-170.561458a56.876607 56.876607 0 0 1 56.876607-56.842426z m-56.842426 341.088736H341.089523v227.403885h454.807769v-227.403885z m-227.403885-56.842426a56.876607 56.876607 0 0 0-113.719033 0v341.088737a56.876607 56.876607 0 0 0 113.719033 0z m682.177473 341.088737a56.876607 56.876607 0 0 0 113.719033 0v-341.088737a56.876607 56.876607 0 0 0-113.719033 0zM511.650982 454.807769H625.506737V341.088737h-113.855755z m0 0"
-                p-id="942"
-                fill="#707070"
-              ></path>
-            </svg>
-            <el-switch
-              style="margin: 0 20px"
-              v-model="valve.GNZG"
-              active-text="开"
-              inactive-text="关"
-              :disabled="GNZGDisabled"
-              @change="onValveStateChange($event, 'GNZG')"
-            ></el-switch>
-            <i
-              v-show="valve.warningGNZG"
-              class="el-icon-warning"
-              style="color: #f40; font-size: 24px; vertical-align: middle"
-              title="异常"
-            ></i>
-          </el-form-item>
-          <el-form-item label="安全阀:" prop="GNZI">
-            <svg
-              style="vertical-align: middle"
-              t="1607683926625"
-              class="icon"
-              viewBox="0 0 1137 1024"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              p-id="941"
-              width="24"
-              height="24"
-            >
-              <path
-                d="M511.650982 227.403885V113.684852H170.562245A56.842426 56.842426 0 1 1 170.562245 0h795.862325a56.842426 56.842426 0 1 1 0 113.684852H625.506737v113.719033h56.842426a56.876607 56.876607 0 0 1 56.876607 56.842426v170.561458h66.51555a170.595639 170.595639 0 0 1 331.552335 56.842426v341.088737a170.527278 170.527278 0 0 1-331.552335 56.842426H331.553121a170.62982 170.62982 0 0 1-331.552335-56.842426v-341.088737a170.561459 170.561459 0 0 1 331.552335-56.842426h66.48137v-170.561458a56.876607 56.876607 0 0 1 56.876607-56.842426z m-56.842426 341.088736H341.089523v227.403885h454.807769v-227.403885z m-227.403885-56.842426a56.876607 56.876607 0 0 0-113.719033 0v341.088737a56.876607 56.876607 0 0 0 113.719033 0z m682.177473 341.088737a56.876607 56.876607 0 0 0 113.719033 0v-341.088737a56.876607 56.876607 0 0 0-113.719033 0zM511.650982 454.807769H625.506737V341.088737h-113.855755z m0 0"
-                p-id="942"
-                fill="#707070"
-              ></path>
-            </svg>
-            <el-switch
-              style="margin: 0 20px"
-              v-model="valve.GNZI"
-              active-text="开"
-              inactive-text="关"
-              :disabled="GNZIDisabled"
-              @change="onValveStateChange($event, 'GNZI')"
-            ></el-switch>
-            <i
-              v-show="valve.warningGNZI"
+              v-show="warning[item.param]"
               class="el-icon-warning"
               style="color: #f40; font-size: 24px; vertical-align: middle"
               title="异常"
@@ -338,10 +244,10 @@
               <el-col :span="12" :offset="0">
                 <el-form-item :prop="item.param">
                   <el-switch
-                    v-model="item.state"
+                    v-model="item.status"
                     active-text="开"
                     inactive-text="关"
-                    @change="onEnableChange($event, item.param)"
+                    @change="onEnableChange($event, item)"
                   >
                   </el-switch>
                 </el-form-item>
@@ -351,7 +257,8 @@
                   class="reset_button"
                   circle
                   type="primary"
-                  :disabled="!item.state"
+                  :disabled="!item.status"
+                  @click="onResetClick(item)"
                 >
                   复位
                 </el-button>
@@ -365,42 +272,34 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted, reactive, toRefs } from "vue";
+import { onMounted, onUnmounted, reactive, toRefs } from "vue";
 import {
   getResetEnableParam,
+  setReset,
   getEnable,
   setEnable,
   setValveState,
+  getSmokeThreshold,
+  getPressThreshold,
+  getHydrogenThreshold,
+  getOpenTimeThreshold,
 } from "../api/envCheck";
 import { getEnableResetDataMap, getValveTypes } from "../data-map/envCheck";
 import { ElMessage } from "element-plus";
 
 export default {
   setup() {
-    const state = reactive({
+    const thresholdState = reactive({
       // 阈值数据
       threshold: {
-        GNZA: "",
-        GNZB: "",
-        GNZC: "",
-        GNZE: "",
+        hydrogen: "",
+        press: "",
+        smoke: "",
+        openTime: "",
       },
-      // 阀门开关数据
-      valve: {
-        GNZD: false,
-        GNZF: true,
-        GNZG: false,
-        GNZI: true,
-        warningGNZD: true,
-        warningGNZF: false,
-        warningGNZG: true,
-        warningGNZI: false,
-      },
-      // 使能复位开关数据
-      enableResetData: [],
       // 阈值校验规则
       thresholdRules: {
-        GNZA: [
+        hydrogen: [
           { type: "number", message: "规定范围0-9999" },
           {
             validator: function (rule, value, callback) {
@@ -412,7 +311,7 @@ export default {
             trigger: ["blur", "change"],
           },
         ],
-        GNZB: [
+        press: [
           { type: "number", message: "规定范围0-30000" },
           {
             validator: function (rule, value, callback) {
@@ -424,7 +323,7 @@ export default {
             trigger: ["blur", "change"],
           },
         ],
-        GNZC: [
+        smoke: [
           { type: "number", message: "规定范围0-5000" },
           {
             validator: function (rule, value, callback) {
@@ -436,7 +335,7 @@ export default {
             trigger: ["blur", "change"],
           },
         ],
-        GNZE: [
+        openTime: [
           { type: "number", message: "规定范围0-1800" },
           {
             validator: function (rule, value, callback) {
@@ -450,58 +349,104 @@ export default {
         ],
       },
     });
-    // 安全阀门开关
-    const GNZDDisabled = computed(() => state.valve.warningGNZD);
-    const GNZFDisabled = computed(() => state.valve.warningGNZF);
-    const GNZGDisabled = computed(() => state.valve.warningGNZG);
-    const GNZIDisabled = computed(() => state.valve.warningGNZI);
+    /**
+     * 一份阈值数据用户判断阈值是否有修改
+     */
+    const oldThresholdData = {
+      smoke: "",
+      press: "",
+      hydrogen: "",
+      openTime: "",
+    };
+    /**
+     * 获取阈值范围并记录一份阈值数据用于判断是否修改了阈值
+     */
+    function getThreshold() {
+      getSmokeThreshold().then((res) => {
+        thresholdState.threshold.smoke = res.Threshold;
+        oldThresholdData.smoke = res.Threshold;
+      });
+      getPressThreshold().then((res) => {
+        thresholdState.threshold.press = res.Threshold;
+        oldThresholdData.press = res.Threshold;
+      });
+      getHydrogenThreshold().then((res) => {
+        thresholdState.threshold.hydrogen = res.Threshold;
+        oldThresholdData.hydrogen = res.Threshold;
+      });
+      getOpenTimeThreshold().then((res) => {
+        thresholdState.threshold.openTime = res.Threshold;
+        oldThresholdData.openTime = res.Threshold;
+      });
+    }
     /**
      * 设置阈值范围
      */
-    function submit() {
+    function onThresholdSubmit() {
       console.log("state.threshold -- ", state.threshold);
       ElMessage({
         type: "info",
         message: "提交阈值范围",
       });
     }
-
+    // 阀门开关数据
+    const valveState = reactive({
+      valve: [
+        [
+          { ...getValveTypes()["GNZD"] },
+          { ...getValveTypes()["GNZF"], GNZF: true },
+        ],
+        [
+          { ...getValveTypes()["GNZG"] },
+          { ...getValveTypes()["GNZI"], GNZI: true },
+        ],
+      ],
+      warning: {
+        GNZD: false,
+        GNZF: false,
+        GNZG: true,
+        GNZI: false,
+      },
+    });
     /**
      * 设置阀门开关
      */
-    function onValveStateChange(value, name) {
-      if (state.valve["warning" + name]) {
-        return;
-      }
-      const valveState = value ? 1 : 0;
-      const valveType = getValveTypes()[name].type;
-      const actionName = !!value ? "打开" : "关闭";
-      const valveName = getValveTypes()[name].name;
-      setValveState(valveType, valveState).then((r) => {
+    function onValveChange(value, item) {
+      const param = item.param;
+      if (valveState.warning[param]) return;
+      setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
         console.log("setValveState result: ", r);
-        const message = `${actionName}${valveName}${
-          r.setValveState ? "成功" : "失败"
-        }`;
-        const type = r.setValveState ? "success" : "error";
         ElMessage({
-          type: type,
-          message: message,
-          duration: 2000,
+          type: r.setValveState ? "success" : "error",
+          message: `${value ? "打开" : "关闭"}${getValveTypes()[param].name}${
+            r.setValveState ? "成功" : "失败"
+          }`,
+          duration: r.setValveState ? 2000 : 3000,
         });
       });
     }
+
+    // 使能复位数据定义
+    const enableResetState = reactive({
+      isEnableLoading: false,
+      isResetLoading: false,
+      enableResetData: [],
+    });
     /**
      * 设置使能开关
      */
-    function onEnableChange(value, name) {
-      console.log(name, ":", value);
-      let arr = [...state.enableResetData[0], ...state.enableResetData[1]];
-      arr = arr.filter((value) => value.state);
+    function onEnableChange(value, item) {
+      console.log(item.param, ":", value);
+      let arr = [
+        ...enableResetState.enableResetData[0],
+        ...enableResetState.enableResetData[1],
+      ];
       let s = arr.reduce((prev, curr) => {
-        return prev + "," + curr.param;
+        if (curr.status) {
+          prev = !prev ? curr.param : `${prev},${curr.param}`;
+        }
+        return prev;
       }, "");
-      s = s.slice(1);
-
       console.log("string: ", s);
       setEnable(s).then((res) => {
         console.log(res);
@@ -510,20 +455,44 @@ export default {
             message: "操作成功",
             duration: 2000,
           });
-          console.log(state.enableResetData);
+          console.log(enableResetState.enableResetData);
         } else {
           ElMessage.warning({
             message: "操作失败",
             duration: 3000,
           });
-          const [left, right] = state.enableResetData;
-          let enable = left.find((value) => value.param === name);
+          const [left, right] = enableResetState.enableResetData;
+          let enable = left.find((value) => value.param === item.param);
           if (enable) {
-            enable.state = !value;
+            enable.status = !value;
             return;
           }
-          enable = right.find((value) => value.param === name);
-          enable.state = !value;
+          enable = right.find((value) => value.param === item.param);
+          enable.status = !value;
+        }
+      });
+    }
+    /**
+     * 处理点击使能复位按钮
+     */
+    function onResetClick(item) {
+      if (!item.param) return;
+      if (enableResetState.isResetLoading) return;
+      enableResetState.isResetLoading = true;
+      setReset(item.param).then((res) => {
+        enableResetState.isResetLoading = false;
+        if (res.setReset) {
+          ElMessage({
+            type: "success",
+            message: "操作成功",
+            duration: 2000,
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: "操作失败",
+            duration: 3000,
+          });
         }
       });
     }
@@ -532,39 +501,42 @@ export default {
      */
     async function getEnableData() {
       let params = await getResetEnableParam();
+      if (!(params && Array.isArray(params))) return;
       params = params.map(({ param }) => {
         const item = getEnableResetDataMap()[param];
         return {
           id: item.id,
           name: item.name,
-          state: item.state,
+          status: item.status,
           param,
         };
       });
 
       const enables = await getEnable();
+      if (!(enables && Array.isArray(enables))) return;
       enables.map(({ param }) => {
-        const cur = params.find((value) => {
-          return value.param === param;
-        });
-        cur.state = true;
+        const cur = params.find((value) => value.param === param);
+        cur.status = true;
       });
 
-      state.enableResetData = generateEnableResetData(params);
+      enableResetState.enableResetData = splitArr(params);
     }
-    function generateEnableResetData(arr) {
+    // 分割数组，分成两半儿
+    function splitArr(arr) {
       const splitPoint = Math.ceil(arr.length / 2);
       const left = arr.slice(0, splitPoint);
       const right = arr.slice(splitPoint);
       return [left, right];
     }
     onMounted(() => {
+      getThreshold();
       getEnableData();
       listenEnvironmentalInfo();
     });
     onUnmounted(() => {
       removeListenEnvironmentalInfo();
     });
+    // 移除event bus监听
     function removeListenEnvironmentalInfo() {
       timer && clearInterval(timer);
       timer = null;
@@ -574,6 +546,7 @@ export default {
 
     let eb = null;
     let timer = null;
+    // 添加event bus监听
     function listenEnvironmentalInfo() {
       timer && clearInterval(timer);
       timer = setInterval(() => {
@@ -611,14 +584,13 @@ export default {
     }
 
     return {
-      ...toRefs(state),
-      submit,
-      onValveStateChange,
+      ...toRefs(thresholdState),
+      onThresholdSubmit,
+      ...toRefs(valveState),
+      onValveChange,
+      ...toRefs(enableResetState),
       onEnableChange,
-      GNZDDisabled,
-      GNZFDisabled,
-      GNZGDisabled,
-      GNZIDisabled,
+      onResetClick,
     };
   },
 };
