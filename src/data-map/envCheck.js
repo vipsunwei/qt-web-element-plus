@@ -31,11 +31,43 @@ export function getEnableResetDataMap() {
  */
 export function getValveTypes() {
   return {
-    GNZD: { id: 1, param: "GNZD", name: "总阀门", type: 3, status: false },
-    GNZF: { id: 2, param: "GNZF", name: "支路1号阀门", type: 1, status: false },
-    GNZG: { id: 3, param: "GNZG", name: "支路2号阀门", type: 2, status: false },
-    GNZI: { id: 4, param: "GNZI", name: "安全阀门", type: 4, status: false },
+    mainValveStatus: {
+      id: 1,
+      param: "mainValveStatus",
+      name: "总阀门",
+      type: 3,
+      status: false,
+    },
+    branch1ValveStatus: {
+      id: 2,
+      param: "branch1ValveStatus",
+      name: "支路1号阀门",
+      type: 1,
+      status: false,
+    },
+    branch2ValveStatus: {
+      id: 3,
+      param: "branch2ValveStatus",
+      name: "支路2号阀门",
+      type: 2,
+      status: false,
+    },
+    safetyValveStatus: {
+      id: 4,
+      param: "safetyValveStatus",
+      name: "安全阀门",
+      type: 4,
+      status: false,
+    },
+  };
+}
+export function getValveStateMap() {
+  return {
+    branch1ValveStatus: "GNZF",
+    branch2ValveStatus: "GNZG",
+    mainValveStatus: "GNZD",
+    safetyValveStatus: "GNZI",
   };
 }
 
-export default { getEnableResetDataMap, getValveTypes };
+export default { getEnableResetDataMap, getValveTypes, getValveStateMap };

@@ -292,6 +292,9 @@ import { getEnableResetDataMap, getValveTypes } from "../data-map/envCheck";
 import { ElMessage } from "element-plus";
 import { debounce, sleep } from "../utils/utils";
 
+// event bus 假数据
+import ebData, { envInfo } from "../data/eventbus";
+
 export default {
   setup() {
     const thresholdState = reactive({
@@ -482,19 +485,19 @@ export default {
     const valveState = reactive({
       valve: [
         [
-          { ...getValveTypes()["GNZD"] },
-          { ...getValveTypes()["GNZF"], GNZF: true },
+          { ...getValveTypes()["mainValveStatus"] },
+          { ...getValveTypes()["branch1ValveStatus"] },
         ],
         [
-          { ...getValveTypes()["GNZG"] },
-          { ...getValveTypes()["GNZI"], GNZI: true },
+          { ...getValveTypes()["branch2ValveStatus"] },
+          { ...getValveTypes()["safetyValveStatus"] },
         ],
       ],
       warning: {
-        GNZD: false,
-        GNZF: false,
-        GNZG: true,
-        GNZI: false,
+        mainValveStatus: false,
+        branch1ValveStatus: false,
+        branch2ValveStatus: false,
+        safetyValveStatus: false,
       },
     });
     /**
@@ -517,6 +520,45 @@ export default {
           duration: r.setValveState ? 2000 : 3000,
         });
       });
+    }
+    /**
+     * 处理阀门告警
+     */
+    function handleAlarm(alarmInfo) {
+      if (!alarmInfo) return;
+      for (const key in valveState.warning) {
+        if (alarmInfo.includes(key)) {
+          valveState.warning[key] = true;
+        }
+      }
+    }
+    /**
+     * 更新阀门开关状态
+     */
+    function handleValveStatus(info) {
+      const { alarmInfo } = info;
+      handleAlarm(alarmInfo);
+      const valveStatusObj = {
+        branch1ValveStatus: info.branch1ValveStatus,
+        branch2ValveStatus: info.branch2ValveStatus,
+        mainValveStatus: info.mainValveStatus,
+        safetyValveStatus: info.safetyValveStatus,
+      };
+      const [l, r] = valveState.valve;
+      for (const key in valveStatusObj) {
+        const a = l.find((value) => value.param === key);
+        if (a) {
+          a.status = !!valveStatusObj[key];
+        }
+        const b = r.find((value) => value.param === key);
+        if (b) {
+          b.status = !!valveStatusObj[key];
+        }
+      }
+    }
+
+    function handleEnvInfo(info) {
+      const { status } = info;
     }
 
     // 使能复位数据定义
@@ -623,8 +665,10 @@ export default {
     function listenEnvironmentalInfo() {
       timer && clearInterval(timer);
       timer = setInterval(() => {
-        console.log("模拟eventbus");
-      }, 30000);
+        console.log("模拟eventbus", envInfo);
+        handleValveStatus(envInfo);
+        handleEnvInfo(envInfo);
+      }, 3000);
       /** *
       const host = process.env.VUE_APP_EVENT_BUS;
       const options = {
