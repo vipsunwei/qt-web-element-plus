@@ -61,6 +61,7 @@ export function getValveTypes() {
     },
   };
 }
+// 未用到作为记录便于以后查看与编码的对应关系
 export function getValveStateMap() {
   return {
     branch1ValveStatus: "GNZF",

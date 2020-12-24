@@ -7,13 +7,17 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">放球仓氢气1浓度：</el-col>
-            <el-col :span="12" class="p-10">1000 Ppm</el-col>
+            <el-col :span="12" class="p-10">
+              <span v-show="gasThickness1 !== ''">{{ gasThickness1 }} Ppm</span>
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">放球仓氢气1浓度：</el-col>
-            <el-col :span="12" class="p-10">1000 Ppm</el-col>
+            <el-col :span="12" class="p-10">
+              <span v-show="gasThickness2 !== ''">{{ gasThickness2 }} Ppm</span>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -21,13 +25,19 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房总管道压力：</el-col>
-            <el-col :span="12" class="p-10">1000 kPa</el-col>
+            <el-col :span="12" class="p-10">
+              <span v-show="pipePressure !== ''">{{ pipePressure }} kPa</span>
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">操作室烟雾报警器：</el-col>
-            <el-col :span="12" class="p-10">1000 Ppm</el-col>
+            <el-col :span="12" class="p-10">
+              <span v-show="smokeDetector1 !== ''">
+                {{ smokeDetector1 }} Ppm
+              </span>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -35,13 +45,17 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">放球仓烟雾报警器：</el-col>
-            <el-col :span="12" class="p-10">正常</el-col>
+            <el-col :span="12" class="p-10">
+              <span>{{ statusFilter(smokeDetector2) }}</span>
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">环境设备状态：</el-col>
-            <el-col :span="12" class="p-10">正常</el-col>
+            <el-col :span="12" class="p-10">
+              <span>{{ statusFilter(status) }}</span>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -49,13 +63,17 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">环境温度：</el-col>
-            <el-col :span="12" class="p-10">28 ℃</el-col>
+            <el-col :span="12" class="p-10">
+              <span>{{ Math.round(temperature) }} ℃</span>
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">环境湿度：</el-col>
-            <el-col :span="12" class="p-10">20 %RH</el-col>
+            <el-col :span="12" class="p-10">
+              <span>{{ Math.round(humidity) }} %RH</span>
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -63,13 +81,15 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">操作室水浸传感器：</el-col>
-            <el-col :span="12" class="p-10">正常</el-col>
+            <el-col :span="12" class="p-10">
+              {{ sensorFilter(waterLeakSensor) }}
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房氢气1浓度：</el-col>
-            <el-col :span="12" class="p-10">1000 Ppm</el-col>
+            <el-col :span="12" class="p-10">{{ roomGasThickness1 }} Ppm</el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -77,13 +97,13 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房氢气2浓度：</el-col>
-            <el-col :span="12" class="p-10">1000 Ppm</el-col>
+            <el-col :span="12" class="p-10">{{ roomGasThickness2 }} Ppm</el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房支路1管道压力：</el-col>
-            <el-col :span="12" class="p-10">1000 kPa</el-col>
+            <el-col :span="12" class="p-10">{{ roomPipePressure1 }} kPa</el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -91,13 +111,15 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房支路2管道压力：</el-col>
-            <el-col :span="12" class="p-10">1000 kPa</el-col>
+            <el-col :span="12" class="p-10">{{ roomPipePressure2 }} kPa</el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房烟雾报警器：</el-col>
-            <el-col :span="12" class="p-10">不报警</el-col>
+            <el-col :span="12" class="p-10">
+              {{ roomSmokeDetector1 }} Ppm
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -105,13 +127,15 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房水浸传感器：</el-col>
-            <el-col :span="12" class="p-10">正常</el-col>
+            <el-col :span="12" class="p-10">
+              {{ sensorFilter(roomWaterLeakSensor) }}
+            </el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">仓顶秒风风速：</el-col>
-            <el-col :span="12" class="p-10">1 m/s</el-col>
+            <el-col :span="12" class="p-10"> {{ domeWindSpeed }} m/s </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -119,7 +143,7 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">仓顶秒风风向：</el-col>
-            <el-col :span="12" class="p-10">100 °</el-col>
+            <el-col :span="12" class="p-10">{{ domeWindDirection }} °</el-col>
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
@@ -293,10 +317,57 @@ import { ElMessage } from "element-plus";
 import { debounce, sleep } from "../utils/utils";
 
 // event bus 假数据
-import ebData, { envInfo } from "../data/eventbus";
+import { envInfo } from "../data/eventbus";
 
 export default {
   setup() {
+    /**
+     * 环境监测要素数据初始化
+     */
+    const envState = reactive({
+      gasThickness1: "", // 放球仓氢气1浓度（ppm）
+      gasThickness2: "", // 放球仓氢气2浓度（ppm）
+      pipePressure: "", // 氢气房总管道压力（kPa）
+      smokeDetector1: "", // 操作室烟雾报警器（ppm）
+      smokeDetector2: "", // 放球仓烟雾报警器。0正常1异常2报警
+      status: "", // 环境检测设备状态。0正常1异常2报警
+      temperature: "", // 环境温度(精确到1度)
+      humidity: "", // 环境湿度(精确到个位数。既整数)
+      waterLeakSensor: "", // 操作室水进传感器。0正常1异常2进水
+      roomGasThickness1: "", // 氢气房氢气1浓度（ppm）
+      roomGasThickness2: "", // 氢气房氢气2浓度（ppm）
+      roomPipePressure1: "", // 氢气房支路1管道压力（bPa）
+      roomPipePressure2: "", // 氢气房支路2管道压力（bPa）
+      roomSmokeDetector1: "", // 氢气房烟雾报警器1（ppm）
+      roomWaterLeakSensor: "", // 氢气房进水传感器。0正常1异常2进水
+      domeWindSpeed: "", // 仓顶秒风风速（m/s）
+      domeWindDirection: "", // 仓顶秒风风向（度）
+    });
+
+    function statusFilter(v) {
+      const falseArr = ["", null, undefined];
+      const trueArr = ["正常", "异常", "报警"];
+      if (falseArr.includes(v)) return "";
+      return trueArr[v];
+    }
+    // 进水报警器
+    function sensorFilter(v) {
+      const falseArr = ["", null, undefined];
+      const trueArr = ["正常", "异常", "进水"];
+      if (falseArr.includes(v)) return "";
+      return trueArr[v];
+    }
+    /**
+     * 处理环境监测信息
+     */
+    function handleEnvInfo(info) {
+      for (const key in envState) {
+        envState[key] = info[key];
+      }
+    }
+    /**
+     * 阈值数据初始化
+     */
     const thresholdState = reactive({
       // 阈值数据
       threshold: {
@@ -557,10 +628,6 @@ export default {
       }
     }
 
-    function handleEnvInfo(info) {
-      const { status } = info;
-    }
-
     // 使能复位数据定义
     const enableResetState = reactive({
       isEnableLoading: false,
@@ -701,6 +768,9 @@ export default {
     }
 
     return {
+      ...toRefs(envState),
+      statusFilter,
+      sensorFilter,
       ...toRefs(thresholdState),
       onThresholdSubmit,
       ...toRefs(valveState),
