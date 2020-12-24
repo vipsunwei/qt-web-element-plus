@@ -20,6 +20,9 @@
         <el-menu-item index="/env" @click="navTo('/env')">
           环境检测
         </el-menu-item>
+        <el-menu-item index="/seven-needles" @click="navTo('/seven-needles')">
+          七针监测
+        </el-menu-item>
       </el-menu>
     </el-aside>
 

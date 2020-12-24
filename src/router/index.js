@@ -41,6 +41,14 @@ const routes = [
       import(/* webpackChunkName: "env" */ "../views/EnvCheck.vue"),
   },
   {
+    path: "/seven-needles",
+    name: "SevenNeedles",
+    component: () =>
+      import(
+        /* webpackChunkName: "seven-needles" */ "../views/SevenNeedles.vue"
+      ),
+  },
+  {
     path: "/",
     name: "Empty",
     component: Empty,
