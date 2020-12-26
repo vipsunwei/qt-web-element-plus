@@ -147,15 +147,6 @@ export function setOpenTimeThreshold(seconds) {
  * @returns 返回值：{ setValveState: true }
  */
 export const setValveState = (valveType, valveState) => {
-  console.log(
-    "🚀 ~ file: envCheck.js ~ line 22 ~ setValveState ~ valveState",
-    valveState
-  );
-  console.log(
-    "🚀 ~ file: envCheck.js ~ line 22 ~ setValveState ~ valveType",
-    valveType
-  );
-
   return IS_MOCK
     ? Promise.resolve({ setValveState: true })
     : request
