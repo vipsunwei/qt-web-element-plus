@@ -8,7 +8,7 @@
           <el-row>
             <el-col :span="12" class="p-10">放球仓氢气1浓度：</el-col>
             <el-col :span="12" class="p-10">
-              <span v-show="gasThickness1 !== ''">{{ gasThickness1 }} Ppm</span>
+              <span>{{ toFixedFilter(gasThickness1) }} Ppm</span>
             </el-col>
           </el-row>
         </el-col>
@@ -16,7 +16,7 @@
           <el-row>
             <el-col :span="12" class="p-10">放球仓氢气1浓度：</el-col>
             <el-col :span="12" class="p-10">
-              <span v-show="gasThickness2 !== ''">{{ gasThickness2 }} Ppm</span>
+              <span>{{ toFixedFilter(gasThickness2) }} Ppm</span>
             </el-col>
           </el-row>
         </el-col>
@@ -26,7 +26,7 @@
           <el-row>
             <el-col :span="12" class="p-10">氢气房总管道压力：</el-col>
             <el-col :span="12" class="p-10">
-              <span v-show="pipePressure !== ''">{{ pipePressure }} kPa</span>
+              <span>{{ toFixedFilter(pipePressure) }} kPa</span>
             </el-col>
           </el-row>
         </el-col>
@@ -34,9 +34,7 @@
           <el-row>
             <el-col :span="12" class="p-10">操作室烟雾报警器：</el-col>
             <el-col :span="12" class="p-10">
-              <span v-show="smokeDetector1 !== ''">
-                {{ smokeDetector1 }} Ppm
-              </span>
+              <span> {{ toFixedFilter(smokeDetector1) }} Ppm </span>
             </el-col>
           </el-row>
         </el-col>
@@ -64,7 +62,7 @@
           <el-row>
             <el-col :span="12" class="p-10">环境温度：</el-col>
             <el-col :span="12" class="p-10">
-              <span>{{ Math.round(temperature) }} ℃</span>
+              <span>{{ toFixedFilter(temperature, 2) }} ℃</span>
             </el-col>
           </el-row>
         </el-col>
@@ -72,7 +70,7 @@
           <el-row>
             <el-col :span="12" class="p-10">环境湿度：</el-col>
             <el-col :span="12" class="p-10">
-              <span>{{ Math.round(humidity) }} %RH</span>
+              <span>{{ toFixedFilter(humidity, 2) }} %RH</span>
             </el-col>
           </el-row>
         </el-col>
@@ -89,7 +87,9 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房氢气1浓度：</el-col>
-            <el-col :span="12" class="p-10">{{ roomGasThickness1 }} Ppm</el-col>
+            <el-col :span="12" class="p-10"
+              >{{ toFixedFilter(roomGasThickness1) }} Ppm</el-col
+            >
           </el-row>
         </el-col>
       </el-row>
@@ -97,13 +97,17 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房氢气2浓度：</el-col>
-            <el-col :span="12" class="p-10">{{ roomGasThickness2 }} Ppm</el-col>
+            <el-col :span="12" class="p-10"
+              >{{ toFixedFilter(roomGasThickness2) }} Ppm</el-col
+            >
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房支路1管道压力：</el-col>
-            <el-col :span="12" class="p-10">{{ roomPipePressure1 }} kPa</el-col>
+            <el-col :span="12" class="p-10"
+              >{{ toFixedFilter(roomPipePressure1) }} kPa</el-col
+            >
           </el-row>
         </el-col>
       </el-row>
@@ -111,14 +115,16 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房支路2管道压力：</el-col>
-            <el-col :span="12" class="p-10">{{ roomPipePressure2 }} kPa</el-col>
+            <el-col :span="12" class="p-10"
+              >{{ toFixedFilter(roomPipePressure2) }} kPa</el-col
+            >
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">氢气房烟雾报警器：</el-col>
             <el-col :span="12" class="p-10">
-              {{ roomSmokeDetector1 }} Ppm
+              {{ toFixedFilter(roomSmokeDetector1) }} Ppm
             </el-col>
           </el-row>
         </el-col>
@@ -135,7 +141,9 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">仓顶秒风风速：</el-col>
-            <el-col :span="12" class="p-10"> {{ domeWindSpeed }} m/s </el-col>
+            <el-col :span="12" class="p-10">
+              {{ toFixedFilter(domeWindSpeed) }} m/s
+            </el-col>
           </el-row>
         </el-col>
       </el-row>
@@ -143,7 +151,9 @@
         <el-col :span="12" :offset="0">
           <el-row>
             <el-col :span="12" class="p-10">仓顶秒风风向：</el-col>
-            <el-col :span="12" class="p-10">{{ domeWindDirection }} °</el-col>
+            <el-col :span="12" class="p-10"
+              >{{ toFixedFilter(domeWindDirection) }} °</el-col
+            >
           </el-row>
         </el-col>
         <el-col :span="12" :offset="0">
@@ -357,6 +367,12 @@ export default {
       const trueArr = ["正常", "异常", "进水"];
       if (falseArr.includes(v)) return "";
       return trueArr[v];
+    }
+    function toFixedFilter(v, n = 2) {
+      const arr = [0, "0"];
+      if (arr.includes(v)) return "0";
+      if (!v) return "";
+      return typeof v === "number" ? v.toFixed(n) : (+v).toFixed(n);
     }
     /**
      * 处理环境监测信息
@@ -780,6 +796,7 @@ export default {
       ...toRefs(envState),
       statusFilter,
       sensorFilter,
+      toFixedFilter,
       ...toRefs(thresholdState),
       onThresholdSubmit,
       ...toRefs(valveState),
