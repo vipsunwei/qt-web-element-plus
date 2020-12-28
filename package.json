@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.20.0-0",
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.1-beta.8",
+    "element-plus": "^1.0.1-beta.17",
     "howler": "^2.2.1",
     "vertx3-eventbus-client": "^3.9.4",
     "vue": "3.0.3",
