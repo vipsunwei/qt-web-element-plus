@@ -8,21 +8,15 @@
         active-text-color="#fff"
         :default-active="active"
       >
-        <el-menu-item index="/home" @click="navTo('/home')">
-          探空仪数据查询
-        </el-menu-item>
-        <el-menu-item index="/alert" @click="navTo('/alert')">
-          告警信息管理
-        </el-menu-item>
-        <el-menu-item index="/devices" @click="navTo('/devices')">
-          设备监控
-        </el-menu-item>
-        <el-menu-item index="/env" @click="navTo('/env')">
-          环境检测
-        </el-menu-item>
-        <el-menu-item index="/seven-needles" @click="navTo('/seven-needles')">
-          七针监测
-        </el-menu-item>
+        <template v-for="item in routes" :key="item.path">
+          <el-menu-item
+            v-if="!item.hidden"
+            :index="item.path"
+            @click="navTo(item.path)"
+          >
+            {{ item.meta.name }}
+          </el-menu-item>
+        </template>
       </el-menu>
     </el-aside>
 
@@ -42,12 +36,14 @@ export default {
     const active = ref("");
     onMounted(() => (active.value = location.href.split("#")[1]));
     const router = useRouter();
+    const routes = router.options.routes;
     function navTo(path) {
       router.push({ path });
     }
     return {
       navTo,
       active,
+      routes,
     };
   },
 };

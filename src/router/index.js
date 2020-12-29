@@ -6,6 +6,7 @@ const routes = [
   {
     path: "/home",
     name: "Home",
+    meta: { name: "探空仪数据查询" },
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
   },
   // {
@@ -20,29 +21,34 @@ const routes = [
   {
     path: "/alert",
     name: "Alert",
+    meta: { name: "告警信息管理" },
     component: () =>
       import(/* webpackChunkName: "alert" */ "../views/Alert.vue"),
   },
   {
     path: "/devices",
     name: "Devices",
+    meta: { name: "设备监控" },
     component: () =>
       import(/* webpackChunkName: "devices" */ "../views/DeviceMonitor.vue"),
   },
   {
     path: "/ups",
     name: "Ups",
+    hidden: true,
     component: () => import(/* webpackChunkName "ups" */ "../views/Ups.vue"),
   },
   {
     path: "/env",
     name: "Env",
+    meta: { name: "环境检测" },
     component: () =>
       import(/* webpackChunkName: "env" */ "../views/EnvCheck.vue"),
   },
   {
     path: "/seven-needles",
     name: "SevenNeedles",
+    meta: { name: "七针监测" },
     component: () =>
       import(
         /* webpackChunkName: "seven-needles" */ "../views/SevenNeedles.vue"
@@ -51,6 +57,7 @@ const routes = [
   {
     path: "/",
     name: "Empty",
+    hidden: true,
     component: Empty,
   },
 ];
