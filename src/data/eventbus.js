@@ -19,7 +19,7 @@ export const envInfo = {
   roomWaterLeakSensor: 0, // 氢气房进水传感器。0正常1异常2进水
   domeWindSpeed: null, // 仓顶秒风风速（m/s）
   domeWindDirection: null, // 仓顶秒风风向（度）
-  alarmInfo: "branch1ValveStatus,branch2ValveStatus", // 报警信息(哪个要素出现报警哪个要素出现在列表中以空格分隔)
+  alarmInfo: "branch1ValveStatus", // 报警信息(哪个要素出现报警哪个要素出现在列表中以空格分隔)
   // alarmInfo: null, // 报警信息(哪个要素出现报警哪个要素出现在列表中以空格分隔)
   branch1ValveStatus: 0, // 支路1阀门状态
   branch2ValveStatus: 0, // 支路2阀门状态

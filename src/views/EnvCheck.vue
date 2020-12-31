@@ -218,8 +218,17 @@
             :key="item.type"
             :label="item.name + ':'"
           >
+            <el-button
+              type="primary"
+              class="reset_button"
+              circle
+              @click="onSetValveState(true, item)"
+              :disabled="warning[item.param]"
+            >
+              开
+            </el-button>
             <svg
-              style="vertical-align: middle"
+              style="vertical-align: middle; margin: 0 10px"
               t="1607683926625"
               class="icon"
               viewBox="0 0 1137 1024"
@@ -232,21 +241,36 @@
               <path
                 d="M511.650982 227.403885V113.684852H170.562245A56.842426 56.842426 0 1 1 170.562245 0h795.862325a56.842426 56.842426 0 1 1 0 113.684852H625.506737v113.719033h56.842426a56.876607 56.876607 0 0 1 56.876607 56.842426v170.561458h66.51555a170.595639 170.595639 0 0 1 331.552335 56.842426v341.088737a170.527278 170.527278 0 0 1-331.552335 56.842426H331.553121a170.62982 170.62982 0 0 1-331.552335-56.842426v-341.088737a170.561459 170.561459 0 0 1 331.552335-56.842426h66.48137v-170.561458a56.876607 56.876607 0 0 1 56.876607-56.842426z m-56.842426 341.088736H341.089523v227.403885h454.807769v-227.403885z m-227.403885-56.842426a56.876607 56.876607 0 0 0-113.719033 0v341.088737a56.876607 56.876607 0 0 0 113.719033 0z m682.177473 341.088737a56.876607 56.876607 0 0 0 113.719033 0v-341.088737a56.876607 56.876607 0 0 0-113.719033 0zM511.650982 454.807769H625.506737V341.088737h-113.855755z m0 0"
                 p-id="942"
-                fill="#707070"
+                :fill="item.status ? 'green' : 'red'"
               ></path>
             </svg>
-            <el-switch
+
+            <el-button
+              type="primary"
+              class="reset_button"
+              circle
+              @click="onSetValveState(false, item)"
+              :disabled="warning[item.param]"
+            >
+              关
+            </el-button>
+            <!-- <el-switch
               style="margin: 0 20px"
               v-model="item.status"
               active-text="开"
               inactive-text="关"
               :disabled="warning[item.param]"
               @change="onValveChange($event, item)"
-            ></el-switch>
+            ></el-switch> -->
             <i
               v-show="warning[item.param]"
               class="el-icon-warning"
-              style="color: #f40; font-size: 24px; vertical-align: middle"
+              style="
+                color: #f40;
+                font-size: 24px;
+                vertical-align: middle;
+                margin: 0 10px;
+              "
               title="异常"
             ></i>
           </el-form-item>
@@ -389,10 +413,12 @@ export default {
     // 阈值范围
     const { thresholdState, onThresholdSubmit } = useThreshold();
     // 阀门开关
-    const { valveState, onValveChange, handleValveStatus } = useValve(
-      IS_MOCK,
-      IS_MOCK ? envInfo : undefined
-    );
+    const {
+      valveState,
+      onValveChange,
+      handleValveStatus,
+      onSetValveState,
+    } = useValve(IS_MOCK, IS_MOCK ? envInfo : undefined);
     // 使能、复位开关
     const { enableResetState, onResetClick, onEnableChange } = useEnableReset();
     return {
@@ -403,7 +429,8 @@ export default {
       ...toRefs(thresholdState),
       onThresholdSubmit,
       ...toRefs(valveState),
-      onValveChange,
+      // onValveChange,
+      onSetValveState,
       ...toRefs(enableResetState),
       onEnableChange,
       onResetClick,

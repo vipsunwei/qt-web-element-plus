@@ -4,7 +4,7 @@ import { setValveState } from "../api/envCheck";
 import { ElMessage } from "element-plus";
 /**
  * 阀门开关
- * @returns {object} { valveState, handleValveStatus, onValveChange }
+ * @returns {object} { valveState, handleValveStatus, onValveChange, onSetValveState }
  */
 export default function useValve(IS_MOCK, ebData = {}) {
   // 阀门开关数据,从event bus获取
@@ -50,6 +50,27 @@ export default function useValve(IS_MOCK, ebData = {}) {
     });
   }
   /**
+   * 设置阀门开关状态
+   * @param {boolean} value 阀门的开关状态，true：开；false：关
+   * @param {object} item 阀门的信息
+   */
+  function onSetValveState(value, item) {
+    const param = item.param;
+    if (valveState.warning[param]) return;
+    setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
+      console.log("setValveState result: ", r, ebData);
+      if (IS_MOCK) ebData[param] = value ? 1 : 0;
+
+      ElMessage({
+        type: r.setValveState ? "success" : "error",
+        message: `${value ? "打开" : "关闭"}${getValveTypes()[param].name}${
+          r.setValveState ? "成功" : "失败"
+        }`,
+        duration: r.setValveState ? 2000 : 3000,
+      });
+    });
+  }
+  /**
    * 处理阀门告警
    */
   async function handleAlarm(alarmInfo) {
@@ -84,5 +105,5 @@ export default function useValve(IS_MOCK, ebData = {}) {
       }
     }
   }
-  return { valveState, handleValveStatus, onValveChange };
+  return { valveState, handleValveStatus, onValveChange, onSetValveState };
 }
