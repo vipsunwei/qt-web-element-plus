@@ -1,4 +1,4 @@
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import {
   getSmokeThreshold,
@@ -9,6 +9,10 @@ import {
   setPressThreshold,
   setHydrogenThreshold,
   setOpenTimeThreshold,
+  getLowHydrogenThreshold,
+  getLowPressThreshold,
+  setLowHydrogenThreshold,
+  setLowPressThreshold,
 } from "../api/envCheck";
 import { debounce } from "../utils/utils";
 
@@ -18,6 +22,7 @@ import { debounce } from "../utils/utils";
  */
 export default function useThreshold() {
   onMounted(() => getThreshold());
+  const thresholdRef = ref(null);
   /**
    * 阈值数据初始化
    */
@@ -28,6 +33,8 @@ export default function useThreshold() {
       press: "",
       smoke: "",
       openTime: "",
+      lowHydrogen: "",
+      lowPress: "",
     },
     // 阈值校验规则
     thresholdRules: {
@@ -38,6 +45,7 @@ export default function useThreshold() {
             if (value < 0 || value > 9999) {
               return callback(new Error("规定范围0-9999"));
             }
+
             callback();
           },
           trigger: ["blur", "change"],
@@ -50,6 +58,7 @@ export default function useThreshold() {
             if (value < 0 || value > 30000) {
               return callback(new Error("规定范围0-30000"));
             }
+
             callback();
           },
           trigger: ["blur", "change"],
@@ -62,6 +71,7 @@ export default function useThreshold() {
             if (value < 0 || value > 5000) {
               return callback(new Error("规定范围0-5000"));
             }
+
             callback();
           },
           trigger: ["blur", "change"],
@@ -74,6 +84,33 @@ export default function useThreshold() {
             if (value < 0 || value > 1800) {
               return callback(new Error("规定范围0-1800"));
             }
+
+            callback();
+          },
+          trigger: ["blur", "change"],
+        },
+      ],
+      lowHydrogen: [
+        { type: "number", message: "要小于等于氢气告警" },
+        {
+          validator: function(rule, value, callback) {
+            if (value > thresholdState.threshold.hydrogen) {
+              return callback(new Error("要小于等于氢气告警"));
+            }
+
+            callback();
+          },
+          trigger: ["blur", "change"],
+        },
+      ],
+      lowPress: [
+        { type: "number", message: "要小于等于压力告警" },
+        {
+          validator: function(rule, value, callback) {
+            if (value > thresholdState.threshold.press) {
+              return callback(new Error("要小于等于压力告警"));
+            }
+
             callback();
           },
           trigger: ["blur", "change"],
@@ -89,6 +126,8 @@ export default function useThreshold() {
     press: "",
     hydrogen: "",
     openTime: "",
+    lowHydrogen: "",
+    lowPress: "",
   };
   /**
    * 获取阈值范围并记录一份阈值数据用于判断是否修改了阈值
@@ -110,6 +149,14 @@ export default function useThreshold() {
       thresholdState.threshold.openTime = res.Threshold;
       oldThresholdData.openTime = res.Threshold;
     });
+    getLowHydrogenThreshold().then((res) => {
+      thresholdState.threshold.lowHydrogen = res.Threshold;
+      oldThresholdData.lowHydrogen = res.Threshold;
+    });
+    getLowPressThreshold().then((res) => {
+      thresholdState.threshold.lowPress = res.Threshold;
+      oldThresholdData.lowPress = res.threshold;
+    });
   }
   /**
    * 处理设置阈值范围
@@ -117,11 +164,18 @@ export default function useThreshold() {
    */
   const onThresholdSubmit = debounce(
     function() {
-      for (const key in oldThresholdData) {
-        if (+oldThresholdData[key] !== thresholdState.threshold[key]) {
-          thresholdFunctions[key](thresholdState.threshold[key]);
+      thresholdRef.value.validate((valid) => {
+        if (valid) {
+          for (const key in oldThresholdData) {
+            if (+oldThresholdData[key] !== thresholdState.threshold[key]) {
+              thresholdFunctions[key](thresholdState.threshold[key]);
+            }
+          }
+        } else {
+          console.warn("验证不通过");
+          return false;
         }
-      }
+      });
     },
     1000,
     true
@@ -194,6 +248,36 @@ export default function useThreshold() {
       });
     });
   }
+  function lowHydrogenFn(lowHydrogen) {
+    setLowHydrogenThreshold(lowHydrogen).then((res) => {
+      console.log(res);
+      if (res.setLowHydrogenThreshold) {
+        oldThresholdData.lowHydrogen = lowHydrogen;
+      }
+      ElMessage({
+        type: res.setLowHydrogenThreshold ? "success" : "error",
+        message: res.setLowHydrogenThreshold
+          ? "设置氢气轻微警告阈值成功"
+          : "设置氢气轻微警告阈值失败",
+        duration: res.setLowHydrogenThreshold ? 2000 : 3000,
+      });
+    });
+  }
+  function lowPressFn(lowPress) {
+    setLowPressThreshold(lowPress).then((res) => {
+      console.log(res);
+      if (res.setLowPressThreshold) {
+        oldThresholdData.lowPress = lowPress;
+      }
+      ElMessage({
+        type: res.setLowPressThreshold ? "success" : "error",
+        message: res.setLowPressThreshold
+          ? "设置压力轻微告警阈值成功"
+          : "设置压力轻微告警阈值失败",
+        duration: res.setLowPressThreshold ? 2000 : 3000,
+      });
+    });
+  }
   /**
    * 阈值项与处理设置阈值的函数的对应关系
    * 方便在循环遍历中调用
@@ -203,7 +287,9 @@ export default function useThreshold() {
     press: pressFn,
     hydrogen: hydrogenFn,
     openTime: openTimeFn,
+    lowHydrogen: lowHydrogenFn,
+    lowPress: lowPressFn,
   };
 
-  return { thresholdState, onThresholdSubmit };
+  return { thresholdState, onThresholdSubmit, thresholdRef };
 }

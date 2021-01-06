@@ -74,6 +74,32 @@ export function setPressThreshold(press) {
         .then((res) => res.data)
         .catch((err) => err);
 }
+/**
+ * 获取轻微压力警告阈值
+ * @description /api/environment/getLowPressThreshold
+ * @returns {object} {"Threshold":"设备异常"}或{"Threshold":60}
+ */
+export function getLowPressThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getLowPressThreshold")
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+/**
+ * 设置压力轻微告警阈值
+ * @description /api/environment/setLowPressThreshold
+ * @param {number|string} lowPress 压力轻微警告阈值,参数要小于等于  压力告警   要做参数校验
+ * @returns {object} {"setLowPressThreshold":true}
+ */
+export function setLowPressThreshold(lowPress) {
+  return IS_MOCK
+    ? Promise.resolve({ setLowPressThreshold: true })
+    : request.get("/api/environment/setLowPressThreshold", {
+        params: { press: lowPress },
+      });
+}
 
 /**
  * 查看氢气阈值
@@ -105,6 +131,32 @@ export function setHydrogenThreshold(hydrogen) {
         })
         .then((res) => res.data)
         .catch((err) => err);
+}
+/**
+ * 获取轻微氢气警告阈值
+ * @description /api/environment/getLowHydrogenThreshold
+ * @returns {object} {"Threshold":"设备异常"}或{"Threshold":60}
+ */
+export function getLowHydrogenThreshold() {
+  return IS_MOCK
+    ? Promise.resolve({ Threshold: 60 })
+    : request
+        .get("/api/environment/getLowHydrogenThreshold")
+        .then((res) => res.data)
+        .catch((err) => err);
+}
+/**
+ * 设置氢气轻微警告阈值
+ * @description /api/environment/setLowHydrogenThreshold
+ * @param {number|string} lowHydrogen 氢气轻微警告阈值,参数要小于等于  氢气告警   要做参数校验
+ * @returns {object} {"setLowHydrogenThreshold:":true}
+ */
+export function setLowHydrogenThreshold(lowHydrogen) {
+  return IS_MOCK
+    ? Promise.resolve({ setLowHydrogenThreshold: true })
+    : request.get("/api/environment/setLowHydrogenThreshold", {
+        params: { hydrogen: lowHydrogen },
+      });
 }
 
 /**
