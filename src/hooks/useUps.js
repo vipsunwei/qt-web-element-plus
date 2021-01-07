@@ -40,43 +40,41 @@ export default function useUps() {
     });
     upsState.ups = params;
   }
+  function open(v, item) {
+    powerOn(item.param).then((res) => {
+      console.log("powerOn -- ", res);
+      upsState.loading = false;
+      if (res.powerOn) {
+        item.status = v;
+      }
+      ElMessage({
+        type: res.powerOn ? "success" : "error",
+        message: res.powerOn ? `打开${item.name}成功` : `打开${item.name}失败`,
+        duration: res.powerOn ? 2000 : 3000,
+      });
+    });
+  }
+  function close(v, item) {
+    powerOff(item.param).then((res) => {
+      console.log("powerOff -- ", res);
+      upsState.loading = false;
+      if (res.powerOff) {
+        item.status = v;
+      }
+      ElMessage({
+        type: res.powerOff ? "success" : "error",
+        message: res.powerOff ? `关闭${item.name}成功` : `关闭${item.name}失败`,
+        duration: res.powerOff ? 2000 : 3000,
+      });
+    });
+  }
 
   function onUpsChange(v, item) {
     if (upsState.loading) return;
     upsState.loading = true;
     item.status = !v;
     console.log(v, item);
-    if (v) {
-      powerOn(item.param).then((res) => {
-        console.log("powerOn -- ", res);
-        upsState.loading = false;
-        if (res.powerOn) {
-          item.status = v;
-        }
-        ElMessage({
-          type: res.powerOn ? "success" : "error",
-          message: res.powerOn
-            ? `打开${item.name}成功`
-            : `打开${item.name}失败`,
-          duration: res.powerOn ? 2000 : 3000,
-        });
-      });
-    } else {
-      powerOff(item.param).then((res) => {
-        console.log("powerOff -- ", res);
-        upsState.loading = false;
-        if (res.powerOff) {
-          item.status = v;
-        }
-        ElMessage({
-          type: res.powerOff ? "success" : "error",
-          message: res.powerOff
-            ? `关闭${item.name}成功`
-            : `关闭${item.name}失败`,
-          duration: res.powerOff ? 2000 : 3000,
-        });
-      });
-    }
+    v ? open(v, item) : close(v, item);
   }
 
   return { upsState, onUpsChange };
