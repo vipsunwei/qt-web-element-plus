@@ -171,9 +171,7 @@ export default {
     }
     async function getLevels() {
       const result = await getWarningAlarmLevel();
-      if (result.status === 200) {
-        state.levels = formatLevels(result.data);
-      }
+      state.levels = formatLevels(result);
     }
     function onLevelChange(curLevel) {
       console.log("cur level -- ", curLevel, "state.level", state.level);
@@ -198,9 +196,7 @@ export default {
     }
     async function getTypes() {
       const result = await getWarningAlarmComponent();
-      if (result.status === 200) {
-        state.types = formatTypes(result.data);
-      }
+      state.types = formatTypes(result);
     }
     function onTypeChange(curType) {
       console.log("type value -- ", curType, state.type);
@@ -250,10 +246,8 @@ export default {
       }
       state.isLoading = true;
       const result = await getWarningMessage(option);
-      if (result.status === 200) {
-        state.warningMessage = result.data?.dataArray?.slice(0, state.pageSize);
-        state.totalCount = result.data?.totalCount;
-      }
+      state.warningMessage = result?.dataArray?.slice(0, state.pageSize);
+      state.totalCount = result?.totalCount;
       await sleep(800);
       state.isLoading = false;
     }

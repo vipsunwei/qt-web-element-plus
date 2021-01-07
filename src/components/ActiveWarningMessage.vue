@@ -30,14 +30,27 @@
           {{ scope.row?.alarm?.alarmName }}
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button
+            type="primary"
+            size="small"
+            @click="onClickAckAlarm(scope.row?.id)"
+          >
+            确认
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </el-card>
 </template>
 
 <script>
 import { onMounted, onUnmounted, reactive, toRefs } from "vue";
-import { getActiveWarningMessage, getTkyData } from "../api/index";
+import { ackAlarm, getActiveWarningMessage } from "../api/index";
 import { debounce, sleep } from "../utils/utils";
+import { ElMessage } from "element-plus";
+const IS_MOCK = true;
 export default {
   name: "ActiveWarningMessage",
   setup() {
@@ -55,9 +68,7 @@ export default {
     async function getTableData() {
       state.isLoading = true;
       const result = await getActiveWarningMessage();
-      if (result.status === 200) {
-        state.tableData = result.data;
-      }
+      state.tableData = result;
       await sleep(800);
       state.isLoading = false;
     }
@@ -67,7 +78,33 @@ export default {
       maxHeight: null,
     });
 
-    return { ...toRefs(state) };
+    function onClickAckAlarm(id) {
+      console.log("alarm id - ", id);
+      if (!id) return;
+      ackAlarm(id).then((res) => {
+        console.log(res);
+        if (res.ackAlarm) {
+          IS_MOCK ? refreshTableData(id) : getTableData();
+          ElMessage({
+            type: "success",
+            message: "操作成功",
+            duration: 2000,
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: "操作失败",
+            duration: 3000,
+          });
+        }
+      });
+    }
+
+    function refreshTableData(id) {
+      state.tableData = state.tableData.filter((item) => item.id !== id);
+    }
+
+    return { ...toRefs(state), onClickAckAlarm };
   },
 };
 </script>

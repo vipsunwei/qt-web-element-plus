@@ -147,11 +147,9 @@ export default {
       state.isLoading = true;
       const result = await getTkyInfo(st, et);
       console.log("getTkyInfo -- ", result);
-      if (result.status === 200) {
-        tkyids.value = result.data;
-      } else {
-        alert("请求失败");
-      }
+
+      tkyids.value = result;
+
       state.isLoading = false;
     }
     /** 探空仪编号 */
@@ -209,12 +207,12 @@ export default {
       if (state.isLoading) return;
       state.isLoading = true;
       const result = await getBaseTestReport(tkyid.value);
-      const jcResultRecord = result.data?.jcResultRecord;
+      const jcResultRecord = result?.jcResultRecord;
       if (!jcResultRecord.ctime) {
-        jcResultRecord.ctime = result.data?.ctime;
+        jcResultRecord.ctime = result?.ctime;
       }
       if (!jcResultRecord.jcResultStatus) {
-        jcResultRecord.jcResultStatus = result.data?.jcResultStatus;
+        jcResultRecord.jcResultStatus = result?.jcResultStatus;
       }
       jcResultRecord.cTime = formatDate(
         new Date(jcResultRecord.ctime),
@@ -260,7 +258,7 @@ export default {
       if (state.isLoading) return;
       state.isLoading = true;
       const result = await getInstantInfo(tkyid.value);
-      const data = result.data;
+      const data = result;
       data.ctime = formatDate(new Date(data.ctime), "yyyy-MM-dd HH:mm:ss");
       const instantInfoFormatted = [];
       for (const key in data) {
@@ -402,7 +400,7 @@ export default {
         pageNumber: state.pageNumber,
       };
       const result = await getTkyData(option);
-      tkyData.value = result.data;
+      tkyData.value = result;
       state.isLoading = false;
     }
 
