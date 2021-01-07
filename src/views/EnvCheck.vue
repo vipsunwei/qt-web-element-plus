@@ -342,73 +342,16 @@ import useEnvInfo from "../hooks/useEnvInfo";
 import useThreshold from "../hooks/useThreshold";
 import useValve from "../hooks/useValve";
 import useEnableReset from "../hooks/useEnableReset";
-import eventbusClient from "vertx3-eventbus-client";
-// event bus 假数据
-import { envInfo } from "../data/eventbus";
+import useEventBus from "../hooks/useEventBus";
 
 export default {
   setup() {
-    onMounted(() => {
-      listenEnvironmentalInfo();
-    });
-    onUnmounted(() => {
-      removeListenEnvironmentalInfo();
-    });
-    // 移除event bus监听
-    function removeListenEnvironmentalInfo() {
-      if (IS_MOCK) {
-        timer && clearInterval(timer);
-        timer = null;
-      } else {
-        // console.log(eb);
-        eb.close && typeof eb.close === "function" && eb.close();
-      }
-    }
-    // 添加event bus监听
-    function listenEnvironmentalInfo() {
-      if (IS_MOCK) {
-        timer && clearInterval(timer);
-        timer = setInterval(() => {
-          console.log("模拟eventbus", envInfo);
-          handleEnvInfo(envInfo);
-          handleValveStatus(envInfo);
-        }, 1000);
-      } else {
-        //** *
-        const host = process.env.VUE_APP_EVENT_BUS;
-        const options = {
-          vertxbus_reconnect_attempts_max: 5, // Max reconnect attempts
-          vertxbus_reconnect_delay_min: 1000, // Initial delay (in ms) before first reconnect attempt
-          vertxbus_reconnect_delay_max: 5000, // Max delay (in ms) between reconnect attempts
-          vertxbus_reconnect_exponent: 2, // Exponential backoff factor
-          vertxbus_randomization_factor: 0.5, // Randomization factor between 0 and 1
-        };
-        eb = new eventbusClient(`${host}/eventbus`, options);
-        eb.enableReconnect(true);
-        eb.onopen = function () {
-          // 监听数据
-          eb.registerHandler("EnvironmentalInfo", function (err, msg) {
-            console.log("EnvironmentalInfo err -- ", err);
-            console.log("EnvironmentalInfo message -- ", JSON.parse(msg.body)); // 在这里对接收的数据进行一些操作
-            handleEnvInfo(JSON.parse(msg.body));
-            handleValveStatus(JSON.parse(msg.body));
-          });
-          // eb.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
-        };
-        eb.onreconnect = function (err, msg) {
-          console.log("onreconnect err -- ", err);
-          console.log("onreconnect msg -- ", msg);
-        }; // Optional, will only be called on reconnections
-        eb.onerror = function (err, msg) {
-          console.log("onerror err -- ", err);
-          console.log("onerror msg -- ", msg);
-        };
-        /**/
-      }
-    }
     const IS_MOCK = true;
-    let eb = null;
-    let timer = null;
+    useEventBus("EnvironmentalInfo", IS_MOCK, "envInfo", handleEventBusMsg);
+    function handleEventBusMsg(envInfo) {
+      handleEnvInfo(envInfo);
+      handleValveStatus(envInfo);
+    }
     // 环境监测要素
     const {
       envState,
@@ -425,7 +368,7 @@ export default {
       onValveChange,
       handleValveStatus,
       onSetValveState,
-    } = useValve(IS_MOCK, IS_MOCK ? envInfo : undefined);
+    } = useValve(IS_MOCK);
     // 使能、复位开关
     const { enableResetState, onResetClick, onEnableChange } = useEnableReset();
     return {

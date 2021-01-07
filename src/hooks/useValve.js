@@ -2,11 +2,14 @@ import { reactive } from "vue";
 import { getValveTypes } from "../data-map/envCheck";
 import { setValveState } from "../api/envCheck";
 import { ElMessage } from "element-plus";
+
 /**
  * 阀门开关
+ * @param {boolean} IS_MOCK 是否使用模拟假数据
  * @returns {object} { valveState, handleValveStatus, onValveChange, onSetValveState }
  */
-export default function useValve(IS_MOCK, ebData = {}) {
+export default function useValve(IS_MOCK) {
+  const ebData = IS_MOCK ? require("../data/eventbus").default.envInfo : null;
   // 阀门开关数据,从event bus获取
   const valveState = reactive({
     valve: [

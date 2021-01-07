@@ -86,3 +86,16 @@ export function splitArr(arr) {
   const right = arr.slice(splitPoint);
   return [left, right];
 }
+
+/**
+ * 保留n位小数
+ * @param {number|string} v 源数据
+ * @param {number} n 保留小数点后 n 位，默认保留2位小数
+ * @returns {string}
+ */
+export function toFixedFilter(v, n = 2) {
+  const arr = [0, "0"];
+  if (arr.includes(v)) return "0";
+  if (!v) return "";
+  return typeof v === "number" ? v.toFixed(n) : (+v).toFixed(n);
+}

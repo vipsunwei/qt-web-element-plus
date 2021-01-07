@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { toFixedFilter } from "../utils/utils";
 
 /**
  * 环境监测要素
@@ -40,18 +41,6 @@ export default function useEnvInfo() {
     const trueArr = ["正常", "异常", "进水"];
     if (falseArr.includes(v)) return "";
     return trueArr[v];
-  }
-  /**
-   * 保留n位小数
-   * @param {number|string} v 源数据
-   * @param {number} n 保留小数点后 n 位，默认保留2位小数
-   * @returns {string}
-   */
-  function toFixedFilter(v, n = 2) {
-    const arr = [0, "0"];
-    if (arr.includes(v)) return "0";
-    if (!v) return "";
-    return typeof v === "number" ? v.toFixed(n) : (+v).toFixed(n);
   }
   /**
    * 处理环境监测信息

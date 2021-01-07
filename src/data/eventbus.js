@@ -29,7 +29,7 @@ export const envInfo = {
 };
 
 const upsInfo = {
-  id: null,
+  id: 0,
   deviceDiIdVersion: "YPM_600_1",
   stationNumber: null,
   ua: 285450.25, // 三相相电压数据，单位V
@@ -48,7 +48,7 @@ const upsInfo = {
   qc: 0.0, // 无功功率，单位war
   freq: 50.01, // 频率，单位Hz
   impep: 0.0, // 正向有功总电能
-  expep: 5.0470457e10, // 反向有功总电能
+  expep: 5.0470457, // 反向有功总电能 5.0470457e10
   ctime: 1609900806875,
 };
 
