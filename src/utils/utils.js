@@ -78,3 +78,11 @@ export function throttle(fn, gapTime = 300) {
 // 睡眠 单位：毫秒
 export const sleep = (t) =>
   new Promise((resolve) => setTimeout(() => resolve(), t));
+
+// 分割数组，分成两半儿
+export function splitArr(arr) {
+  const splitPoint = Math.ceil(arr.length / 2);
+  const left = arr.slice(0, splitPoint);
+  const right = arr.slice(splitPoint);
+  return [left, right];
+}

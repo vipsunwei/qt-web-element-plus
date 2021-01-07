@@ -5,19 +5,34 @@
     </el-col>
   </el-row>
 
-  <div class="ups" v-loading="loading">
-    <el-row v-for="(row, i) in ups" :key="i">
+  <div class="ups">
+    <el-row>
       <el-col
         class="col"
         :span="12"
         :offset="0"
-        v-for="item in row"
-        :key="item.label"
+        v-for="item in upsInfo"
+        :key="item.param"
       >
-        <span class="ups-name">{{ item.label }}：</span>
+        <span class="ups-name">{{ item.name }}({{ item.param }})：</span>
+        <span>{{ item.value }} {{ item.unit }}</span>
+      </el-col>
+    </el-row>
+  </div>
+
+  <div class="ups" v-loading="loading">
+    <el-row>
+      <el-col
+        class="col"
+        :span="12"
+        :offset="0"
+        v-for="item in ups"
+        :key="item.param"
+      >
+        <span class="ups-name">{{ item.name }}：</span>
         <el-switch
-          :disabled="disabled && item.label !== '所有电源'"
-          v-model="item.state"
+          :disabled="disabled && item.param !== 'MAIN'"
+          v-model="item.status"
           active-text="开"
           inactive-text="关"
           @change="onUpsChange($event, item)"
@@ -29,92 +44,102 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs } from "vue";
-import { ElMessage } from "element-plus";
+import { toRefs, onMounted, onUnmounted, reactive } from "vue";
+import eventbusClient from "vertx3-eventbus-client";
 import { useRouter } from "vue-router";
+import useUps from "../hooks/useUps";
+import { getUpsInfoMap } from "../data-map/ups";
 export default {
   name: "Ups",
   setup() {
-    const router = useRouter();
-    const state = reactive({
-      loading: false,
-      ups: [
-        [
-          { state: false, label: "所有电源" },
-          { state: false, label: "总输入电压、电流、功耗、电源频率和电量" },
-        ],
-        [
-          { state: false, label: "通风照明电源" },
-          { state: false, label: "工作室电源" },
-        ],
-        [
-          { state: false, label: "通风照明电源" },
-          { state: false, label: "通风照明电源" },
-        ],
-        [
-          { state: false, label: "控制室电源" },
-          { state: false, label: "氢气房电源" },
-        ],
-        [
-          { state: false, label: "工作室空调、控制室空调" },
-          { state: false, label: "氢气房空调" },
-        ],
-        [
-          { state: false, label: "摄像机电源" },
-          { state: false, label: "环境检测电源" },
-        ],
-      ],
+    onMounted(() => {
+      listenEventBus();
     });
-
-    const disabled = computed(() => {
-      let r = null;
-      if (!state.ups[0][0].state) {
-        r = true;
-      }
-      return r;
+    onUnmounted(() => {
+      removeListenEventBus();
     });
-
-    function onUpsChange(v, item) {
-      if (state.loading) return;
-      state.loading = true;
-      console.log(v, item);
-      if (item.label !== "工作室电源") {
-        setTimeout(() => {
-          const message = `${!!v ? "打开" : "关闭"}${item.label}成功`;
-          ElMessage({
-            type: "success",
-            message: message,
-            duration: 2000,
-          });
-          state.loading = false;
-        }, 500);
-
-        return;
+    // 移除event bus监听
+    function removeListenEventBus() {
+      if (IS_MOCK) {
+        timer && clearInterval(timer);
+        timer = null;
+      } else {
+        // console.log(eb);
+        eb.close && typeof eb.close === "function" && eb.close();
       }
-
-      setTimeout(() => {
-        const error = `${!!v ? "打开" : "关闭"}${item.label}失败`;
-        ElMessage({
-          type: "error",
-          message: error,
-          duration: 2000,
-        });
-        item.state = !v;
-        state.loading = false;
-      }, 500);
     }
-
+    // 添加event bus监听
+    function listenEventBus() {
+      if (IS_MOCK) {
+        timer && clearInterval(timer);
+        timer = setInterval(() => {
+          console.log(
+            "模拟eventbus -- upsInfo: ",
+            require("../data/eventbus").default.upsInfo
+          );
+          handleUpsInfo(require("../data/eventbus").default.upsInfo);
+        }, 1000);
+      } else {
+        //** *
+        const host = process.env.VUE_APP_EVENT_BUS;
+        const options = {
+          vertxbus_reconnect_attempts_max: 5, // Max reconnect attempts
+          vertxbus_reconnect_delay_min: 1000, // Initial delay (in ms) before first reconnect attempt
+          vertxbus_reconnect_delay_max: 5000, // Max delay (in ms) between reconnect attempts
+          vertxbus_reconnect_exponent: 2, // Exponential backoff factor
+          vertxbus_randomization_factor: 0.5, // Randomization factor between 0 and 1
+        };
+        eb = new eventbusClient(`${host}/eventbus`, options);
+        eb.enableReconnect(true);
+        eb.onopen = function () {
+          // 监听数据
+          eb.registerHandler("PowerInfo", function (err, msg) {
+            console.log("PowerInfo err -- ", err);
+            console.log("PowerInfo message -- ", JSON.parse(msg.body)); // 在这里对接收的数据进行一些操作
+            handleUpsInfo(JSON.parse(msg.body));
+          });
+          // eb.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
+        };
+        eb.onreconnect = function (err, msg) {
+          console.log("onreconnect err -- ", err);
+          console.log("onreconnect msg -- ", msg);
+        }; // Optional, will only be called on reconnections
+        eb.onerror = function (err, msg) {
+          console.log("onerror err -- ", err);
+          console.log("onerror msg -- ", msg);
+        };
+        /**/
+      }
+    }
+    const IS_MOCK = true;
+    let eb = null;
+    let timer = null;
+    const { upsState, onUpsChange } = useUps();
+    const router = useRouter();
     function back() {
       router.go(-1);
     }
+    const upsInfoState = reactive({
+      upsInfo: upsInfoInit(),
+    });
+    function upsInfoInit() {
+      return Object.values(getUpsInfoMap());
+    }
+    function handleUpsInfo(upsInfo) {
+      for (const key in upsInfo) {
+        const cur = upsInfoState.upsInfo.find((value) => value.param === key);
+        cur && (cur.value = upsInfo[key]);
+      }
+    }
 
-    return { ...toRefs(state), disabled, onUpsChange, back };
+    return { ...toRefs(upsState), onUpsChange, back, ...toRefs(upsInfoState) };
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .ups {
+  color: #333;
   border: 1px solid #dcdfe6;
   margin-top: 20px;
   padding: 20px;

@@ -84,7 +84,7 @@ export default function useEnableReset() {
     if (!(enables && Array.isArray(enables))) return;
     enables.map(({ param }) => {
       const cur = params.find((value) => value.param === param);
-      cur.status = true;
+      cur && (cur.status = true);
     });
 
     enableResetState.enableResetData = splitArr(params);

@@ -28,6 +28,31 @@ export const envInfo = {
   ctime: 1608798953203,
 };
 
+const upsInfo = {
+  id: null,
+  deviceDiIdVersion: "YPM_600_1",
+  stationNumber: null,
+  ua: 285450.25, // 三相相电压数据，单位V
+  ub: 122.88, // 三相相电压数据，单位V
+  uc: 122.88, // 三相相电压数据，单位V
+  ia: 17.681, // 三相电流数据，单位A
+  ib: 0.0, // 三相电流数据，单位A
+  ic: 0.0, // 三相电流数据，单位A
+  pt: 0.0, // 有功功率，单位W
+  pa: 0.0, // 有功功率，单位W
+  pb: 0.0, // 有功功率，单位W
+  pc: 0.0, // 有功功率，单位W
+  qt: 0.0, // 无功功率，单位war
+  qa: 0.0, // 无功功率，单位war
+  qb: 0.0, // 无功功率，单位war
+  qc: 0.0, // 无功功率，单位war
+  freq: 50.01, // 频率，单位Hz
+  impep: 0.0, // 正向有功总电能
+  expep: 5.0470457e10, // 反向有功总电能
+  ctime: 1609900806875,
+};
+
 export default {
   envInfo,
+  upsInfo,
 };
