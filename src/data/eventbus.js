@@ -52,7 +52,31 @@ const upsInfo = {
   ctime: 1609900806875,
 };
 
+const gpsInfo = {
+  offset: {
+    totalSeconds: 0,
+    id: "Z",
+    rules: { transitionRules: [], transitions: [], fixedOffset: true },
+  },
+  zone: {
+    id: "UTC",
+    rules: { transitionRules: [], transitions: [], fixedOffset: true },
+  },
+  month: "JANUARY",
+  year: 2021,
+  dayOfMonth: 6,
+  hour: 10,
+  minute: 34,
+  monthValue: 1,
+  nano: 0,
+  second: 30,
+  dayOfWeek: "WEDNESDAY",
+  dayOfYear: 6,
+  chronology: { id: "ISO", calendarType: "iso8601" },
+};
+
 export default {
   envInfo,
   upsInfo,
+  gpsInfo,
 };

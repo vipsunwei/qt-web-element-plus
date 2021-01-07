@@ -39,6 +39,12 @@ const routes = [
     component: () => import(/* webpackChunkName "ups" */ "../views/Ups.vue"),
   },
   {
+    path: "/gps",
+    name: "gps",
+    hidden: true,
+    component: () => import(/* webpackChunkName "gps" */ "../views/Gps.vue"),
+  },
+  {
     path: "/env",
     name: "Env",
     meta: { name: "环境检测" },
