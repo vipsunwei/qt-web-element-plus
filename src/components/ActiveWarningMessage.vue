@@ -33,6 +33,7 @@
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
+            v-if="!scope.row?.ackUser || !scope.row?.ackTime"
             type="primary"
             size="small"
             @click="onClickAckAlarm(scope.row?.id)"
@@ -69,7 +70,6 @@ export default {
       state.isLoading = true;
       const result = await getActiveWarningMessage();
       state.tableData = result;
-      await sleep(800);
       state.isLoading = false;
     }
     const state = reactive({
