@@ -9,11 +9,11 @@ export default function useUps() {
     ups: [],
     loading: false,
     disabled: computed(() => {
-      let r = null;
-      const main = upsState.ups.find((value) => value.param === "MAIN");
-      if (main) {
-        r = !main.status;
-      }
+      let r = false;
+      //   const main = upsState.ups.find((value) => value.param === "MAIN");
+      //   if (main) {
+      //     r = !main.status;
+      //   }
       return r;
     }),
   });
