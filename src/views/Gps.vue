@@ -21,18 +21,22 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive, toRefs, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { getGpsInfoMap } from "../data-map/gps";
 import useEnableReset from "../hooks/useEnableReset";
 import useEventBus from "../hooks/useEventBus";
 
-export default defineComponent({
+export default {
   name: "Gps",
   setup() {
     const IS_MOCK = true;
-    useEventBus("GPS", IS_MOCK, "gpsInfo", handleGpsInfo);
+    useEventBus("GPS", {
+      IS_MOCK,
+      mockDataName: "gpsInfo",
+      callback: handleGpsInfo,
+    });
 
     function handleGpsInfo(gpsInfo) {
       for (const key in gpsInfo) {
@@ -52,7 +56,7 @@ export default defineComponent({
     }
     return { ...toRefs(gpsInfoState), back };
   },
-});
+};
 </script>
 
 <style lang="scss" scoped>

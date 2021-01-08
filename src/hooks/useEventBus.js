@@ -2,18 +2,37 @@ import { onMounted, onUnmounted, reactive } from "vue";
 import eventbusClient from "vertx3-eventbus-client";
 
 /**
- * 使用event bus接收数据
+ *
  * @param {string} channel 通道名称
- * @param {boolean} IS_MOCK 是否使用模拟假数据
- * @param {string} mockDataName 假数据key名
- * @param {function} callback 处理event bus接收到的数据
+ * @param {object} mockOptions 模拟假数据配置项
+ * @param {boolean} mockOptions.IS_MOCK 是否使用模拟假数据
+ * @param {string} mockOptions.mockDataName 假数据key名
+ * @param {null|number} mockOptions.timer 定时器句柄对象
+ * @param {number} mockOptions.timeout 定时器间隔时间 单位ms 默认1000毫秒
+ * @param {number} mockOptions.times 定时器执行的次数 默认3次
+ * @param {function} mockOptions.callback 处理event bus接收到的数据
  */
-export default function useEventBus(channel, IS_MOCK, mockDataName, callback) {
+export default function useEventBus(channel, mockOptions) {
   onMounted(() => listenEventBus());
   onUnmounted(() => removeListenEventBus());
-  let timer = null;
+  const defaultOptions = {
+    IS_MOCK: false,
+    mockDataName: undefined,
+    timer: null,
+    timeout: 1000,
+    times: 3,
+    callback: undefined,
+  };
+  let {
+    IS_MOCK,
+    mockDataName,
+    timer,
+    timeout,
+    times,
+    callback,
+  } = Object.assign({}, defaultOptions, mockOptions);
+
   let eb = null;
-  const timeout = 1000;
   // 移除event bus监听
   function removeListenEventBus() {
     if (IS_MOCK) {
@@ -29,10 +48,16 @@ export default function useEventBus(channel, IS_MOCK, mockDataName, callback) {
     if (IS_MOCK) {
       timer && clearInterval(timer);
       timer = setInterval(() => {
+        if (times <= 0) {
+          clearInterval(timer);
+          timer = null;
+          return;
+        }
+        times--;
         const mockData = require("../data/eventbus").default[mockDataName];
         // mockData.id++;
         // mockData.ib = mockData.ib + 1;
-        console.log(`模拟eventbus -- ${channel}: `, mockData);
+        console.warn(`模拟eventbus -- ${channel}: `, mockData);
         callback && typeof callback === "function" && callback(mockData);
         // state.msg = mockData;
       }, timeout);

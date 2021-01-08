@@ -51,6 +51,7 @@ import { onMounted, onUnmounted, reactive, toRefs } from "vue";
 import { ackAlarm, getActiveWarningMessage } from "../api/index";
 import { debounce, sleep } from "../utils/utils";
 import { ElMessage } from "element-plus";
+import emitter from "../hooks/useMitt";
 const IS_MOCK = true;
 export default {
   name: "ActiveWarningMessage",
@@ -64,13 +65,14 @@ export default {
     const getMaxHeight = debounce(function () {
       const viewHeight = document.body.offsetHeight;
       state.maxHeight = viewHeight * 0.3;
-      console.log(state.maxHeight, typeof state.maxHeight);
+      // console.log(state.maxHeight, typeof state.maxHeight);
     });
     async function getTableData() {
       state.isLoading = true;
       const result = await getActiveWarningMessage();
       state.tableData = result;
       state.isLoading = false;
+      emitter.emit("alarm", result);
     }
     const state = reactive({
       tableData: [],

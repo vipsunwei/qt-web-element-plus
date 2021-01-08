@@ -62,7 +62,11 @@ export default {
   name: "Ups",
   setup() {
     const IS_MOCK = true;
-    useEventBus("PowerInfo", IS_MOCK, "upsInfo", handleUpsInfo);
+    useEventBus("PowerInfo", {
+      IS_MOCK,
+      mockDataName: "upsInfo",
+      callback: handleUpsInfo,
+    });
     const { upsState, onUpsChange } = useUps();
     const router = useRouter();
     function back() {

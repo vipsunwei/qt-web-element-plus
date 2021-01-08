@@ -347,7 +347,11 @@ import useEventBus from "../hooks/useEventBus";
 export default {
   setup() {
     const IS_MOCK = true;
-    useEventBus("EnvironmentalInfo", IS_MOCK, "envInfo", handleEventBusMsg);
+    useEventBus("EnvironmentalInfo", {
+      IS_MOCK,
+      mockDataName: "envInfo",
+      callback: handleEventBusMsg,
+    });
     function handleEventBusMsg(envInfo) {
       handleEnvInfo(envInfo);
       handleValveStatus(envInfo);

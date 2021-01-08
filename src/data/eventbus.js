@@ -28,7 +28,7 @@ export const envInfo = {
   ctime: 1608798953203,
 };
 
-const upsInfo = {
+export const upsInfo = {
   id: 0,
   deviceDiIdVersion: "YPM_600_1",
   stationNumber: null,
@@ -52,7 +52,7 @@ const upsInfo = {
   ctime: 1609900806875,
 };
 
-const gpsInfo = {
+export const gpsInfo = {
   offset: {
     totalSeconds: 0,
     id: "Z",
@@ -75,8 +75,27 @@ const gpsInfo = {
   chronology: { id: "ISO", calendarType: "iso8601" },
 };
 
+export const alarmInfo = {
+  id: 6,
+  alarm: {
+    alarmComponent: "RECEIVER",
+    alarmLevel: "VERY_SERIOUS",
+    alarmName: "充气装置称重设备状态错误报警",
+    key: "1_4_接收机频谱数据到报率不足",
+  },
+  startTime: 1606537349016,
+  endTime: null,
+  alarmDetail: "频谱数据30秒内数据数量小于25条",
+  status: 1,
+  ackTime: null,
+  ackUser: null,
+  ctime: 1606537351908,
+  mtime: 1606537351908,
+};
+
 export default {
   envInfo,
   upsInfo,
   gpsInfo,
+  alarmInfo,
 };
