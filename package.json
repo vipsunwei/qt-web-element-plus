@@ -11,12 +11,13 @@
   "dependencies": {
     "axios": "^0.20.0-0",
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.1-beta.17",
+    "element-plus": "^1.0.1-beta.24",
     "howler": "^2.2.1",
     "mitt": "^2.1.0",
     "vertx3-eventbus-client": "^3.9.4",
     "vue": "3.0.3",
-    "vue-router": "4.0.0-beta.4"
+    "vue-router": "4.0.0-beta.4",
+    "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

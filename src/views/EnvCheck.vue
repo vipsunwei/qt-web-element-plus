@@ -230,7 +230,7 @@
               class="reset_button"
               circle
               @click="onSetValveState(true, item)"
-              :disabled="warning[item.param]"
+              :disabled="isDisabledSetValve(item.param)"
             >
               开
             </el-button>
@@ -257,7 +257,7 @@
               class="reset_button"
               circle
               @click="onSetValveState(false, item)"
-              :disabled="warning[item.param]"
+              :disabled="isDisabledSetValve(item.param)"
             >
               关
             </el-button>
@@ -372,6 +372,7 @@ export default {
       onValveChange,
       handleValveStatus,
       onSetValveState,
+      isDisabledSetValve,
     } = useValve(IS_MOCK);
     // 使能、复位开关
     const { enableResetState, onResetClick, onEnableChange } = useEnableReset();
@@ -386,6 +387,7 @@ export default {
       ...toRefs(valveState),
       // onValveChange,
       onSetValveState,
+      isDisabledSetValve,
       ...toRefs(enableResetState),
       onEnableChange,
       onResetClick,

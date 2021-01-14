@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import { getValveTypes } from "../data-map/envCheck";
 import { setValveState } from "../api/envCheck";
+import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 
 /**
@@ -9,6 +10,7 @@ import { ElMessage } from "element-plus";
  * @returns {object} { valveState, handleValveStatus, onValveChange, onSetValveState }
  */
 export default function useValve(IS_MOCK) {
+  const store = useStore();
   const ebData = IS_MOCK ? require("../data/eventbus").default.envInfo : null;
   // 阀门开关数据,从event bus获取
   const valveState = reactive({
@@ -29,6 +31,12 @@ export default function useValve(IS_MOCK) {
       safetyValveStatus: false,
     },
   });
+  function isDisabledSetValve(valve) {
+    const disableMode = ["AUTO", "SETTING", "INITIALIZING"];
+    return (
+      disableMode.includes(store.state.systemMode) || valveState.warning[valve]
+    );
+  }
   /**
    * 设置阀门开关
    */
@@ -108,5 +116,11 @@ export default function useValve(IS_MOCK) {
       }
     }
   }
-  return { valveState, handleValveStatus, onValveChange, onSetValveState };
+  return {
+    valveState,
+    handleValveStatus,
+    onValveChange,
+    onSetValveState,
+    isDisabledSetValve,
+  };
 }

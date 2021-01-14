@@ -46,7 +46,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        :unlink-panels="false"
+        unlink-panels
         :disabled-date="disabledDate"
         @change="handleDateForTCSJChange"
       ></el-date-picker>

@@ -7,9 +7,9 @@ import eventbusClient from "vertx3-eventbus-client";
  * @param {object} mockOptions 模拟假数据配置项
  * @param {boolean} mockOptions.IS_MOCK 是否使用模拟假数据
  * @param {string} mockOptions.mockDataName 假数据key名
- * @param {null|number} mockOptions.timer 定时器句柄对象
- * @param {number} mockOptions.timeout 定时器间隔时间 单位ms 默认1000毫秒
- * @param {number} mockOptions.times 定时器执行的次数 默认3次
+ * @param {null|number} mockOptions.timer 延时器句柄对象
+ * @param {number} mockOptions.timeout 延时器间隔时间 单位ms 默认1000毫秒
+ * @param {number} mockOptions.times 延时器执行的次数 默认一直发
  * @param {function} mockOptions.callback 处理event bus接收到的数据
  */
 export default function useEventBus(channel, mockOptions) {
@@ -20,7 +20,7 @@ export default function useEventBus(channel, mockOptions) {
     mockDataName: undefined,
     timer: null,
     timeout: 1000,
-    times: 3,
+    times: Infinity,
     callback: undefined,
   };
   let {
@@ -36,31 +36,45 @@ export default function useEventBus(channel, mockOptions) {
   // 移除event bus监听
   function removeListenEventBus() {
     if (IS_MOCK) {
-      timer && clearInterval(timer);
-      timer = null;
+      timer && clearTimeout(timer);
+      // timer = null;
     } else {
       // console.log(eb);
       eb.close && typeof eb.close === "function" && eb.close();
     }
   }
+  function sendMockData() {
+    timer && clearTimeout(timer);
+    if (times <= 0) return;
+    timer = setTimeout(() => {
+      if (times !== Infinity) {
+        times--;
+      }
+      const mockData = require("../data/eventbus").default[mockDataName];
+      console.warn(`模拟eventbus -- ${channel}: `, mockData);
+      callback && typeof callback === "function" && callback(mockData);
+      sendMockData();
+    }, timeout);
+  }
   // 添加event bus监听
   function listenEventBus() {
     if (IS_MOCK) {
-      timer && clearInterval(timer);
-      timer = setInterval(() => {
-        if (times <= 0) {
-          clearInterval(timer);
-          timer = null;
-          return;
-        }
-        times--;
-        const mockData = require("../data/eventbus").default[mockDataName];
-        // mockData.id++;
-        // mockData.ib = mockData.ib + 1;
-        console.warn(`模拟eventbus -- ${channel}: `, mockData);
-        callback && typeof callback === "function" && callback(mockData);
-        // state.msg = mockData;
-      }, timeout);
+      sendMockData();
+      // timer && clearInterval(timer);
+      // timer = setInterval(() => {
+      //   if (times <= 0) {
+      //     clearInterval(timer);
+      //     timer = null;
+      //     return;
+      //   }
+      //   times--;
+      //   const mockData = require("../data/eventbus").default[mockDataName];
+      //   // mockData.id++;
+      //   // mockData.ib = mockData.ib + 1;
+      //   console.warn(`模拟eventbus -- ${channel}: `, mockData);
+      //   callback && typeof callback === "function" && callback(mockData);
+      //   // state.msg = mockData;
+      // }, timeout);
     } else {
       //** *
       const host = process.env.VUE_APP_EVENT_BUS;

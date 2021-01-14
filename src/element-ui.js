@@ -22,10 +22,15 @@ import {
   ElFormItem,
   ElInput,
   ElSwitch,
+  ElHeader,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
 } from "element-plus";
 
 const components = [
   ElContainer,
+  ElHeader,
   ElAside,
   ElMain,
   ElMenu,
@@ -48,6 +53,9 @@ const components = [
   ElFormItem,
   ElInput,
   ElSwitch,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem,
 ];
 
 function useElementUi(app) {
