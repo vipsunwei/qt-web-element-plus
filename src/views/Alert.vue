@@ -57,12 +57,11 @@ export default {
       notificationInstance.close();
     }
     const IS_MOCK = true;
-    useEventBus("Warning", {
+    useEventBus("Warning", ebHandler, {
       IS_MOCK,
       mockDataName: "alarmInfo",
       times: 5,
       timeout: 100,
-      callback: ebHandler,
     });
     function ebHandler(alarmInfo) {
       console.info("eventbus来消息了！");
@@ -71,7 +70,7 @@ export default {
 
     function add(o) {
       const alarm = o.alarm;
-      const src = voiceMap[alarm.alarmName];
+      const src = voiceMap[alarm.alarmName] || voiceMap["未找到报警语音"];
       o.src = src;
       queue.add(o);
     }
