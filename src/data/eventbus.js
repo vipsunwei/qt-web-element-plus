@@ -93,9 +93,19 @@ export const alarmInfo = {
   mtime: 1606537351908,
 };
 
+export const systemMode = {
+  SystemMode: "AUTO",
+};
+
+export const test = {
+  test: "test-test",
+};
+
 export default {
   envInfo,
   upsInfo,
   gpsInfo,
   alarmInfo,
+  systemMode,
+  test,
 };

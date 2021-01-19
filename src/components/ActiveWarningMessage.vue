@@ -52,10 +52,10 @@ import { ackAlarm, getActiveWarningMessage } from "../api/index";
 import { debounce, sleep } from "../utils/utils";
 import { ElMessage } from "element-plus";
 import emitter from "../hooks/useMitt";
-const IS_MOCK = true;
 export default {
   name: "ActiveWarningMessage",
   setup() {
+    const IS_MOCK = true;
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();

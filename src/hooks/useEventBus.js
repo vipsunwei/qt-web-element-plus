@@ -4,15 +4,15 @@ import eventbusClient from "vertx3-eventbus-client";
 /**
  *
  * @param {string} channel 通道名称
+ * @param {function} callback 处理event bus接收到的数据
  * @param {object} mockOptions 模拟假数据配置项
  * @param {boolean} mockOptions.IS_MOCK 是否使用模拟假数据
  * @param {string} mockOptions.mockDataName 假数据key名
  * @param {null|number} mockOptions.timer 延时器句柄对象
  * @param {number} mockOptions.timeout 延时器间隔时间 单位ms 默认1000毫秒
  * @param {number} mockOptions.times 延时器执行的次数 默认一直发
- * @param {function} mockOptions.callback 处理event bus接收到的数据
  */
-export default function useEventBus(channel, mockOptions) {
+export default function useEventBus(channel, callback, mockOptions) {
   onMounted(() => listenEventBus());
   onUnmounted(() => removeListenEventBus());
   const defaultOptions = {
@@ -21,16 +21,12 @@ export default function useEventBus(channel, mockOptions) {
     timer: null,
     timeout: 1000,
     times: Infinity,
-    callback: undefined,
   };
-  let {
-    IS_MOCK,
-    mockDataName,
-    timer,
-    timeout,
-    times,
-    callback,
-  } = Object.assign({}, defaultOptions, mockOptions);
+  let { IS_MOCK, mockDataName, timer, timeout, times } = Object.assign(
+    {},
+    defaultOptions,
+    mockOptions
+  );
 
   let eb = null;
   // 移除event bus监听

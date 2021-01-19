@@ -32,10 +32,9 @@ export default {
   name: "Gps",
   setup() {
     const IS_MOCK = true;
-    useEventBus("GPS", {
+    useEventBus("GPS", handleGpsInfo, {
       IS_MOCK,
       mockDataName: "gpsInfo",
-      callback: handleGpsInfo,
     });
 
     function handleGpsInfo(gpsInfo) {
