@@ -93,19 +93,44 @@ export const alarmInfo = {
   mtime: 1606537351908,
 };
 
-export const systemMode = {
-  SystemMode: "AUTO",
-};
+export const systemMode = [
+  {
+    SystemMode: "AUTO",
+  },
+];
 
-export const test = {
-  test: "test-test",
-};
-
+const releaseStep1 = [
+  {
+    ReleaseStep: "WAITING_COMMAND",
+  },
+  {
+    ReleaseStep: "POWER_SOND",
+  },
+  {
+    ReleaseStep: "CHECKING",
+  },
+  {
+    ReleaseStep: "CHECKING_SUCCESS",
+  },
+  {
+    ReleaseStep: "RELEASED",
+  },
+  {
+    ReleaseStep: "PERFORMING_ASCENDING_SOUNDING",
+  },
+  {
+    ReleaseStep: "PERFORMING_DESCENDING_SOUNDING",
+  },
+  {
+    ReleaseStep: "SOUNDING_TERMINATED",
+  },
+].reverse();
+export const releaseStep = [...releaseStep1, ...releaseStep1];
 export default {
   envInfo,
   upsInfo,
   gpsInfo,
   alarmInfo,
   systemMode,
-  test,
+  releaseStep,
 };
