@@ -22,18 +22,8 @@
 
     <el-container>
       <el-header height="60px" class="my-header">
-        <el-dropdown @command="handleCommand">
-          <el-button type="primary" plain>
-            系统模式：{{ systemMode }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="AUTO">自动模式</el-dropdown-item>
-              <el-dropdown-item command="MANUAL">手动模式</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <release-steps></release-steps>
+        <system-mode></system-mode>
       </el-header>
 
       <el-main>
@@ -46,17 +36,14 @@
 <script>
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import SystemMode from "../components/SystemMode.vue";
+import ReleaseSteps from "../components/ReleaseSteps.vue";
 export default {
+  components: {
+    SystemMode,
+    ReleaseSteps,
+  },
   setup() {
-    const store = useStore();
-    const systemMode = computed(() => {
-      return store.getters.systemMode;
-    });
-    store.dispatch("getSystemMode");
-    function handleCommand(command) {
-      store.dispatch("setSystemMode", command);
-    }
     const active = ref("");
     onMounted(() => (active.value = location.href.split("#")[1]));
     const router = useRouter();
@@ -68,8 +55,6 @@ export default {
       navTo,
       active,
       routes,
-      systemMode,
-      handleCommand,
     };
   },
 };
@@ -83,7 +68,7 @@ export default {
 .my-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border-bottom: 1px solid #eaecef;
 }
 </style>
