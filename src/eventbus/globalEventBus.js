@@ -1,4 +1,6 @@
 import eventbusClient from "vertx3-eventbus-client";
+import { shuffle } from "lodash-es";
+
 let eventbus = null;
 export function useEventBus() {
   return eventbus;
@@ -49,7 +51,7 @@ function getTimer({ channel, handler, timer, timeout, times, mockDataName }) {
       const mockData = require("../data/eventbus").default[mockDataName];
       let mock = null;
       if (times === Infinity) {
-        mock = mockData[0];
+        mock = shuffle(mockData)[0];
       } else {
         mock = mockData[times];
       }

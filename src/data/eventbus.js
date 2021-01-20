@@ -95,7 +95,16 @@ export const alarmInfo = {
 
 export const systemMode = [
   {
+    SystemMode: "SETTING",
+  },
+  {
+    SystemMode: "INITIALIZING",
+  },
+  {
     SystemMode: "AUTO",
+  },
+  {
+    SystemMode: "MANUAL",
   },
 ];
 
