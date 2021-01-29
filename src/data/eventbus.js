@@ -93,6 +93,44 @@ export const alarmInfo = {
   mtime: 1606537351908,
 };
 
+export const warning = [
+  alarmInfo,
+  {
+    id: 7,
+    alarm: {
+      alarmComponent: "RECEIVER",
+      alarmLevel: "VERY_SERIOUS",
+      alarmName: "自动气象站数据到报率不足",
+      key: "1_4_接收机频谱数据到报率不足",
+    },
+    startTime: 1606537349016,
+    endTime: null,
+    alarmDetail: "频谱数据30秒内数据数量小于25条",
+    status: 1,
+    ackTime: null,
+    ackUser: null,
+    ctime: 1606537351908,
+    mtime: 1606537351908,
+  },
+  {
+    id: 8,
+    alarm: {
+      alarmComponent: "RECEIVER",
+      alarmLevel: "VERY_SERIOUS",
+      alarmName: "环境检测装置风速值错误",
+      key: "1_4_接收机频谱数据到报率不足",
+    },
+    startTime: 1606537349016,
+    endTime: null,
+    alarmDetail: "频谱数据30秒内数据数量小于25条",
+    status: 1,
+    ackTime: null,
+    ackUser: null,
+    ctime: 1606537351908,
+    mtime: 1606537351908,
+  },
+];
+
 export const systemMode = [
   {
     SystemMode: "SETTING",
@@ -142,4 +180,5 @@ export default {
   alarmInfo,
   systemMode,
   releaseStep,
+  warning,
 };

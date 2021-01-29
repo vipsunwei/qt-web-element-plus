@@ -15,7 +15,6 @@ export default createStore({
     SET_STEPS(state, value) {
       state.steps = value;
     },
-
     SET_SYSTEM_MODE(state, value) {
       state.systemMode = value;
     },
@@ -40,7 +39,7 @@ export default createStore({
         });
       }
       commit("SET_STEPS", steps);
-      console.info("steps from event bus -- ", steps);
+      // console.info("steps from event bus -- ", steps);
     },
     async getReleaseStep({ commit }) {
       const result = await getReleaseStep();
@@ -60,7 +59,7 @@ export default createStore({
         });
         commit("SET_STEPS", arr);
       }
-      console.info("steps from get method --", arr);
+      // console.info("steps from get method --", arr);
     },
     async setSystemMode({ commit }, value) {
       const result = await setSystemMode(value);

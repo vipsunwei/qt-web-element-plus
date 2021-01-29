@@ -2,9 +2,9 @@ import eventbusClient from "vertx3-eventbus-client";
 import { shuffle } from "lodash-es";
 
 let eventbus = null;
-export function useEventBus() {
-  return eventbus;
-}
+// export function useEventBus() {
+//   return eventbus;
+// }
 function registerHandler(eb, channels) {
   for (let i = 0; i < channels.length; i++) {
     const item = channels[i];
@@ -55,7 +55,7 @@ function getTimer({ channel, handler, timer, timeout, times, mockDataName }) {
       } else {
         mock = mockData[times];
       }
-      console.info(mock);
+      // console.info(mock);
       handler(mock);
       fn();
     }, timeout);
@@ -107,6 +107,6 @@ export default function install(app, args) {
         registerHandler(eventbus, channels);
       }
     };
-    // app.config.globalProperties.$eventbus = eventbus;
+    app.config.globalProperties.$eventbus = eventbus;
   }
 }
