@@ -28,12 +28,16 @@ import ipPhone from "../assets/ip-phone.jpg";
 import dy from "../assets/dianyuan.jpg";
 import gps from "../assets/gps.jpg";
 import { useRouter } from "vue-router";
+const { videoUrl, IPTelephone } = {
+  videoUrl: "http://192.168.0.2",
+  IPTelephone: "https://192.168.0.100/login_web.htm",
+};
 export default {
   setup() {
     const state = reactive({
       deviceList: [
-        { n: 0, path: "/video", name: "视频监控", img: sxt },
-        { n: 0, path: "/ipPhone", name: "IP电话", img: ipPhone },
+        { n: 0, url: videoUrl, name: "视频监控", img: sxt },
+        { n: 0, url: IPTelephone, name: "IP电话", img: ipPhone },
         { n: 0, path: "/ups", name: "电源管理", img: dy },
         { n: 0, path: "/gps", name: "GPS", img: gps },
       ],
@@ -42,7 +46,9 @@ export default {
     const router = useRouter();
     function onClick(item) {
       // console.log(item);
-      router.push({ path: item.path });
+      item.path && router.push({ path: item.path });
+      item.url && window.open(item.url); // 打开新浏览器窗口
+      // item.url && (window.location.href = item.url);
     }
 
     return { ...toRefs(state), onClick };
