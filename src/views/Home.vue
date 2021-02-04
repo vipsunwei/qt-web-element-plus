@@ -305,6 +305,9 @@ export default {
       showTkyData();
     }
     function disabledDate(time) {
+      if (!date.value) {
+        return false;
+      }
       let st = date.value[0]?.getTime();
       let et = date.value[1]?.getTime();
       return time.getTime() > et || time.getTime() < st;
