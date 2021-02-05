@@ -69,32 +69,32 @@
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column label="alarmComponent">
+      <el-table-column label="报警源">
         <template #default="scope">
           <span>{{ scope.row?.alarm?.alarmComponent }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="alarmLevel">
+      <el-table-column label="报警级别">
         <template #default="scope">
           <span>{{ scope.row?.alarm?.alarmLevel }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="alarmName">
+      <el-table-column label="报警名称">
         <template #default="scope">
           <span>{{ scope.row?.alarm?.alarmName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="status">
+      <el-table-column label="状态">
         <template #default="scope">
           <span>{{ scope.row?.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="ackTime">
+      <el-table-column label="确认时间">
         <template #default="scope">
           <span>{{ scope.row?.ackTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="ackUser">
+      <el-table-column label="确认人">
         <template #default="scope">
           <span>{{ scope.row?.ackUser }}</span>
         </template>

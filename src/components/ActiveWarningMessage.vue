@@ -15,17 +15,17 @@
     >
       <el-table-column type="index" align="center" label="#" width="80">
       </el-table-column>
-      <el-table-column label="alarmComponent">
+      <el-table-column label="报警源">
         <template #default="scope">
           {{ scope.row?.alarm?.alarmComponent }}
         </template>
       </el-table-column>
-      <el-table-column label="alarmLevel">
+      <el-table-column label="报警级别">
         <template #default="scope">
           {{ scope.row?.alarm?.alarmLevel }}
         </template>
       </el-table-column>
-      <el-table-column label="alarmName">
+      <el-table-column label="报警名称">
         <template #default="scope">
           {{ scope.row?.alarm?.alarmName }}
         </template>
