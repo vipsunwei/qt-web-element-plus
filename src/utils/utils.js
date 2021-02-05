@@ -99,3 +99,9 @@ export function toFixedFilter(v, n = 2) {
   if (!v) return "";
   return typeof v === "number" ? v.toFixed(n) : (+v).toFixed(n);
 }
+
+export function getMuted() {
+  let audioConfig = localStorage.getItem("audio-config");
+  audioConfig && (audioConfig = JSON.parse(audioConfig));
+  return audioConfig?.muted;
+}

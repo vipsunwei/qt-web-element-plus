@@ -1,8 +1,7 @@
 <template>
-  <el-container style="height: 100vh">
+  <el-container>
     <el-aside class="left" width="200px">
       <el-menu
-        style="height: 100%"
         background-color="#009ac6"
         text-color="#fff"
         active-text-color="#fff"
@@ -18,6 +17,7 @@
           </el-menu-item>
         </template>
       </el-menu>
+      <!-- <el-button @click="toWSL">维色拉</el-button> -->
     </el-aside>
 
     <el-container>
@@ -51,16 +51,29 @@ export default {
     function navTo(path) {
       router.push({ path });
     }
+    // function toWSL() {
+    //   window.open("https://192.168.0.1:9443");
+    // }
     return {
       navTo,
       active,
       routes,
+      // toWSL,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.left {
+  background-color: #009ac6;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+.left ::v-deep(.el-menu) {
+  border-right: 0;
+}
 .left ::v-deep(.el-menu-item.is-active) {
   background-color: #026a8e !important;
 }

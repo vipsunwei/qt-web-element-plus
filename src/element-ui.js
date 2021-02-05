@@ -28,6 +28,7 @@ import {
   ElDropdownItem,
   ElSteps,
   ElStep,
+  ElDrawer,
 } from "element-plus";
 
 const components = [
@@ -60,6 +61,7 @@ const components = [
   ElDropdownItem,
   ElSteps,
   ElStep,
+  ElDrawer,
 ];
 
 function useElementUi(app) {

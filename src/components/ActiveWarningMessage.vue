@@ -55,7 +55,7 @@ import emitter from "../hooks/useMitt";
 export default {
   name: "ActiveWarningMessage",
   setup() {
-    const IS_MOCK = true;
+    const IS_MOCK = false;
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();

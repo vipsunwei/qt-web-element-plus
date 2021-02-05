@@ -3,7 +3,7 @@
 import axios from "axios";
 const host = process.env.VUE_APP_HOST;
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
-const IS_MOCK = true; // 切换假数据开关
+const IS_MOCK = false; // 切换假数据开关
 
 const request = axios.create({
   baseURL: host,
@@ -18,4 +18,10 @@ export function getReleaseStep() {
   return IS_MOCK
     ? Promise.resolve({ ReleaseStep: "SOUNDING_TERMINATED" })
     : request.get("/api/environment/getReleaseStep");
+}
+
+export function resetReleaseStep() {
+  return IS_MOCK
+    ? Promise.resolve({ resetReleaseStep: true })
+    : request.get("/api/environment/resetReleaseStep");
 }

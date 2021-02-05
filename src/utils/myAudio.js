@@ -3,8 +3,9 @@ class MyAudio extends Audio {
     super(url);
     if (!MyAudio._instance) {
       this.isPlaying = false;
-      this.src = url || null;
+      this.src = url || "";
       this.autoplay = true;
+      this.muted = false;
       MyAudio._instance = this;
     }
     return MyAudio._instance;
@@ -12,6 +13,9 @@ class MyAudio extends Audio {
   setSrc(url) {
     this.src = url;
     // MyAudio._instance.src = url;
+  }
+  setMuted(isMuted) {
+    this.muted = isMuted;
   }
   addListener(eventName, callback) {
     MyAudio._instance.addEventListener(eventName, callback);
@@ -21,6 +25,6 @@ class MyAudio extends Audio {
   }
 }
 
-export default function useMyAudio(url) {
+export default function getMyAudio(url) {
   return new MyAudio(url);
 }

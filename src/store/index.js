@@ -4,8 +4,17 @@ import { mode } from "../data-map/systemMode";
 import { releaseStepMap } from "../data-map/releaseStep";
 import { ElMessage } from "element-plus";
 import { getReleaseStep } from "../api/releaseStep";
+import stepsVioce from "../assets/steps/index";
+import getMyAudio from "../utils/myAudio";
 const startStep = ["WAITING_COMMAND"];
 const overStep = ["SOUNDING_TERMINATED", "SOUNDING_ABORTED"];
+
+const myAudio = getMyAudio();
+function playStepsVioce(item) {
+  const src = stepsVioce[item.title];
+  myAudio.setSrc(src);
+}
+
 export default createStore({
   state: {
     systemMode: "",
@@ -39,7 +48,8 @@ export default createStore({
         });
       }
       commit("SET_STEPS", steps);
-      // console.info("steps from event bus -- ", steps);
+      console.info("steps from event bus -- ", mapItem);
+      playStepsVioce(mapItem);
     },
     async getReleaseStep({ commit }) {
       const result = await getReleaseStep();

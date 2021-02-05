@@ -31,7 +31,7 @@ import useEventBus from "../hooks/useEventBus";
 export default {
   name: "Gps",
   setup() {
-    const IS_MOCK = true;
+    const IS_MOCK = false;
     useEventBus("GPS", handleGpsInfo, {
       IS_MOCK,
       mockDataName: "gpsInfo",

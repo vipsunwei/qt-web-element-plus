@@ -9,12 +9,15 @@
         :key="item.id"
       ></el-step>
     </el-steps>
+    <el-button type="primary" size="mini" @click="reset"> 重置步序 </el-button>
   </div>
 </template>
 
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { resetReleaseStep } from "@/api/releaseStep.js";
+import { ElMessage } from "element-plus";
 export default {
   name: "ReleaseSteps",
   setup() {
@@ -24,7 +27,25 @@ export default {
       return store.state.steps;
     });
 
-    return { steps };
+    function reset() {
+      resetReleaseStep().then((res) => {
+        console.info(res);
+        if (res.resetReleaseStep) {
+          ElMessage({
+            type: "success",
+            message: "重置成功",
+            duration: 2000,
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: "重置失败",
+            duration: 3000,
+          });
+        }
+      });
+    }
+    return { steps, reset };
   },
 };
 </script>

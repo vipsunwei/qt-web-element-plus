@@ -5,9 +5,13 @@ class MyAudio extends Audio {
       this.isPlaying = false;
       this.src = url || null;
       this.autoplay = true;
+      this.muted = false;
       MyAudio._instance = this;
     }
     return MyAudio._instance;
+  }
+  setMuted(value) {
+    this.muted = value;
   }
   setSrc(url) {
     this.src = url;

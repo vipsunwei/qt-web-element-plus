@@ -21,7 +21,7 @@ const routes = [
   {
     path: "/alert",
     name: "Alert",
-    meta: { name: "告警信息管理" },
+    meta: { name: "报警信息管理" },
     component: () =>
       import(/* webpackChunkName: "alert" */ "../views/Alert.vue"),
   },

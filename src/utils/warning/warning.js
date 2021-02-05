@@ -3,12 +3,28 @@ import useAudioQueue from "@/hooks/useAudioQueue.js";
 import useMyAudio from "@/hooks/useMyAudio.js";
 import emitter from "@/hooks/useMitt";
 import { ElNotification, ElMessageBox } from "element-plus";
-
+import { getMuted } from "@/utils/utils.js";
+let orignalSetItem = localStorage.setItem;
+localStorage.setItem = function(key, newValue) {
+  let setItemEvent = new Event("storageChange");
+  setItemEvent.newValue = newValue;
+  window.dispatchEvent(setItemEvent);
+  orignalSetItem.apply(this, arguments);
+};
 const queue = useAudioQueue();
 const audio1 = useMyAudio();
 
+getMuted() && audio1.setMuted(getMuted());
+window.addEventListener("storageChange", (e) => {
+  let newValue = e.newValue && JSON.parse(e.newValue);
+
+  if (newValue.hasOwnProperty("muted")) {
+    audio1.setMuted(newValue.muted);
+  }
+});
 audio1.addListener("ended", onEnded);
 audio1.addListener("error", onError);
+
 // let isAdded = false;
 const getMediaErrorMessage = (error) => {
   // return Object.keys(Object.getPrototypeOf(error.currentTarget.error)).find(
