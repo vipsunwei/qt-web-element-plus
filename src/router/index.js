@@ -61,6 +61,33 @@ const routes = [
       ),
   },
   {
+    path: "/device-enable",
+    name: "DeviceEnable",
+    meta: { name: "设备使能" },
+    component: () =>
+      import(
+        /* webpackChunkName: "device-enable" */ "../views/DeviceEnable.vue"
+      ),
+  },
+  {
+    path: "/users-manager",
+    name: "UsersManager",
+    meta: { name: "用户管理" },
+    component: () =>
+      import(
+        /* webpackChunkName: "users-manager" */ "../views/UsersManager.vue"
+      ),
+  },
+  {
+    path: "/check-params-config",
+    name: "CheckParamsConfig",
+    meta: { name: "检测参数配置" },
+    component: () =>
+      import(
+        /* webpackChunkName: "check-params-config" */ "../views/CheckParamsConfig.vue"
+      ),
+  },
+  {
     path: "/",
     name: "Empty",
     hidden: true,
