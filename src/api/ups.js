@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getToken } from "../utils/utils";
+
 const host = process.env.VUE_APP_HOST;
 let IS_MOCK = false;
 const request = axios.create({
@@ -12,21 +14,24 @@ request.interceptors.response.use(
 );
 
 export function getPowerParam() {
+  const url = `/api/power/getPowerParam?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/ups").default.data)
-    : request.get("/api/power/getPowerParam");
+    : request.get(url);
 }
 
 export function getPowerStatus() {
+  const url = `/api/power/getPowerStatus?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/ups").default.state)
-    : request.get("/api/power/getPowerStatus");
+    : request.get(url);
 }
 
 export function powerOn(powerType) {
+  const url = `/api/power/powerOn?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ powerOn: true })
-    : request.get("/api/power/powerOn", {
+    : request.get(url, {
         params: {
           powerType,
         },
@@ -34,9 +39,10 @@ export function powerOn(powerType) {
 }
 
 export function powerOff(powerType) {
+  const url = `/api/power/powerOff?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ powerOff: true })
-    : request.get("/api/power/powerOff", {
+    : request.get(url, {
         params: {
           powerType,
         },

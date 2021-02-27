@@ -114,8 +114,9 @@ export default {
     function onGetTkyIdClick() {
       getSondeId().then((res) => {
         if (res.SondeId) {
-          const id = parseInt("0x" + res.SondeId);
-          state.sondeId = id;
+          // const id = parseInt("0x" + res.SondeId);
+          // state.sondeId = id;
+          state.sondeId = res.SondeId;
         }
       });
     }

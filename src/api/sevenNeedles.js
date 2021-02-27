@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
 
@@ -17,10 +18,11 @@ const request = axios.create({
  * @returns 返回值:{"powerOn":true}
  */
 export function powerOn() {
+  const url = `/api/sevenPin/powerOn?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ powerOn: true })
     : request
-        .get("/api/sevenPin/powerOn")
+        .get(url)
         .then((res) => res.data)
         .catch((error) => error);
 }
@@ -31,10 +33,11 @@ export function powerOn() {
  * @returns 返回值:{"powerOff":true}
  */
 export function powerOff() {
+  const url = `/api/sevenPin/powerOff?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ powerOff: true })
     : request
-        .get("/api/sevenPin/powerOff")
+        .get(url)
         .then((res) => res.data)
         .catch((error) => error);
 }
@@ -45,10 +48,11 @@ export function powerOff() {
  * @returns 返回值:{"SondeFreq":403.452}
  */
 export function getSondeFreq() {
+  const url = `/api/sevenPin/getSondeFreq?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ SondeFreq: 403.452 })
     : request
-        .get("/api/sevenPin/getSondeFreq")
+        .get(url)
         .then((res) => res.data)
         .catch((err) => err);
 }
@@ -59,10 +63,11 @@ export function getSondeFreq() {
  * @returns 返回值:{"SondeId":"7F7F7F7F"}
  */
 export function getSondeId() {
+  const url = `/api/sevenPin/getSondeId?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ SondeId: "7F7F7F7F" })
     : request
-        .get("/api/sevenPin/getSondeId")
+        .get(url)
         .then((res) => res.data)
         .catch((err) => err);
 }
@@ -73,10 +78,11 @@ export function getSondeId() {
  * @returns 返回值:{"setSondeFreq":true}
  */
 export function setSondeFreq(sondeFreq) {
+  const url = `/api/sevenPin/setSondeFreq?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ setSondeFreq: true })
     : request
-        .get("/api/sevenPin/setSondeFreq", {
+        .get(url, {
           params: {
             sondeFreq,
           },

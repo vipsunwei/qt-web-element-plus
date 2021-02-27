@@ -1,15 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- <script src="<%= BASE_URL %>qwebchannel.js"></script> -->
+    <script>
+      // new QWebChannel(qt.webChannelTransport, function(channel) {
+      //   window.bridge = channel.objects.bridge;
+      //   if (window.bridge) {
+      //     const token = window.bridge.getToken();
+      //     console.log(
+      //       "token from qt -- ",
+      //       token,
+      //       "\ntoken 数据类型是：",
+      //       typeof token
+      //     );
+      //     sessionStorage.setItem("qt-token", JSON.stringify(token));
+      //   }
+      // });
+
+      /**
+       * @param {string} url
+       * @returns {Object}
+       */
+      function getQueryObject(url) {
+        url = url == null ? window.location.href : url;
+        const search = url.substring(url.lastIndexOf("?") + 1);
+        const obj = {};
+        const reg = /([^?&=]+)=([^?&=]*)/g;
+        search.replace(reg, (rs, $1, $2) => {
+          const name = decodeURIComponent($1);
+          let val = decodeURIComponent($2);
+          val = String(val);
+          obj[name] = val;
+          return rs;
+        });
+        return obj;
+      }
+      const o = getQueryObject();
+      if (o && o.token) {
+        sessionStorage.setItem("qt-token", o.token);
+      }
+      // alert("token is " + o.token);
+    </script>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>
+        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to continue.
+      </strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

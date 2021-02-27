@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
 console.log("🚀 ~ file: index.js ~ host", host);
@@ -16,9 +17,11 @@ request.interceptors.response.use(
 
 // /api/history/getTkyInfo?startTime=2020-11-11 12:23:23&endTime=2020-11-19 23:00:15
 export const getTkyInfo = (st, et) => {
+  const token = getToken();
+  const url = `/api/history/getTkyInfo?token=${token}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/tkyinfo").default.data)
-    : request.get("/api/history/getTkyInfo", {
+    : request.get(url, {
         params: {
           startTime: st,
           endTime: et,
@@ -29,9 +32,11 @@ export const getTkyInfo = (st, et) => {
 // /api/history/getBaseTestReport?tkyid=11
 export const getBaseTestReport = (tkyid) => {
   console.log("tkyid: ", tkyid);
+  const token = getToken();
+  const url = `/api/history/getBaseTestReport?token=${token}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/baseTestReport").default.data)
-    : request.get("/api/history/getBaseTestReport", {
+    : request.get(url, {
         params: {
           tkyid,
         },
@@ -41,9 +46,10 @@ export const getBaseTestReport = (tkyid) => {
 // /api/history/getInstantInfo?tkyid=11
 export const getInstantInfo = (tkyid) => {
   console.log("tkyid: ", tkyid);
+  const url = `/api/history/getInstantInfo?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/instantInfo").default.data)
-    : request.get("/api/history/getInstantInfo", {
+    : request.get(url, {
         params: {
           tkyid,
         },
@@ -60,9 +66,10 @@ export const getTkyData = ({
   pageNumber,
 }) => {
   console.log(tkyid, startTime, endTime, pageSize, pageNumber);
+  const url = `/api/history/getTkyData?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/tkyData").default.data)
-    : request.get("/api/history/getTkyData", {
+    : request.get(url, {
         params: {
           tkyid,
           startTime,
@@ -74,23 +81,25 @@ export const getTkyData = ({
 };
 
 export function getWarningAlarmLevel() {
-  let url = "/api/history/getWarningAlarmLevel";
+  let url = `/api/history/getWarningAlarmLevel?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/levels").default.data)
     : request.get(url);
 }
 
 export function getWarningAlarmComponent() {
+  const url = `/api/history/getWarningAlarmComponent?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/types").default.data)
-    : request.get("/api/history/getWarningAlarmComponent");
+    : request.get(url);
 }
 
 // /api/history/getActiveWarningMessage
 export function getActiveWarningMessage() {
+  const url = `/api/history/getActiveWarningMessage?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/activeWarningMessage").default.data)
-    : request.get("/api/history/getActiveWarningMessage");
+    : request.get(url);
 }
 
 // /api/history/getWarningMessage
@@ -104,9 +113,10 @@ export function getWarningMessage({
   pageSize,
 }) {
   console.log(startTime, endTime, level, typeCode, pageNumber, pageSize);
+  const url = `/api/history/getWarningMessage?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve(require("../data/warningMessage").default.data)
-    : request.get("/api/history/getWarningMessage", {
+    : request.get(url, {
         params: {
           startTime,
           endTime,
@@ -124,9 +134,10 @@ export function getWarningMessage({
  * @returns {object} {"ackAlarm":true}是否成功
  */
 export function ackAlarm(id) {
+  const url = `/api/environment/ackAlarm?token=${getToken()}`;
   return IS_MOCK
     ? Promise.resolve({ ackAlarm: true })
-    : request.get("/api/environment/ackAlarm", {
+    : request.get(url, {
         params: {
           id,
         },
