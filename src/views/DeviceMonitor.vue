@@ -36,8 +36,8 @@ export default {
   setup() {
     const state = reactive({
       deviceList: [
-        { n: 0, url: videoUrl, name: "视频监控", img: sxt },
-        { n: 0, url: IPTelephone, name: "IP电话", img: ipPhone },
+        // { n: 0, url: videoUrl, name: "视频监控", img: sxt },
+        // { n: 0, url: IPTelephone, name: "IP电话", img: ipPhone },
         { n: 0, path: "/ups", name: "电源管理", img: dy },
         { n: 0, path: "/gps", name: "GPS", img: gps },
       ],
@@ -47,7 +47,7 @@ export default {
     function onClick(item) {
       // console.log(item);
       item.path && router.push({ path: item.path });
-      item.url && window.open(item.url); // 打开新浏览器窗口
+      // item.url && window.open(item.url); // 打开新浏览器窗口
       // item.url && (window.location.href = item.url);
     }
 

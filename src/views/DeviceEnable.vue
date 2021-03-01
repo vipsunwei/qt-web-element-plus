@@ -36,38 +36,73 @@ import {
   closeDeviceEnable,
 } from "../api/deviceEnable";
 import { onMounted, reactive, toRefs } from "vue";
+import { ElMessage } from "element-plus";
 export default {
   setup() {
-    // onMounted(() => deviceEnable());
+    onMounted(() => deviceEnable());
     const deviceEnableState = reactive({
-      deviceEnable: [
-        {
-          name: "设备使能开关1",
-          status: true,
-        },
-        {
-          name: "设备使能开关2",
-          status: false,
-        },
-        {
-          name: "设备使能开关3",
-          status: false,
-        },
-      ],
+      deviceEnable: [],
     });
     // 获取全部设备使能
     function deviceEnable() {
-      getDeviceEnable().then((data) => console.log("device enable -- ", data));
+      getDeviceEnable().then((data) => {
+        deviceEnableState.deviceEnable = formatDeviceEnable(data);
+      });
+    }
+    function formatDeviceEnable(data) {
+      return data.map((item) => {
+        return formatDataItem(item);
+      });
+    }
+    function formatDataItem(item) {
+      return Object.keys(item).reduce((prev, current) => {
+        prev.name = current;
+        prev.status = item[current];
+        return prev;
+      }, {});
     }
     // 开启
-    function openEnable() {}
+    function openEnable(param) {
+      openDeviceEnable(param).then((res) => {
+        if (res.openDeviceEnable) {
+          ElMessage({
+            type: "success",
+            message: "操作成功",
+            duration: 2000,
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: "操作失败",
+            duration: 3000,
+          });
+        }
+      });
+    }
 
     // 关闭
-    function closeEnable() {}
+    function closeEnable(param) {
+      closeDeviceEnable(param).then((res) => {
+        if (res.closeDeviceEnable) {
+          ElMessage({
+            type: "success",
+            message: "操作成功",
+            duration: 2000,
+          });
+        } else {
+          ElMessage({
+            type: "error",
+            message: "操作失败",
+            duration: "3000",
+          });
+        }
+      });
+    }
 
     // 使能变化
     function onEnableChange(e, item) {
       console.log(e, item);
+      e ? openEnable({ Dtype: item.name }) : closeEnable({ Dtype: item.name });
     }
 
     return { ...toRefs(deviceEnableState), onEnableChange };

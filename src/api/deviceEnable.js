@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "../utils/utils";
 
-// const IS_MOCK = false;
+const IS_MOCK = false;
 const host = process.env.VUE_APP_HOST;
 const request = axios.create({
   baseURL: host,
@@ -17,10 +17,21 @@ export function getDeviceEnable() {
   if (token) {
     url += `?token=${token}`;
   }
-  return request
-    .get(url)
-    .then((res) => res.data)
-    .catch((error) => error);
+  return IS_MOCK
+    ? Promise.resolve([
+        { YINF: true },
+        { YP7: false },
+        { YAWS: true },
+        { YPM: false },
+        { YBMB: true },
+        { YGPS: true },
+        { YEMS: true },
+        { YSRP: false },
+      ])
+    : request
+        .get(url)
+        .then((res) => res.data)
+        .catch((error) => error);
 }
 
 /**
@@ -33,10 +44,12 @@ export function closeDeviceEnable(param) {
   const token = getToken();
   let url = `/api/environment/closeDeviceEnable?token=${token}&Dtype=${param.Dtype}`;
 
-  return request
-    .get(url)
-    .then((res) => res.data)
-    .catch((error) => error);
+  return IS_MOCK
+    ? Promise.resolve({ closeDeviceEnable: true })
+    : request
+        .get(url)
+        .then((res) => res.data)
+        .catch((error) => error);
 }
 
 /**
@@ -48,8 +61,10 @@ export function closeDeviceEnable(param) {
 export function openDeviceEnable(param) {
   const token = getToken();
   let url = `/api/environment/openDeviceEnable?token=${token}&Dtype=${param.Dtype}`;
-  return request
-    .get(url)
-    .then((res) => res.data)
-    .catch((error) => error);
+  return IS_MOCK
+    ? Promise.resolve({ openDeviceEnable: true })
+    : request
+        .get(url)
+        .then((res) => res.data)
+        .catch((error) => error);
 }
