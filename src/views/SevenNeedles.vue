@@ -1,6 +1,6 @@
 <template>
   <div class="seven-needles">
-    <el-row :gutter="20" style="padding: 20px">
+    <el-row :gutter="0" style="padding: 20px">
       <el-col :span="12" :offset="0">
         <el-button type="primary" plain @click="onOpenTkyClick">
           激活探空仪
@@ -12,7 +12,7 @@
         </el-button>
       </el-col>
     </el-row>
-    <el-row :gutter="20" style="padding: 20px">
+    <el-row :gutter="0" style="padding: 20px">
       <el-col :span="12" :offset="0">
         <el-button type="primary" plain @click="onGetTkyFreqClick">
           获取探空仪频点
@@ -28,26 +28,37 @@
         <span style="padding-left: 15px" v-show="sondeId">{{ sondeId }}</span>
       </el-col>
     </el-row>
-    <el-form
-      :model="formData"
-      ref="form"
-      :rules="rules"
-      label-width="80px"
-      :inline="true"
-      style="padding: 20px"
-    >
-      <el-form-item prop="sondeFreq">
-        <el-input
-          v-model="formData.sondeFreq"
-          placeholder="频点取值范围400-406"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" plain @click="onSondeFreqSubmit">
-          设置探空仪频点
+    <el-row :gutter="0" :style="{ padding: '20px' }">
+      <el-col :span="12" :offset="0">
+        <el-form
+          :model="formData"
+          ref="form"
+          :rules="rules"
+          label-width="80px"
+          :inline="true"
+        >
+          <el-form-item prop="sondeFreq">
+            <el-input
+              v-model="formData.sondeFreq"
+              placeholder="频点取值范围400-406"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" plain @click="onSondeFreqSubmit">
+              设置探空仪频点
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="12" :offset="0">
+        <el-button type="primary" plain @click="onGetSondePowerClick">
+          获取探空仪功率
         </el-button>
-      </el-form-item>
-    </el-form>
+        <span style="padding-left: 15px" v-show="sondePower">
+          {{ sondePower }}
+        </span>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -60,6 +71,7 @@ import {
   getSondeFreq,
   getSondeId,
   setSondeFreq,
+  getSondePower,
 } from "../api/sevenNeedles";
 export default {
   name: "SevenNeedles",
@@ -68,6 +80,7 @@ export default {
       sondeStatus: null,
       sondeId: "",
       sondeFreq: "",
+      sondePower: "",
       formData: {
         sondeFreq: "",
       },
@@ -123,15 +136,16 @@ export default {
     function onSondeFreqSubmit() {
       if (!state.formData.sondeFreq) return;
       setSondeFreq(state.formData.sondeFreq).then((res) => {
-        console.log(
-          "🚀 ~ file: SevenNeedles.vue ~ line 121 ~ setSondeFreq ~ res",
-          res
-        );
         ElMessage({
           type: res.setSondeFreq ? "success" : "error",
           message: res.setSondeFreq ? "操作成功" : "操作失败",
           duration: res.setSondeFreq ? 2000 : 3000,
         });
+      });
+    }
+    function onGetSondePowerClick() {
+      getSondePower().then((res) => {
+        state.sondePower = res.sondePower;
       });
     }
     return {
@@ -141,6 +155,7 @@ export default {
       onGetTkyFreqClick,
       onGetTkyIdClick,
       onSondeFreqSubmit,
+      onGetSondePowerClick,
     };
   },
 };

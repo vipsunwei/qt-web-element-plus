@@ -65,7 +65,7 @@ export function getSondeFreq() {
 export function getSondeId() {
   const url = `/api/sevenPin/getSondeId?token=${getToken()}`;
   return IS_MOCK
-    ? Promise.resolve({ SondeId: "7F7F7F7F" })
+    ? Promise.resolve({ SondeId: "2983472397434" })
     : request
         .get(url)
         .then((res) => res.data)
@@ -89,4 +89,17 @@ export function setSondeFreq(sondeFreq) {
         })
         .then((res) => res.data)
         .catch((err) => err);
+}
+
+/**
+ * 获取探空仪功率
+ */
+export function getSondePower() {
+  const url = `/api/sevenPin/getSondePower`;
+  return IS_MOCK
+    ? Promise.resolve({ sondePower: 123 })
+    : request
+        .get(url)
+        .then((res) => res.data)
+        .catch((error) => error);
 }
