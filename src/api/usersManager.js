@@ -1,13 +1,21 @@
 import axios from "axios";
 import { getToken } from "../utils/utils";
 
-const IS_MOCK = true;
+const IS_MOCK = false;
 const host = process.env.VUE_APP_HOST;
 const request = axios.create({
   baseURL: host,
   timeout: 10 * 1000,
 });
 
+export const userDict = {
+  id: "ID",
+  username: "用户名",
+  dept: "部门名称",
+  roles: "角色",
+  userRealName: "用户真实姓名",
+  // status: "用户状态",
+};
 /**
  * 获取所有用户
  */
