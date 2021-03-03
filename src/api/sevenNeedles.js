@@ -60,7 +60,7 @@ export function getSondeFreq() {
 /**
  * 获取探空仪id
  * @description /api/sevenPin/getSondeId
- * @returns 返回值:{"SondeId":"7F7F7F7F"}
+ * @returns 返回值:{"SondeId":"2983472397434"}
  */
 export function getSondeId() {
   const url = `/api/sevenPin/getSondeId?token=${getToken()}`;

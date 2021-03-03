@@ -4,12 +4,28 @@
       circle
       type="primary"
       icon="el-icon-setting"
+      title="报警静音设置"
       @click="openSetting"
     >
     </el-button>
   </teleport>
 
-  <el-drawer
+  <el-dialog title="报警静音设置" v-model="drawer" width="30%">
+    <!-- <el-switch
+      v-model="isMuted"
+      :active-value="true"
+      active-text="是"
+      :inactive-value="false"
+      inactive-text="否"
+      @change="handleMuteChange"
+    >
+    </el-switch> -->
+    <el-checkbox v-model="isMuted" @change="handleMuteChange">
+      关闭报警声音
+    </el-checkbox>
+  </el-dialog>
+
+  <!-- <el-drawer
     v-model="drawer"
     direction="btt"
     :with-header="false"
@@ -27,7 +43,7 @@
       >
       </el-switch>
     </div>
-  </el-drawer>
+  </el-drawer> -->
 </template>
 
 <script>
@@ -38,7 +54,7 @@ export default {
   setup() {
     const SettingDOM = document.createElement("div");
     SettingDOM.id = "setting";
-    SettingDOM.title = "设置";
+    // SettingDOM.title = "报警静音设置";
     SettingDOM.style.position = "fixed";
     SettingDOM.style.top = "50%";
     SettingDOM.style.right = "16px";

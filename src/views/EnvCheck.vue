@@ -227,8 +227,8 @@
           >
             <el-button
               type="primary"
-              class="reset_button"
               circle
+              size="small"
               @click="onSetValveState(true, item)"
               :disabled="isDisabledSetValve(item.param)"
             >
@@ -254,8 +254,8 @@
 
             <el-button
               type="primary"
-              class="reset_button"
               circle
+              size="small"
               @click="onSetValveState(false, item)"
               :disabled="isDisabledSetValve(item.param)"
             >
@@ -319,8 +319,8 @@
               </el-col>
               <el-col :span="12" :offset="0">
                 <el-button
-                  class="reset_button"
-                  circle
+                  round
+                  size="mini"
                   type="primary"
                   :disabled="!item.status"
                   @click="onResetClick(item)"
@@ -425,12 +425,5 @@ export default {
 }
 .border-top {
   border-top: 1px solid #dcdfe6;
-}
-.reset_button {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 0;
-  font-size: 12px;
 }
 </style>

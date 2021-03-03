@@ -30,6 +30,7 @@ import {
   ElStep,
   ElDrawer,
   ElDialog,
+  ElCheckbox,
 } from "element-plus";
 
 const components = [
@@ -64,6 +65,7 @@ const components = [
   ElStep,
   ElDrawer,
   ElDialog,
+  ElCheckbox,
 ];
 
 function useElementUi(app) {
