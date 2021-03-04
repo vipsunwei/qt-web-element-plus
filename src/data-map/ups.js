@@ -51,9 +51,27 @@ export function getUpsParamDataMap() {
  */
 export function getUpsInfoMap() {
   return {
-    ua: { id: 1, param: "ua", name: "三相相电压数据", value: "", unit: "V" },
-    ub: { id: 2, param: "ub", name: "三相相电压数据", value: "", unit: "V" },
-    uc: { id: 3, param: "uc", name: "三相相电压数据", value: "", unit: "V" },
+    ua: {
+      id: 1,
+      param: "ua",
+      name: "三相电源相电压数据",
+      value: "",
+      unit: "V",
+    },
+    ub: {
+      id: 2,
+      param: "ub",
+      name: "三相电源相电压数据",
+      value: "",
+      unit: "V",
+    },
+    uc: {
+      id: 3,
+      param: "uc",
+      name: "三相电源相电压数据",
+      value: "",
+      unit: "V",
+    },
     ia: { id: 4, param: "ia", name: "三相电流数据", value: "", unit: "A" },
     ib: { id: 5, param: "ib", name: "三相电流数据", value: "", unit: "A" },
     ic: { id: 6, param: "ic", name: "三相电流数据", value: "", unit: "A" },

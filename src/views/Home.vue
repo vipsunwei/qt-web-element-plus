@@ -337,7 +337,7 @@ export default {
       },
       {
         prop: "dataTime",
-        label: "dataTime",
+        label: "探空仪数据时间",
       },
       {
         prop: "lng",
@@ -361,7 +361,7 @@ export default {
       },
       {
         prop: "vspeed",
-        label: "vspeed",
+        label: "垂直速度",
       },
       {
         prop: "satellitesNum",

@@ -12,7 +12,7 @@ export const userDict = {
   id: "ID",
   username: "用户名",
   dept: "部门名称",
-  roles: "角色",
+  rolesString: "角色",
   userRealName: "用户真实姓名",
   // status: "用户状态",
 };

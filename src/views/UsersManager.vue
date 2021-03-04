@@ -18,9 +18,10 @@
           :prop="col.prop"
           :key="col.prop"
           :label="col.label"
+          show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" fixed="right">
           <template #default="scope">
             <el-button
               type="primary"
@@ -140,9 +141,9 @@ import {
 import { ElMessage } from "element-plus";
 export default {
   setup() {
-    onMounted(() => {
-      getUser();
-      getRoles();
+    onMounted(async () => {
+      await getRoles();
+      await getUser();
     });
     const state = reactive({
       userListLoading: false,
@@ -153,7 +154,7 @@ export default {
 
     function getColumns(data) {
       const columns = [];
-      const userInfo = data[0].userInfo;
+      const userInfo = data[0];
       for (const key in userInfo) {
         if (userInfo.hasOwnProperty(key) && userDict.hasOwnProperty(key)) {
           const element = userDict[key];
@@ -182,13 +183,29 @@ export default {
         }
       });
     }
+    function formatUserInfo(user) {
+      user.rolesString = user?.roles
+        .split(",")
+        .reduce((prev, current) => {
+          if (state.roles.length) {
+            toRaw(state.roles).map((item) => {
+              if (item.value === current) {
+                prev.push(item.label);
+              }
+            });
+          }
+          return prev;
+        }, [])
+        .join(",");
+      return user;
+    }
     function getUser() {
       state.userListLoading = true;
       getUserList()
         .then((res) => {
           if (res?.length) {
-            state.columns = getColumns(res);
-            state.userList = res.map((item) => item.userInfo);
+            state.userList = res.map((item) => formatUserInfo(item.userInfo));
+            state.columns = getColumns(toRaw(state.userList));
           }
         })
         .finally(() => (state.userListLoading = false));
@@ -226,6 +243,7 @@ export default {
               message: "添加成功",
               duration: 2000,
             });
+            getUser();
           } else if (res.addUser === false) {
             ElMessage({
               type: "error",
@@ -294,6 +312,7 @@ export default {
               message: "修改成功",
               duration: 2000,
             });
+            getUser();
           } else if (res.updateUser === false) {
             ElMessage({
               type: "error",

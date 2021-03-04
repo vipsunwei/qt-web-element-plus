@@ -12,15 +12,15 @@ const request = axios.create({
 export const paramsDict = {
   mustBeJcTky: "是否需要基测",
   resetTkyFreq: "重置探空仪频点",
-  poweronMaxTime: "上电最大时间",
-  checkWaitTime: "检查时长",
-  retryTimes: "重试时间",
-  diffPressure: "压力差",
-  diffTemperature: "温度差",
-  diffHumidity: "湿度差",
-  diffLng: "经度差",
-  diffLat: "纬度差",
-  diffAlt: "海拔差",
+  poweronMaxTime: "上电最大时间（秒）",
+  checkWaitTime: "检查时长（秒）",
+  retryTimes: "重试时间（秒）",
+  diffPressure: "压力差（hPa）",
+  diffTemperature: "温度差（℃）",
+  diffHumidity: "湿度差（%）",
+  diffLng: "经度差（度）",
+  diffLat: "纬度差（度）",
+  diffAlt: "海拔差（米）",
 };
 export function getCheckSurveyCriteion() {
   let url = "/api/CheckSurvey/getCheckSurveyCriteion";

@@ -3,7 +3,7 @@
   <div style="margin-top: 20px">
     <div class="title">设备使能开关</div>
     <el-form
-      label-width="240px"
+      label-width="300px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
     >
@@ -14,7 +14,7 @@
           v-for="(item, index) in deviceEnable"
           :key="index"
         >
-          <el-form-item :label="item.name">
+          <el-form-item :label="item.label + '(' + item.name + ')'">
             <el-switch
               v-model="item.status"
               active-text="开"
@@ -34,6 +34,7 @@ import {
   getDeviceEnable,
   openDeviceEnable,
   closeDeviceEnable,
+  deviceEnableDict,
 } from "../api/deviceEnable";
 import { onMounted, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
@@ -56,6 +57,7 @@ export default {
     }
     function formatDataItem(item) {
       return Object.keys(item).reduce((prev, current) => {
+        prev.label = deviceEnableDict[current];
         prev.name = current;
         prev.status = item[current];
         return prev;

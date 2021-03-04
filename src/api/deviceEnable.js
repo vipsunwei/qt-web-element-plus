@@ -8,6 +8,17 @@ const request = axios.create({
   timeout: 10 * 1000,
 });
 
+export const deviceEnableDict = {
+  YSRP: "接收机",
+  YBMB: "基测箱",
+  YGPS: "GPS",
+  YP7: "7针",
+  YPM: "电源管理",
+  YINF: "充气系统",
+  YEMS: "环境检测系统（原氢气检测）",
+  YAWS: "地面自动气象站",
+};
+
 /**
  * 获取全部设备使能状态
  */

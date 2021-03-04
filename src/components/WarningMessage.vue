@@ -9,6 +9,7 @@
         filterable
         @change="onLevelChange"
       >
+        <el-option label="所有" value=""></el-option>
         <el-option
           v-for="item in levels"
           :key="item.levelCode"
@@ -27,6 +28,8 @@
         filterable
         @change="onTypeChange"
       >
+        <el-option label="所有" value=""></el-option>
+
         <el-option
           v-for="item in types"
           :key="item.typeCode"
@@ -76,7 +79,7 @@
       </el-table-column>
       <el-table-column label="报警级别">
         <template #default="scope">
-          <span>{{ scope.row?.alarm?.alarmLevel }}</span>
+          <span>{{ levelsDict[scope.row?.alarm?.alarmLevel] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="报警名称">
@@ -86,7 +89,13 @@
       </el-table-column>
       <el-table-column label="状态">
         <template #default="scope">
-          <span>{{ scope.row?.status }}</span>
+          <span>{{
+            scope.row?.status == 1
+              ? "未处理"
+              : scope.row?.status == 0
+              ? "已处理"
+              : scope.row?.status
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="确认时间">
@@ -121,6 +130,7 @@ import {
   getWarningAlarmLevel,
   getWarningAlarmComponent,
   getWarningMessage,
+  levelsDict,
 } from "../api/index";
 import { onMounted, onUnmounted, reactive, toRefs } from "vue";
 import { ElMessage } from "element-plus";
@@ -220,7 +230,7 @@ export default {
       search();
     }, 500);
     function search() {
-      if (state.level !== "" && state.type !== "" && state.date !== "") {
+      if (state.date !== "") {
         const option = {
           startTime: formatDate(state.date[0], "yyyy-MM-dd HH:mm:ss"),
           endTime: formatDate(state.date[1], "yyyy-MM-dd HH:mm:ss"),
@@ -232,7 +242,7 @@ export default {
         getWarnings(option);
       } else {
         ElMessage.error({
-          message: "级别&类别&时间范围必选",
+          message: "时间范围必选",
           showClose: true,
         });
       }
@@ -259,6 +269,7 @@ export default {
       search,
       onPageSizeChange,
       onPageNumberChange,
+      levelsDict,
     };
   },
 };

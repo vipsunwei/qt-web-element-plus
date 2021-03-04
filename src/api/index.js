@@ -143,3 +143,11 @@ export function ackAlarm(id) {
         },
       });
 }
+
+export const levelsDict = {
+  INFO: "等级 0",
+  SLIGHT: "等级 1",
+  GENERAL: "等级 2",
+  SERIOUS: "等级 3",
+  VERY_SERIOUS: "等级 4",
+};

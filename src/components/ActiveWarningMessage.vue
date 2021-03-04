@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label="报警级别">
         <template #default="scope">
-          {{ scope.row?.alarm?.alarmLevel }}
+          {{ levelsDict[scope.row?.alarm?.alarmLevel] }}
         </template>
       </el-table-column>
       <el-table-column label="报警名称">
@@ -48,7 +48,7 @@
 
 <script>
 import { onMounted, onUnmounted, reactive, toRefs } from "vue";
-import { ackAlarm, getActiveWarningMessage } from "../api/index";
+import { ackAlarm, getActiveWarningMessage, levelsDict } from "../api/index";
 import { debounce, sleep } from "../utils/utils";
 import { ElMessage } from "element-plus";
 import emitter from "../hooks/useMitt";
@@ -56,6 +56,7 @@ export default {
   name: "ActiveWarningMessage",
   setup() {
     const IS_MOCK = false;
+
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();
@@ -106,7 +107,7 @@ export default {
       state.tableData = state.tableData.filter((item) => item.id !== id);
     }
 
-    return { ...toRefs(state), onClickAckAlarm };
+    return { ...toRefs(state), onClickAckAlarm, levelsDict };
   },
 };
 </script>
