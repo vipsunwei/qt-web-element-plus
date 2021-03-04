@@ -155,7 +155,7 @@ export default function useThreshold() {
     });
     getLowPressThreshold().then((res) => {
       thresholdState.threshold.lowPress = res.Threshold;
-      oldThresholdData.lowPress = res.threshold;
+      oldThresholdData.lowPress = res.Threshold;
     });
   }
   /**
@@ -181,6 +181,7 @@ export default function useThreshold() {
     true
   );
   function smokeFn(smoke) {
+    if (smoke == oldThresholdData.smoke) return;
     setSmokeThreshold(smoke).then((res) => {
       console.log("set smoke result -- ", res);
       if (res.setSmokeThreshold) {
@@ -198,6 +199,7 @@ export default function useThreshold() {
     });
   }
   function pressFn(press) {
+    if (press == oldThresholdData.press) return;
     setPressThreshold(press).then((res) => {
       console.log("set press result -- ", res);
       if (res.setPressThreshold) {
@@ -215,6 +217,7 @@ export default function useThreshold() {
     });
   }
   function hydrogenFn(hydrogen) {
+    if (hydrogen == oldThresholdData.hydrogen) return;
     setHydrogenThreshold(hydrogen).then((res) => {
       console.log("set hydrogen result -- ", res);
       if (res.setHydrogenThreshold) {
@@ -232,6 +235,7 @@ export default function useThreshold() {
     });
   }
   function openTimeFn(openTime) {
+    if (openTime == oldThresholdData.openTime) return;
     setOpenTimeThreshold(openTime).then((res) => {
       console.log("set open time result -- ", res);
       if (res.setOpenTimeThreshold) {
@@ -249,6 +253,7 @@ export default function useThreshold() {
     });
   }
   function lowHydrogenFn(lowHydrogen) {
+    if (lowHydrogen == oldThresholdData.lowHydrogen) return;
     setLowHydrogenThreshold(lowHydrogen).then((res) => {
       console.log(res);
       if (res.setLowHydrogenThreshold) {
@@ -264,6 +269,7 @@ export default function useThreshold() {
     });
   }
   function lowPressFn(lowPress) {
+    if (lowPress == oldThresholdData.lowPress) return;
     setLowPressThreshold(lowPress).then((res) => {
       console.log(res);
       if (res.setLowPressThreshold) {
@@ -291,5 +297,10 @@ export default function useThreshold() {
     lowPress: lowPressFn,
   };
 
-  return { thresholdState, onThresholdSubmit, thresholdRef };
+  return {
+    thresholdState,
+    onThresholdSubmit,
+    thresholdRef,
+    ...thresholdFunctions,
+  };
 }

@@ -172,7 +172,7 @@
       :model="threshold"
       :rules="thresholdRules"
       label-width="240px"
-      :inline="false"
+      :inline="true"
       style="border: 1px solid #dcdfe6; padding: 20px"
       ref="thresholdRef"
     >
@@ -181,28 +181,49 @@
           <el-form-item label="氢气浓度上限(0-9999Ppm):" prop="hydrogen">
             <el-input v-model.number="threshold.hydrogen"></el-input>
           </el-form-item>
+          <el-button type="primary" @click="hydrogenFn(threshold.hydrogen)">
+            保存
+          </el-button>
           <el-form-item label="管道压力上限(0-30000kPa):" prop="press">
             <el-input v-model.number="threshold.press"></el-input>
           </el-form-item>
+          <el-button type="primary" @click="pressFn(threshold.press)">
+            保存
+          </el-button>
           <el-form-item label="轻微氢气警告阈值:" prop="lowHydrogen">
             <el-input v-model.number="threshold.lowHydrogen"></el-input>
           </el-form-item>
+          <el-button
+            type="primary"
+            @click="lowHydrogenFn(threshold.lowHydrogen)"
+          >
+            保存
+          </el-button>
         </el-col>
         <el-col :span="12" :offset="0">
           <el-form-item label="烟雾报警器上限(0-5000Ppm):" prop="smoke">
             <el-input v-model.number="threshold.smoke"></el-input>
           </el-form-item>
+          <el-button type="primary" @click="smokeFn(threshold.smoke)">
+            保存
+          </el-button>
           <el-form-item label="开启时间上限设置(0-1800S):" prop="openTime">
             <el-input v-model.number="threshold.openTime"></el-input>
           </el-form-item>
+          <el-button type="primary" @click="openTimeFn(threshold.openTime)">
+            保存
+          </el-button>
           <el-form-item label="轻微压力警告阈值:" prop="lowPress">
             <el-input v-model.number="threshold.lowPress"></el-input>
           </el-form-item>
+          <el-button type="primary" @click="lowPressFn(threshold.lowPress)">
+            保存
+          </el-button>
         </el-col>
       </el-row>
-      <el-form-item style="margin-bottom: 0">
+      <!-- <el-form-item style="margin-bottom: 0">
         <el-button @click="onThresholdSubmit">提交</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
   <!-- 安全阀门开关 -->
@@ -320,7 +341,7 @@
               <el-col :span="12" :offset="0">
                 <el-button
                   round
-                  size="mini"
+                  size="small"
                   type="primary"
                   :disabled="!item.status"
                   @click="onResetClick(item)"
@@ -364,7 +385,17 @@ export default {
       handleEnvInfo,
     } = useEnvInfo();
     // 阈值范围
-    const { thresholdState, onThresholdSubmit, thresholdRef } = useThreshold();
+    const {
+      thresholdState,
+      onThresholdSubmit,
+      thresholdRef,
+      smoke: smokeFn,
+      press: pressFn,
+      hydrogen: hydrogenFn,
+      openTime: openTimeFn,
+      lowHydrogen: lowHydrogenFn,
+      lowPress: lowPressFn,
+    } = useThreshold();
     // 阀门开关
     const {
       valveState,
@@ -383,6 +414,12 @@ export default {
       ...toRefs(thresholdState),
       onThresholdSubmit,
       thresholdRef,
+      smokeFn,
+      pressFn,
+      hydrogenFn,
+      openTimeFn,
+      lowHydrogenFn,
+      lowPressFn,
       ...toRefs(valveState),
       // onValveChange,
       onSetValveState,
