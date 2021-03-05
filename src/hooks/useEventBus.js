@@ -36,7 +36,7 @@ export default function useEventBus(channel, callback, mockOptions) {
       // timer = null;
     } else {
       // console.log(eb);
-      eb.close && typeof eb.close === "function" && eb.close();
+      // eb.close && typeof eb.close === "function" && eb.close();
     }
   }
   function sendMockData() {

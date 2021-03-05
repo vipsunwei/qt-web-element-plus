@@ -94,6 +94,7 @@ const routes = [
     path: "/",
     name: "Empty",
     hidden: true,
+    redirect: "/alert",
     component: Empty,
   },
 ];

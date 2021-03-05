@@ -6,6 +6,7 @@
         text-color="#fff"
         active-text-color="#fff"
         :default-active="active"
+        @select="onSelect"
       >
         <template v-for="item in routes" :key="item.path">
           <el-menu-item
@@ -34,8 +35,8 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import SystemMode from "../components/SystemMode.vue";
 import ReleaseSteps from "../components/ReleaseSteps.vue";
 export default {
@@ -46,19 +47,27 @@ export default {
   setup() {
     const active = ref("");
     onMounted(() => (active.value = location.href.split("#")[1]));
+    onUnmounted(() =>
+      window.removeEventListener("hashchange", hashChangeHandler)
+    );
     const router = useRouter();
-    const routes = router.options.routes;
+    const route = useRoute();
+    const routes = router.getRoutes();
     function navTo(path) {
       router.push({ path });
     }
-    // function toWSL() {
-    //   window.open("https://192.168.0.1:9443");
-    // }
+    function onSelect(index, indexPath) {
+      active.value = index;
+    }
+    function hashChangeHandler(e) {
+      active.value = e.newURL.split("#")[1];
+    }
+    window.addEventListener("hashchange", hashChangeHandler);
     return {
       navTo,
       active,
       routes,
-      // toWSL,
+      onSelect,
     };
   },
 };
