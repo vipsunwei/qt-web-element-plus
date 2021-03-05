@@ -13,6 +13,10 @@ import {
   getLowPressThreshold,
   setLowHydrogenThreshold,
   setLowPressThreshold,
+  getPressThresholdInquire,
+  getSmokeThresholdInquire,
+  getHydrogenThresholdInquire,
+  getOpenTimeThresholdInquire,
 } from "../api/envCheck";
 import { debounce } from "../utils/utils";
 
@@ -285,6 +289,38 @@ export default function useThreshold() {
     });
   }
   /**
+   * 查询设备烟雾阈值
+   */
+  function getSmokeInquire() {
+    getSmokeThresholdInquire().then((res) => {
+      thresholdState.threshold.smoke = res.ThresholdInquire;
+    });
+  }
+  /**
+   * 查询设备时间阈值
+   */
+  function getOpenTimeInquire() {
+    getOpenTimeThresholdInquire().then((res) => {
+      thresholdState.threshold.openTime = res.ThresholdInquire;
+    });
+  }
+  /**
+   * 查询设备氢气阈值
+   */
+  function getHydrogenInquire() {
+    getHydrogenThresholdInquire().then((res) => {
+      thresholdState.threshold.hydrogen = res.ThresholdInquire;
+    });
+  }
+  /**
+   * 查询设备压力阈值
+   */
+  function getPressInquire() {
+    getPressThresholdInquire().then((res) => {
+      thresholdState.threshold.press = res.ThresholdInquire;
+    });
+  }
+  /**
    * 阈值项与处理设置阈值的函数的对应关系
    * 方便在循环遍历中调用
    */
@@ -295,6 +331,10 @@ export default function useThreshold() {
     openTime: openTimeFn,
     lowHydrogen: lowHydrogenFn,
     lowPress: lowPressFn,
+    getOpenTimeInquire,
+    getHydrogenInquire,
+    getSmokeInquire,
+    getPressInquire,
   };
 
   return {

@@ -45,6 +45,22 @@ export function setSmokeThreshold(smoke) {
         .then((res) => res.data)
         .catch((err) => err);
 }
+/**
+ * 查询设备烟雾阈值
+ * @returns {*} { ThresholdInquire: 70 }
+ */
+export function getSmokeThresholdInquire() {
+  const token = getToken();
+  const url = "/api/environment/getSmokeThresholdInquire";
+  return IS_MOCK
+    ? Promise.resolve({ ThresholdInquire: 70 })
+    : request
+        .get(url, {
+          params: { token },
+        })
+        .then((res) => res.data)
+        .catch((error) => error);
+}
 
 /**
  * 查看压力阈值
@@ -78,6 +94,22 @@ export function setPressThreshold(press) {
         })
         .then((res) => res.data)
         .catch((err) => err);
+}
+/**
+ * 查询设备压力阈值
+ * @returns {*} {"ThresholdInquire":60}
+ */
+export function getPressThresholdInquire() {
+  const token = getToken();
+  const url = "/api/environment/getPressThresholdInquire";
+  return IS_MOCK
+    ? Promise.resolve({ ThresholdInquire: 70 })
+    : request
+        .get(url, {
+          params: { token },
+        })
+        .then((res) => res.data)
+        .catch((error) => error);
 }
 /**
  * 获取轻微压力警告阈值
@@ -119,6 +151,22 @@ export function getHydrogenThreshold() {
     ? Promise.resolve({ Threshold: 60 })
     : request
         .get(url)
+        .then((res) => res.data)
+        .catch((error) => error);
+}
+/**
+ * 查询设备氢气阈值
+ * @returns {*} {"ThresholdInquire":60}
+ */
+export function getHydrogenThresholdInquire() {
+  const token = getToken();
+  const url = "/api/environment/getHydrogenThresholdInquire";
+  return IS_MOCK
+    ? Promise.resolve({ ThresholdInquire: 70 })
+    : request
+        .get(url, {
+          params: { token },
+        })
         .then((res) => res.data)
         .catch((error) => error);
 }
@@ -202,6 +250,22 @@ export function setOpenTimeThreshold(seconds) {
         })
         .then((res) => res.data)
         .catch((err) => err);
+}
+/**
+ * 查询设备时间阈值
+ * @returns {*} { ThresholdInquire: 70 }
+ */
+export function getOpenTimeThresholdInquire() {
+  const token = getToken();
+  const url = `/api/environment/getOpenTimeThresholdInquire`;
+  return IS_MOCK
+    ? Promise.resolve({ ThresholdInquire: 70 })
+    : request
+        .get(url, {
+          params: { token },
+        })
+        .then((res) => res.data)
+        .catch((error) => error);
 }
 
 /**

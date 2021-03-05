@@ -184,12 +184,17 @@
           <el-button type="primary" @click="hydrogenFn(threshold.hydrogen)">
             保存
           </el-button>
+          <el-button type="primary" @click="getHydrogenInquire">
+            查询
+          </el-button>
           <el-form-item label="管道压力上限(0-30000kPa):" prop="press">
             <el-input v-model.number="threshold.press"></el-input>
           </el-form-item>
           <el-button type="primary" @click="pressFn(threshold.press)">
             保存
           </el-button>
+          <el-button type="primary" @click="getPressInquire"> 查询 </el-button>
+
           <el-form-item label="轻微氢气警告阈值:" prop="lowHydrogen">
             <el-input v-model.number="threshold.lowHydrogen"></el-input>
           </el-form-item>
@@ -207,11 +212,15 @@
           <el-button type="primary" @click="smokeFn(threshold.smoke)">
             保存
           </el-button>
+          <el-button type="primary" @click="getSmokeInquire"> 查询 </el-button>
           <el-form-item label="开启时间上限设置(0-1800S):" prop="openTime">
             <el-input v-model.number="threshold.openTime"></el-input>
           </el-form-item>
           <el-button type="primary" @click="openTimeFn(threshold.openTime)">
             保存
+          </el-button>
+          <el-button type="primary" @click="getOpenTimeInquire">
+            查询
           </el-button>
           <el-form-item label="轻微压力警告阈值:" prop="lowPress">
             <el-input v-model.number="threshold.lowPress"></el-input>
@@ -395,6 +404,10 @@ export default {
       openTime: openTimeFn,
       lowHydrogen: lowHydrogenFn,
       lowPress: lowPressFn,
+      getOpenTimeInquire,
+      getHydrogenInquire,
+      getSmokeInquire,
+      getPressInquire,
     } = useThreshold();
     // 阀门开关
     const {
@@ -420,6 +433,10 @@ export default {
       openTimeFn,
       lowHydrogenFn,
       lowPressFn,
+      getOpenTimeInquire,
+      getHydrogenInquire,
+      getSmokeInquire,
+      getPressInquire,
       ...toRefs(valveState),
       // onValveChange,
       onSetValveState,
