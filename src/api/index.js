@@ -28,6 +28,112 @@ export const getTkyInfo = (st, et) => {
         },
       });
 };
+/**
+ * 根据基测时间获取探空仪id列表
+ * @param {string} st 开始时间
+ * @param {string} et 结束时间
+ */
+export function getTkyInfoByJCTime(st, et) {
+  const token = getToken();
+  const url = "/api/history/getTkyInfoByJCTime";
+  return IS_MOCK
+    ? Promise.resolve([
+        {
+          id: 1,
+          tkyid: "20070909",
+          tkyType: 1,
+          tkyFrequencyPoint: 401.0,
+          status: 1,
+          jcStatusTime: 1605124800000,
+          checkResult: 1,
+          checkResultTime: 1605125100000,
+          fqStartTime: 1605125400000,
+          fqEndTime: 1605139198000,
+          tkyFirm: 30,
+          sensorType: 1,
+          ctime: 1605124800000,
+          mtime: 1605139199000,
+        },
+        {
+          id: 2,
+          tkyid: "20070901",
+          tkyType: 1,
+          tkyFrequencyPoint: 401.131,
+          status: 1,
+          jcStatusTime: 1605211200000,
+          checkResult: 1,
+          checkResultTime: 1605211500000,
+          fqStartTime: 1605211800000,
+          fqEndTime: 1605225598000,
+          tkyFirm: 30,
+          sensorType: 1,
+          ctime: 1605211200000,
+          mtime: 1605225599000,
+        },
+      ])
+    : request.get(url, {
+        params: {
+          token,
+          startTime: st,
+          endTime: et,
+        },
+      });
+}
+
+/**
+ * 获取检测报告
+ * @param {string} tkyid 探空仪id
+ */
+export function getCheckReport(tkyid) {
+  const token = getToken();
+  const url = "/api/history/getCheckReport";
+  return IS_MOCK
+    ? Promise.resolve({
+        id: 2,
+        tkyid: "20707999",
+        checkResultStatus: 0,
+        detail: "xxxx",
+        ctime: 1611772295000,
+        checkResultRecord: {
+          tkyid: "20707999",
+          envPressure: 1011.983495088971039876923896372318267822265625,
+          envTemperature: 19.4,
+          envHumidity: 25.3,
+          envLng: 116.4700887,
+          envLat: 39.8065693,
+          envAlt: 35.7,
+          tkyPressure: 1014.51600000000007639755494892597198486328125,
+          tkyTemperature: 16.4200000000000017053025658242404460906982421875,
+          tkyHumidity: 36.34080000000000154614099301397800445556640625,
+          tkyLng: 116.470001220703125,
+          tkyLat: 39.80658676147461250138803734444081783294677734375,
+          tkyAlt: 35.34400000000000119371179607696831226348876953125,
+          diffPressure: 2.532504911029036520631052553653717041015625,
+          diffTemperature: -2.9799999999999982946974341757595539093017578125,
+          diffHumidity: 11.04080000000000154614099301397800445556640625,
+          diffLng: -0.000087479296875,
+          diffLat: 0.00001746147461250138803734444081783294677734375,
+          diffAlt: -0.35599999999999880628820392303168773651123046875,
+          passedPressure: true,
+          passedTemperature: true,
+          passedHumidity: false,
+          passedLng: true,
+          passedLat: true,
+          passedAlt: true,
+          passedBatteryVol: null,
+          passedLocating: null,
+          passedRssi: null,
+          passed: false,
+          ctime: null,
+        },
+      })
+    : request.get(url, {
+        params: {
+          token,
+          tkyid,
+        },
+      });
+}
 
 // /api/history/getBaseTestReport?tkyid=11
 export const getBaseTestReport = (tkyid) => {

@@ -1,14 +1,25 @@
 <template>
   <div class="home" v-loading="isLoading">
+    时间
     <el-date-picker
       v-model="date"
       type="datetimerange"
       range-separator="至"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
-      unlink-panels
-      @change="handleDatePickerChange"
     ></el-date-picker>
+    时间类型
+    <el-select
+      v-model="timeType"
+      placeholder="请选择时间类型"
+      clearable
+      filterable
+    >
+      <el-option label="放球时间" value="放球时间"> </el-option>
+      <el-option label="基测时间" value="基测时间"> </el-option>
+    </el-select>
+    <el-button type="primary" @click="handleDatePickerChange"> 搜索 </el-button>
+
     <div v-if="isShowSelectTkyid">
       <div style="padding: 20px 0">探空仪编号</div>
       <el-select
@@ -36,6 +47,7 @@
         <el-radio-button label="探测数据"></el-radio-button>
         <el-radio-button label="瞬时值"></el-radio-button>
         <el-radio-button label="基测报告"></el-radio-button>
+        <el-radio-button label="检测报告"></el-radio-button>
       </el-radio-group>
     </div>
 
@@ -107,6 +119,13 @@
         <el-table-column prop="value"></el-table-column>
       </el-table>
     </div>
+
+    <div v-show="isCheckReport" :style="{ marginTop: '20px' }">
+      <el-table :data="checkReportData" :show-header="false" border stripe>
+        <el-table-column prop="label"></el-table-column>
+        <el-table-column prop="value"></el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -118,6 +137,8 @@ import {
   getInstantInfo,
   getTkyData,
   getTkyInfo,
+  getTkyInfoByJCTime,
+  getCheckReport,
 } from "../api/index.js";
 
 export default {
@@ -131,33 +152,36 @@ export default {
     const getMaxHeight = debounce(function () {
       const viewHeight = window.document.body.offsetHeight;
       maxHeight.value = viewHeight * 0.7;
-      console.log(maxHeight.value);
     });
     /** 时间选择框 */
     const date = ref("");
+    const timeType = ref("");
     const tkyids = ref([]);
-    async function handleDatePickerChange(dates) {
-      if (!dates) {
+    async function handleDatePickerChange() {
+      tkyid.value = "";
+      if (!date.value || !timeType.value) {
         return;
       }
-      let [st, et] = dates;
+      let [st, et] = date.value;
       st = formatDate(st, "yyyy-MM-dd HH:mm:ss");
       et = formatDate(et, "yyyy-MM-dd HH:mm:ss");
       if (state.isLoading) return;
       state.isLoading = true;
-      const result = await getTkyInfo(st, et);
-      console.log("getTkyInfo -- ", result);
-
-      tkyids.value = result;
-
+      if (timeType.value === "放球时间") {
+        const result = await getTkyInfo(st, et);
+        console.log("根据放球时间获取探空仪id -- ", result);
+        tkyids.value = result;
+      } else if (timeType.value === "基测时间") {
+        const result = await getTkyInfoByJCTime(st, et);
+        console.log("根据基测时间获取探空仪id", result);
+        tkyids.value = result;
+      }
       state.isLoading = false;
     }
     /** 探空仪编号 */
     const isShowSelectTkyid = computed(() => tkyids.value.length);
     const tkyid = ref("");
     function handleTkyidChange(curTkyid) {
-      console.log(curTkyid, " --- curTkyid");
-      console.log(tkyid.value, " --- tkyid.value");
       // tkyid.value = curTkyid;
       dataType.value = "";
       state.dateForTCSJ = "";
@@ -170,6 +194,7 @@ export default {
     const isTCSJ = computed(() => dataType.value === "探测数据");
     const isSSZ = computed(() => dataType.value === "瞬时值");
     const isJCBG = computed(() => dataType.value === "基测报告");
+    const isCheckReport = computed(() => dataType.value === "检测报告");
     function handleDataTypeChange(value) {
       switch (value) {
         case "基测报告":
@@ -180,6 +205,9 @@ export default {
           break;
         case "探测数据":
           showTkyData();
+          break;
+        case "检测报告":
+          showCheckReport();
           break;
       }
     }
@@ -388,7 +416,6 @@ export default {
         label: "盒内温度",
       },
     ];
-
     async function showTkyData() {
       if (state.isLoading) return;
       state.isLoading = true;
@@ -406,9 +433,70 @@ export default {
       tkyData.value = result;
       state.isLoading = false;
     }
+    // 检测报告
+    const checkResultRecordColumns = {
+      tkyid: "探空仪编号",
+      envPressure: "环境气压",
+      envTemperature: "环境温度",
+      envHumidity: "环境湿度",
+      envLng: "环境经度",
+      envLat: "环境纬度",
+      envAlt: "环境海拔",
+      tkyPressure: "探空仪气压",
+      tkyTemperature: "探空仪温度",
+      tkyHumidity: "探空仪湿度",
+      tkyLng: "探空仪经度",
+      tkyLat: "探空仪纬度",
+      tkyAlt: "探空仪海拔",
+      tkyBatteryVol: "电池电压",
+      diffPressure: "气压差值",
+      diffTemperature: "温度差值",
+      diffHumidity: "湿度差值",
+      diffLng: "经度差值",
+      diffLat: "纬度差值",
+      diffAlt: "海拔差值",
+      diffBatteryVol: "电压差值",
+      passedPressure: "气压是否通过",
+      passedTemperature: "温度是否通过",
+      passedHumidity: "湿度是否通过",
+      passedLng: "经度是否通过",
+      passedLat: "纬度是否通过",
+      passedAlt: "海拔是否通过",
+      passed: "是否通过",
+      ctime: "创建时间",
+    };
+    const checkReportData = ref(null);
+    async function showCheckReport() {
+      if (state.isLoading) return;
+      state.isLoading = true;
+      const result = await getCheckReport(tkyid.value);
+      console.log(result, "show check report");
+      const checkResultRecord = result?.checkResultRecord;
+      if (!checkResultRecord.ctime) {
+        checkResultRecord.ctime = formatDate(
+          new Date(result?.ctime),
+          "yyyy-MM-dd HH:mm:ss"
+        );
+      }
+      if (!checkResultRecord.checkResultStatus) {
+        checkResultRecord.checkResultStatus = result?.checkResultStatus;
+      }
+      const checkReportFormatted = [];
+      for (const key in checkResultRecord) {
+        if (checkResultRecordColumns[key]) {
+          checkReportFormatted.push({
+            label: checkResultRecordColumns[key],
+            value: passedfilter(key, checkResultRecord[key]),
+          });
+        }
+      }
+      checkReportData.value = checkReportFormatted;
+      state.isLoading = false;
+    }
 
     return {
       date,
+      timeType,
       tkyid,
       tkyids,
       isShowSelectTkyid,
@@ -420,6 +508,8 @@ export default {
       isTCSJ,
       isSSZ,
       isJCBG,
+      isCheckReport,
+      checkReportData,
       baseTestReport,
       instantInfo,
       ...toRefs(state),
