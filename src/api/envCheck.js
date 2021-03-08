@@ -1,30 +1,39 @@
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
 
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
 // 切换假数据开关
-const IS_MOCK = false;
+const IS_MOCK = true;
 
 const request = axios.create({
   baseURL: host,
   timeout: 10000,
 });
 
+request.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    ElMessage({
+      type: "error",
+      message: error.message,
+      duration: 3000,
+    });
+  }
+);
 /**
  * 查看烟雾阈值
  * @description /api/environment/getSmokeThreshold
  * @returns {object} {"Threshold": 60}
  */
 export function getSmokeThreshold() {
-  const url = `/api/environment/getSmokeThreshold?token=${getToken()}`;
+  const url = `/api/environment/getSmokeThreshold`;
+  const token = getToken();
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 /**
  * 设置烟雾阈值
@@ -33,17 +42,10 @@ export function getSmokeThreshold() {
  * @returns {object} {"setSmokeThreshold": true}
  */
 export function setSmokeThreshold(smoke) {
-  const url = `/api/environment/setSmokeThreshold?token=${getToken()}`;
+  const url = `/api/environment/setSmokeThreshold`;
   return IS_MOCK
     ? Promise.resolve({ setSmokeThreshold: true })
-    : request
-        .get(url, {
-          params: {
-            smoke,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken(), smoke } });
 }
 /**
  * 查询设备烟雾阈值
@@ -54,12 +56,7 @@ export function getSmokeThresholdInquire() {
   const url = "/api/environment/getSmokeThresholdInquire";
   return IS_MOCK
     ? Promise.resolve({ ThresholdInquire: 70 })
-    : request
-        .get(url, {
-          params: { token },
-        })
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 
 /**
@@ -68,13 +65,10 @@ export function getSmokeThresholdInquire() {
  * @returns {object} {"Threshold": 60}
  */
 export function getPressThreshold() {
-  const url = `/api/environment/getPressThreshold?token=${getToken()}`;
+  const url = `/api/environment/getPressThreshold`;
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token: getToken() } });
 }
 /**
  * 设置压力阈值
@@ -83,17 +77,10 @@ export function getPressThreshold() {
  * @returns {object} {"setPressThreshold":true}
  */
 export function setPressThreshold(press) {
-  const url = `/api/environment/setPressThreshold?token=${getToken()}`;
+  const url = `/api/environment/setPressThreshold`;
   return IS_MOCK
     ? Promise.resolve({ setPressThreshold: true })
-    : request
-        .get(url, {
-          params: {
-            press,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken(), press } });
 }
 /**
  * 查询设备压力阈值
@@ -104,12 +91,7 @@ export function getPressThresholdInquire() {
   const url = "/api/environment/getPressThresholdInquire";
   return IS_MOCK
     ? Promise.resolve({ ThresholdInquire: 70 })
-    : request
-        .get(url, {
-          params: { token },
-        })
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 /**
  * 获取轻微压力警告阈值
@@ -117,13 +99,10 @@ export function getPressThresholdInquire() {
  * @returns {object} {"Threshold":"设备异常"}或{"Threshold":60}
  */
 export function getLowPressThreshold() {
-  const url = `/api/environment/getLowPressThreshold?token=${getToken()}`;
+  const url = `/api/environment/getLowPressThreshold`;
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken() } });
 }
 /**
  * 设置压力轻微告警阈值
@@ -132,12 +111,10 @@ export function getLowPressThreshold() {
  * @returns {object} {"setLowPressThreshold":true}
  */
 export function setLowPressThreshold(lowPress) {
-  const url = `/api/environment/setLowPressThreshold?token=${getToken()}`;
+  const url = `/api/environment/setLowPressThreshold`;
   return IS_MOCK
     ? Promise.resolve({ setLowPressThreshold: true })
-    : request.get(url, {
-        params: { press: lowPress },
-      });
+    : request.get(url, { params: { token: getToken(), press: lowPress } });
 }
 
 /**
@@ -146,13 +123,10 @@ export function setLowPressThreshold(lowPress) {
  * @returns {object} {"Threshold": 60}
  */
 export function getHydrogenThreshold() {
-  const url = `/api/environment/getHydrogenThreshold?token=${getToken()}`;
+  const url = `/api/environment/getHydrogenThreshold`;
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token: getToken() } });
 }
 /**
  * 查询设备氢气阈值
@@ -163,12 +137,7 @@ export function getHydrogenThresholdInquire() {
   const url = "/api/environment/getHydrogenThresholdInquire";
   return IS_MOCK
     ? Promise.resolve({ ThresholdInquire: 70 })
-    : request
-        .get(url, {
-          params: { token },
-        })
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 /**
  * 设置氢气浓度阈值
@@ -177,17 +146,10 @@ export function getHydrogenThresholdInquire() {
  * @returns {object} {"setHydrogenThreshold":true}
  */
 export function setHydrogenThreshold(hydrogen) {
-  const url = `/api/environment/setHydrogenThreshold?token=${getToken()}`;
+  const url = `/api/environment/setHydrogenThreshold`;
   return IS_MOCK
     ? Promise.resolve({ setHydrogenThreshold: true })
-    : request
-        .get(url, {
-          params: {
-            hydrogen,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken(), hydrogen } });
 }
 /**
  * 获取轻微氢气警告阈值
@@ -195,13 +157,10 @@ export function setHydrogenThreshold(hydrogen) {
  * @returns {object} {"Threshold":"设备异常"}或{"Threshold":60}
  */
 export function getLowHydrogenThreshold() {
-  const url = `/api/environment/getLowHydrogenThreshold?token=${getToken()}`;
+  const url = `/api/environment/getLowHydrogenThreshold`;
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken() } });
 }
 /**
  * 设置氢气轻微警告阈值
@@ -210,12 +169,11 @@ export function getLowHydrogenThreshold() {
  * @returns {object} {"setLowHydrogenThreshold:":true}
  */
 export function setLowHydrogenThreshold(lowHydrogen) {
-  const url = `/api/environment/setLowHydrogenThreshold?token=${getToken()}`;
+  const url = `/api/environment/setLowHydrogenThreshold`;
+  const token = getToken();
   return IS_MOCK
     ? Promise.resolve({ setLowHydrogenThreshold: true })
-    : request.get(url, {
-        params: { hydrogen: lowHydrogen },
-      });
+    : request.get(url, { params: { token, hydrogen: lowHydrogen } });
 }
 
 /**
@@ -224,13 +182,10 @@ export function setLowHydrogenThreshold(lowHydrogen) {
  * @returns {object} {"Threshold": 60}
  */
 export function getOpenTimeThreshold() {
-  const url = `/api/environment/getOpenTimeThreshold?token=${getToken()}`;
+  const url = `/api/environment/getOpenTimeThreshold`;
   return IS_MOCK
     ? Promise.resolve({ Threshold: 60 })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token: getToken() } });
 }
 /**
  * 设置时间阈值
@@ -239,17 +194,10 @@ export function getOpenTimeThreshold() {
  * @returns 返回值:{"setOpenTimeThreshold":true}
  */
 export function setOpenTimeThreshold(seconds) {
-  const url = `/api/environment/setOpenTimeThreshold?token=${getToken()}`;
+  const url = `/api/environment/setOpenTimeThreshold`;
   return IS_MOCK
     ? Promise.resolve({ setOpenTimeThreshold: true })
-    : request
-        .get(url, {
-          params: {
-            seconds,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token: getToken(), seconds } });
 }
 /**
  * 查询设备时间阈值
@@ -260,12 +208,7 @@ export function getOpenTimeThresholdInquire() {
   const url = `/api/environment/getOpenTimeThresholdInquire`;
   return IS_MOCK
     ? Promise.resolve({ ThresholdInquire: 70 })
-    : request
-        .get(url, {
-          params: { token },
-        })
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 
 /**
@@ -278,20 +221,9 @@ export function getOpenTimeThresholdInquire() {
 export const setValveState = (valveType, valveState) => {
   let url = `/api/environment/setValveState`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
   return IS_MOCK
     ? Promise.resolve({ setValveState: true })
-    : request
-        .get(url, {
-          params: {
-            valveType,
-            valveState,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token, valveType, valveState } });
 };
 
 /**
@@ -302,15 +234,9 @@ export const setValveState = (valveType, valveState) => {
 export const getResetEnableParam = () => {
   let url = `/api/environment/getResetEnableParam`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
   return IS_MOCK
     ? import("../data/resetEnableParams.js").then((result) => result.default)
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token } });
 };
 
 /**
@@ -321,15 +247,9 @@ export const getResetEnableParam = () => {
 export const getEnable = () => {
   let url = `/api/environment/getEnable`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
   return IS_MOCK
     ? import("../data/enable.js").then((result) => result.default)
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token } });
 };
 
 /**
@@ -341,19 +261,9 @@ export const getEnable = () => {
 export const setEnable = (params) => {
   let url = `/api/environment/setEnable`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
   return IS_MOCK
     ? Promise.resolve({ setEnable: true })
-    : request
-        .get(url, {
-          params: {
-            params,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token, params } });
 };
 
 /**
@@ -363,20 +273,9 @@ export const setEnable = (params) => {
  * @returns 返回值:{"setReset":true}
  */
 export function setReset(param) {
-  console.log("param: ", param);
   let url = `/api/environment/setReset`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
   return IS_MOCK
     ? Promise.resolve({ setReset: true })
-    : request
-        .get(url, {
-          params: {
-            param,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => err);
+    : request.get(url, { params: { token, param } });
 }
