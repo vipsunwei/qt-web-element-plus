@@ -6,27 +6,20 @@
         text-color="#fff"
         active-text-color="#fff"
         :default-active="active"
-        @select="onSelect"
+        router
       >
         <template v-for="item in routes" :key="item.path">
-          <el-menu-item
-            v-if="!item.hidden"
-            :index="item.path"
-            @click="navTo(item.path)"
-          >
+          <el-menu-item v-if="!item.hidden" :index="item.path">
             {{ item.meta.name }}
           </el-menu-item>
         </template>
       </el-menu>
-      <!-- <el-button @click="toWSL">维色拉</el-button> -->
     </el-aside>
-
     <el-container>
       <el-header height="60px" class="my-header">
         <release-steps></release-steps>
         <system-mode></system-mode>
       </el-header>
-
       <el-main>
         <router-view></router-view>
       </el-main>
@@ -35,7 +28,7 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import SystemMode from "../components/SystemMode.vue";
 import ReleaseSteps from "../components/ReleaseSteps.vue";
@@ -45,29 +38,17 @@ export default {
     ReleaseSteps,
   },
   setup() {
-    const active = ref("");
-    onMounted(() => (active.value = location.href.split("#")[1]));
-    onUnmounted(() =>
-      window.removeEventListener("hashchange", hashChangeHandler)
-    );
     const router = useRouter();
     const route = useRoute();
     const routes = router.getRoutes();
-    function navTo(path) {
-      router.push({ path });
-    }
-    function onSelect(index, indexPath) {
-      active.value = index;
-    }
-    function hashChangeHandler(e) {
-      active.value = e.newURL.split("#")[1];
-    }
-    window.addEventListener("hashchange", hashChangeHandler);
+    // function navTo(path) {
+    //   router.push({ path });
+    // }
+    const active = computed(() => route.path);
     return {
-      navTo,
+      // navTo,
       active,
       routes,
-      onSelect,
     };
   },
 };
