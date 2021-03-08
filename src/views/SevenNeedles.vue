@@ -2,19 +2,34 @@
   <div class="seven-needles">
     <el-row :gutter="0" style="padding: 20px">
       <el-col :span="12" :offset="0">
-        <el-button type="primary" plain @click="onOpenTkyClick">
+        <el-button
+          type="primary"
+          plain
+          :disabled="isDisabled()"
+          @click="onOpenTkyClick"
+        >
           激活探空仪
         </el-button>
       </el-col>
       <el-col :span="12" :offset="0">
-        <el-button type="primary" plain @click="onCloseTkyClick">
+        <el-button
+          type="primary"
+          plain
+          :disabled="isDisabled()"
+          @click="onCloseTkyClick"
+        >
           关闭探空仪
         </el-button>
       </el-col>
     </el-row>
     <el-row :gutter="0" style="padding: 20px">
       <el-col :span="12" :offset="0">
-        <el-button type="primary" plain @click="onGetTkyFreqClick">
+        <el-button
+          type="primary"
+          plain
+          :disabled="isDisabled()"
+          @click="onGetTkyFreqClick"
+        >
           获取探空仪频点
         </el-button>
         <span style="padding-left: 15px" v-show="sondeFreq">
@@ -22,7 +37,12 @@
         </span>
       </el-col>
       <el-col :span="12" :offset="0">
-        <el-button type="primary" plain @click="onGetTkyIdClick">
+        <el-button
+          type="primary"
+          plain
+          :disabled="isDisabled()"
+          @click="onGetTkyIdClick"
+        >
           获取探空仪id
         </el-button>
         <span style="padding-left: 15px" v-show="sondeId">{{ sondeId }}</span>
@@ -41,17 +61,28 @@
             <el-input
               v-model="formData.sondeFreq"
               placeholder="频点取值范围400-406"
+              :disabled="isDisabled()"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" plain @click="onSondeFreqSubmit">
+            <el-button
+              type="primary"
+              plain
+              :disabled="isDisabled()"
+              @click="onSondeFreqSubmit"
+            >
               设置探空仪频点
             </el-button>
           </el-form-item>
         </el-form>
       </el-col>
       <el-col :span="12" :offset="0">
-        <el-button type="primary" plain @click="onGetSondePowerClick">
+        <el-button
+          type="primary"
+          plain
+          :disabled="isDisabled()"
+          @click="onGetSondePowerClick"
+        >
           获取探空仪功率
         </el-button>
         <span style="padding-left: 15px" v-show="sondePower">
@@ -64,6 +95,7 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import {
   powerOn,
@@ -76,6 +108,7 @@ import {
 export default {
   name: "SevenNeedles",
   setup() {
+    const store = useStore();
     const state = reactive({
       sondeStatus: null,
       sondeId: "",
@@ -99,25 +132,29 @@ export default {
         ],
       },
     });
-    function onOpenTkyClick() {
-      powerOn().then((res) => {
-        ElMessage({
-          type: res.powerOn ? "success" : "error",
-          message: res.powerOn ? "操作成功" : "操作失败",
-          duration: res.powerOn ? 2000 : 3000,
-        });
+    function isDisabled() {
+      const disableMode = ["AUTO", "SETTING", "INITIALIZING"];
+      return disableMode.includes(store.state.systemMode);
+    }
+    function showMessage(result) {
+      ElMessage({
+        type:
+          result === true ? "success" : result === false ? "error" : "warning",
+        message:
+          result === true ? "操作成功" : result === false ? "操作失败" : result,
+        duration: result === true ? 2000 : 3000,
       });
+    }
+    function onOpenTkyClick() {
+      if (isDisabled()) return;
+      powerOn().then((res) => showMessage(res.powerOn));
     }
     function onCloseTkyClick() {
-      powerOff().then((res) => {
-        ElMessage({
-          type: res.powerOff ? "success" : "error",
-          message: res.powerOff ? "操作成功" : "操作失败",
-          duration: res.powerOff ? 2000 : 3000,
-        });
-      });
+      if (isDisabled()) return;
+      powerOff().then((res) => showMessage(res.powerOff));
     }
     function onGetTkyFreqClick() {
+      if (isDisabled()) return;
       getSondeFreq().then((res) => {
         if (res.SondeFreq) {
           state.sondeFreq = res.SondeFreq;
@@ -125,6 +162,7 @@ export default {
       });
     }
     function onGetTkyIdClick() {
+      if (isDisabled()) return;
       getSondeId().then((res) => {
         if (res.SondeId) {
           // const id = parseInt("0x" + res.SondeId);
@@ -134,16 +172,14 @@ export default {
       });
     }
     function onSondeFreqSubmit() {
+      if (isDisabled()) return;
       if (!state.formData.sondeFreq) return;
       setSondeFreq(state.formData.sondeFreq).then((res) => {
-        ElMessage({
-          type: res.setSondeFreq ? "success" : "error",
-          message: res.setSondeFreq ? "操作成功" : "操作失败",
-          duration: res.setSondeFreq ? 2000 : 3000,
-        });
+        showMessage(res.setSondeFreq);
       });
     }
     function onGetSondePowerClick() {
+      if (isDisabled()) return;
       getSondePower().then((res) => {
         state.sondePower = res.sondePower;
       });
@@ -156,6 +192,7 @@ export default {
       onGetTkyIdClick,
       onSondeFreqSubmit,
       onGetSondePowerClick,
+      isDisabled,
     };
   },
 };
