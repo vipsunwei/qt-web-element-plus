@@ -1,3 +1,5 @@
+import { ElMessage } from "element-plus";
+
 /**
  * 格式化日期
  * @param date
@@ -127,4 +129,12 @@ export function getQueryObject(url) {
 
 export function getToken() {
   return sessionStorage.getItem("qt-token");
+}
+
+export function showMessage(value) {
+  ElMessage({
+    type: value === true ? "success" : value === false ? "error" : "warning",
+    message: value === true ? "操作成功" : value === false ? "操作失败" : value,
+    duration: value === true ? 2000 : 3000,
+  });
 }
