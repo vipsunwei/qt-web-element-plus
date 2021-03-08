@@ -1,12 +1,25 @@
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
-const IS_MOCK = false;
+const IS_MOCK = true;
 const host = process.env.VUE_APP_HOST;
 const request = axios.create({
   baseURL: host,
   timeout: 10 * 1000,
 });
+
+request.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    ElMessage({
+      type: "error",
+      message: error.message,
+      duration: 3000,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export const deviceEnableDict = {
   YSRP: "接收机",
@@ -25,9 +38,7 @@ export const deviceEnableDict = {
 export function getDeviceEnable() {
   let url = `/api/environment/getDeviceEnable`;
   const token = getToken();
-  if (token) {
-    url += `?token=${token}`;
-  }
+
   return IS_MOCK
     ? Promise.resolve([
         { YINF: true },
@@ -39,10 +50,7 @@ export function getDeviceEnable() {
         { YEMS: true },
         { YSRP: false },
       ])
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token } });
 }
 
 /**
@@ -53,14 +61,11 @@ export function getDeviceEnable() {
  */
 export function closeDeviceEnable(param) {
   const token = getToken();
-  let url = `/api/environment/closeDeviceEnable?token=${token}&Dtype=${param.Dtype}`;
+  let url = `/api/environment/closeDeviceEnable`;
 
   return IS_MOCK
     ? Promise.resolve({ closeDeviceEnable: true })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token, Dtype: param.Dtype } });
 }
 
 /**
@@ -71,11 +76,8 @@ export function closeDeviceEnable(param) {
  */
 export function openDeviceEnable(param) {
   const token = getToken();
-  let url = `/api/environment/openDeviceEnable?token=${token}&Dtype=${param.Dtype}`;
+  let url = `/api/environment/openDeviceEnable`;
   return IS_MOCK
     ? Promise.resolve({ openDeviceEnable: true })
-    : request
-        .get(url)
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, { params: { token, Dtype: param.Dtype } });
 }
