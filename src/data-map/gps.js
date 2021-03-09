@@ -4,10 +4,10 @@ export function getGpsInfoMap() {
     hour: { key: "hour", name: "时", value: "" },
     monthValue: { key: "monthValue", name: "月", value: "" },
     minute: { key: "minute", name: "分", value: "" },
-    dayOfWeek: { key: "dayOfWeek", name: "星期", value: "" },
+    // dayOfWeek: { key: "dayOfWeek", name: "星期", value: "" },
+    dayOfMonth: { key: "dayOfMonth", name: "日", value: "" },
     second: { key: "second", name: "秒", value: "" },
-    month: { key: "month", name: "月", value: "" },
-    dayOfYear: { key: "dayOfYear", name: "本年第几天", value: "" },
-    dayOfMonth: { key: "dayOfMonth", name: "本月第几天", value: "" },
+    // month: { key: "month", name: "月", value: "" },
+    // dayOfYear: { key: "dayOfYear", name: "本年第几天", value: "" },
   };
 }
