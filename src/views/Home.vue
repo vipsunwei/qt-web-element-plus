@@ -463,35 +463,37 @@ export default {
       passedLat: "纬度是否通过",
       passedAlt: "海拔是否通过",
       passed: "是否通过",
-      ctime: "创建时间",
+      // ctime: "创建时间",
     };
     const checkReportData = ref(null);
-    async function showCheckReport() {
+    function showCheckReport() {
       if (state.isLoading) return;
       state.isLoading = true;
-      const result = await getCheckReport(tkyid.value);
-      console.log(result, "show check report");
-      const checkResultRecord = result?.checkResultRecord;
-      if (!checkResultRecord.ctime) {
-        checkResultRecord.ctime = formatDate(
-          new Date(result?.ctime),
-          "yyyy-MM-dd HH:mm:ss"
-        );
-      }
-      if (!checkResultRecord.checkResultStatus) {
-        checkResultRecord.checkResultStatus = result?.checkResultStatus;
-      }
-      const checkReportFormatted = [];
-      for (const key in checkResultRecord) {
-        if (checkResultRecordColumns[key]) {
-          checkReportFormatted.push({
-            label: checkResultRecordColumns[key],
-            value: passedfilter(key, checkResultRecord[key]),
-          });
-        }
-      }
-      checkReportData.value = checkReportFormatted;
-      state.isLoading = false;
+      getCheckReport(tkyid.value)
+        .then((result) => {
+          console.log(result, "show check report");
+          const checkResultRecord = result;
+          if (result.ctime) {
+            checkResultRecord.ctime = formatDate(
+              new Date(result?.ctime),
+              "yyyy-MM-dd HH:mm:ss"
+            );
+          }
+
+          const checkReportFormatted = [];
+          for (const key in checkResultRecord) {
+            if (checkResultRecordColumns[key]) {
+              checkReportFormatted.push({
+                label: checkResultRecordColumns[key],
+                value: passedfilter(key, checkResultRecord[key]),
+              });
+            }
+          }
+          checkReportData.value = checkReportFormatted;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
 
     return {
