@@ -6,7 +6,7 @@ const host = process.env.VUE_APP_HOST;
 
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
 // 切换假数据开关
-const IS_MOCK = true;
+const IS_MOCK = false;
 
 const request = axios.create({
   baseURL: host,
