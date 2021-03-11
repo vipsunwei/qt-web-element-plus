@@ -1,13 +1,28 @@
 <template>
   <div class="home" v-loading="isLoading">
     时间
-    <el-date-picker
+    <!-- <el-date-picker
       v-model="date"
       type="datetimerange"
       range-separator="至"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
-    ></el-date-picker>
+    ></el-date-picker> -->
+    <el-date-picker
+      v-model="startDate"
+      type="date"
+      placeholder="开始日期"
+      :disabled-date="disabledStartDate"
+    >
+    </el-date-picker>
+    至
+    <el-date-picker
+      v-model="endDate"
+      type="date"
+      placeholder="结束日期"
+      :disabled-date="disabledEndDate"
+    >
+    </el-date-picker>
     时间类型
     <el-select
       v-model="timeType"
@@ -18,7 +33,7 @@
       <el-option label="放球时间" value="放球时间"> </el-option>
       <el-option label="基测时间" value="基测时间"> </el-option>
     </el-select>
-    <el-button type="primary" @click="handleDatePickerChange"> 搜索 </el-button>
+    <el-button type="primary" @click="onClickSearch"> 搜索 </el-button>
 
     <div v-if="isShowSelectTkyid">
       <div style="padding: 20px 0">探空仪编号</div>
@@ -52,7 +67,8 @@
     </div>
 
     <div v-show="isTCSJ" style="margin-top: 20px">
-      <el-date-picker
+      <!-- <el-date-picker
+        v-if="0"
         v-model="dateForTCSJ"
         type="datetimerange"
         range-separator="至"
@@ -61,14 +77,8 @@
         unlink-panels
         :disabled-date="disabledDate"
         @change="handleDateForTCSJChange"
-      ></el-date-picker>
-      <el-table
-        :data="tableData"
-        :max-height="maxHeight"
-        border
-        stripe
-        style="width: 100%; margin-top: 20px"
-      >
+      ></el-date-picker> -->
+      <el-table :data="tableData" border stripe style="margin-top: 20px">
         <el-table-column
           type="index"
           width="60"
@@ -140,6 +150,8 @@ import {
   getTkyInfoByJCTime,
   getCheckReport,
 } from "../api/index.js";
+import useDatepicker from "../hooks/useDatepicker.js";
+import { ElMessage } from "element-plus";
 
 export default {
   name: "Home",
@@ -154,31 +166,50 @@ export default {
       maxHeight.value = viewHeight * 0.7;
     });
     /** 时间选择框 */
-    const date = ref("");
+    const { date, disabledStartDate, disabledEndDate } = useDatepicker();
+    // const date = ref("");
     const timeType = ref("");
-    const tkyids = ref([]);
-    async function handleDatePickerChange() {
-      tkyid.value = "";
-      if (!date.value || !timeType.value) {
+    function onClickSearch() {
+      if (!date.startDate || !date.endDate || !timeType.value) {
+        ElMessage({
+          type: "warning",
+          message: !date.startDate
+            ? "请选择开始日期"
+            : !date.endDate
+            ? "请选择结束日期"
+            : !timeType.value
+            ? "请选择时间类型"
+            : "",
+        });
         return;
       }
-      let [st, et] = date.value;
-      st = formatDate(st, "yyyy-MM-dd HH:mm:ss");
-      et = formatDate(et, "yyyy-MM-dd HH:mm:ss");
+      tkyid.value = "";
+      const st = formatDate(date.startDate, "yyyy-MM-dd HH:mm:ss");
+      const et = formatDate(date.endDate, "yyyy-MM-dd HH:mm:ss");
       if (state.isLoading) return;
       state.isLoading = true;
       if (timeType.value === "放球时间") {
-        const result = await getTkyInfo(st, et);
-        console.log("根据放球时间获取探空仪id -- ", result);
-        tkyids.value = result;
+        getTkyInfo(st, et)
+          .then((result) => {
+            console.log("根据放球时间获取探空仪id -- ", result);
+            tkyids.value = result;
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
       } else if (timeType.value === "基测时间") {
-        const result = await getTkyInfoByJCTime(st, et);
-        console.log("根据基测时间获取探空仪id", result);
-        tkyids.value = result;
+        getTkyInfoByJCTime(st, et)
+          .then((result) => {
+            console.log("根据基测时间获取探空仪id", result);
+            tkyids.value = result;
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
       }
-      state.isLoading = false;
     }
     /** 探空仪编号 */
+    const tkyids = ref([]);
     const isShowSelectTkyid = computed(() => tkyids.value.length);
     const tkyid = ref("");
     function handleTkyidChange(curTkyid) {
@@ -416,22 +447,26 @@ export default {
         label: "盒内温度",
       },
     ];
-    async function showTkyData() {
+    function showTkyData() {
       if (state.isLoading) return;
       state.isLoading = true;
-      state.dateForTCSJ = state.dateForTCSJ || date.value;
-      state.startTime = formatDate(state.dateForTCSJ[0], "yyyy-MM-dd HH:mm:ss");
-      state.endTime = formatDate(state.dateForTCSJ[1], "yyyy-MM-dd HH:mm:ss");
+      // state.dateForTCSJ = state.dateForTCSJ || date.value;
+      // state.startTime = formatDate(state.dateForTCSJ[0], "yyyy-MM-dd HH:mm:ss");
+      // state.endTime = formatDate(state.dateForTCSJ[1], "yyyy-MM-dd HH:mm:ss");
       const option = {
         tkyid: tkyid.value,
-        startTime: state.startTime,
-        endTime: state.endTime,
+        startTime: formatDate(date.startDate, "yyyy-MM-dd HH:mm:ss"),
+        endTime: formatDate(date.endDate, "yyyy-MM-dd HH:mm:ss"),
         pageSize: state.pageSize,
         pageNumber: state.pageNumber,
       };
-      const result = await getTkyData(option);
-      tkyData.value = result;
-      state.isLoading = false;
+      getTkyData(option)
+        .then((result) => {
+          tkyData.value = result;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
     // 检测报告
     const checkResultRecordColumns = {
@@ -497,12 +532,14 @@ export default {
     }
 
     return {
-      date,
+      ...toRefs(date),
+      disabledStartDate,
+      disabledEndDate,
       timeType,
       tkyid,
       tkyids,
       isShowSelectTkyid,
-      handleDatePickerChange,
+      onClickSearch,
       handleTkyidChange,
       isRadioDisabled,
       dataType,
