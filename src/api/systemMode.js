@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
@@ -11,22 +12,30 @@ const request = axios.create({
 });
 request.interceptors.response.use(
   (res) => res.data,
-  (err) => Promise.reject(err)
+  (err) => {
+    ElMessage({
+      type: "error",
+      message: err.message,
+      duration: 3000,
+    });
+    return Promise.reject(err);
+  }
 );
 
 export function getSystemMode() {
-  const url = `/api/environment/getSystemMode?token=${getToken()}`;
+  const url = `/api/environment/getSystemMode`;
   return IS_MOCK
     ? Promise.resolve({ SystemMode: "INITIALIZING" })
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
 
 export function setSystemMode(value) {
-  const url = `/api/environment/setSystemMode?token=${getToken()}`;
+  const url = `/api/environment/setSystemMode`;
   return IS_MOCK
     ? Promise.resolve({ setSystemMode: true })
     : request.get(url, {
         params: {
+          token: getToken(),
           ModeName: value,
         },
       });

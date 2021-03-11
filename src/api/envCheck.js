@@ -21,6 +21,7 @@ request.interceptors.response.use(
       message: error.message,
       duration: 3000,
     });
+    return Promise.reject(error);
   }
 );
 /**
