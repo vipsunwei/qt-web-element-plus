@@ -7,12 +7,7 @@
     <template #header>
       <span>当前存活的告警信息</span>
     </template>
-    <el-table
-      v-loading="isLoading"
-      :data="tableData"
-      :max-height="maxHeight"
-      stripe
-    >
+    <el-table v-loading="isLoading" :data="tableData" stripe>
       <el-table-column type="index" align="center" label="#" width="80">
       </el-table-column>
       <el-table-column label="报警源">
