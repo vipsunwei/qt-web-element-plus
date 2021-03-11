@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="10">
     <el-col
-      :span="6"
+      :span="5"
       :offset="0"
       :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
     >
@@ -25,7 +25,7 @@
       </el-select>
     </el-col>
     <el-col
-      :span="6"
+      :span="5"
       :offset="0"
       :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
     >
@@ -50,12 +50,12 @@
       </el-select>
     </el-col>
     <el-col
-      :span="9"
+      :span="11"
       :offset="0"
       :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
     >
       时间
-      <el-date-picker
+      <!-- <el-date-picker
         v-model="date"
         type="datetimerange"
         unlink-panels
@@ -63,6 +63,21 @@
         end-placeholder="结束日期"
         range-separator="至"
         @change="onDateChange"
+      >
+      </el-date-picker> -->
+      <el-date-picker
+        v-model="startDate"
+        type="date"
+        placeholder="开始日期"
+        :disabled-date="disabledStartDate"
+      >
+      </el-date-picker>
+      至
+      <el-date-picker
+        v-model="endDate"
+        type="date"
+        placeholder="结束日期"
+        :disabled-date="disabledEndDate"
       >
       </el-date-picker>
     </el-col>
@@ -186,6 +201,7 @@ import {
   toRefs,
 } from "vue";
 import { ElMessage } from "element-plus";
+import useDatepicker from "../hooks/useDatepicker.js";
 export default defineComponent({
   name: "WarningMessage",
   setup() {
@@ -198,7 +214,7 @@ export default defineComponent({
     onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
     const state = reactive({
       maxHeight: null,
-      date: "",
+      // date: "",
       level: "",
       levels: [],
       type: "",
@@ -213,6 +229,7 @@ export default defineComponent({
         () => state.pageNumber === Math.ceil(state.totalCount / state.pageSize)
       ),
     });
+    const { date, disabledStartDate, disabledEndDate } = useDatepicker();
     const getMaxHeight = debounce(function () {
       const viewHeight = document.body.offsetHeight;
       state.maxHeight = viewHeight * 0.8;
@@ -288,19 +305,26 @@ export default defineComponent({
       search();
     }, 500);
     function search() {
-      if (state.date !== "") {
-        const option = {
-          startTime: formatDate(state.date[0], "yyyy-MM-dd HH:mm:ss"),
-          endTime: formatDate(state.date[1], "yyyy-MM-dd HH:mm:ss"),
-          level: state.level,
-          typeCode: state.type,
-          pageNumber: state.pageNumber,
-          pageSize: state.pageSize,
-        };
-        getWarnings(option);
-      } else {
-        ElMessage.warning({ message: "时间范围必选" });
+      if (!date.startDate || !date.endDate) {
+        ElMessage({
+          type: "warning",
+          message: !date.startDate
+            ? "请选择开始日期"
+            : !date.endDate
+            ? "请选择结束日期"
+            : "",
+        });
+        return;
       }
+      const option = {
+        startTime: formatDate(date.startDate, "yyyy-MM-dd HH:mm:ss"),
+        endTime: formatDate(date.endDate, "yyyy-MM-dd HH:mm:ss"),
+        level: state.level,
+        typeCode: state.type,
+        pageNumber: state.pageNumber,
+        pageSize: state.pageSize,
+      };
+      getWarnings(option);
     }
     function getWarnings(option) {
       if (state.isLoading) {
@@ -340,6 +364,9 @@ export default defineComponent({
       onLevelChange,
       onTypeChange,
       ...toRefs(state),
+      ...toRefs(date),
+      disabledStartDate,
+      disabledEndDate,
       onDateChange,
       search,
       onPageSizeChange,
