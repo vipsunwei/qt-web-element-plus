@@ -1,6 +1,11 @@
 <template>
-  <el-row :gutter="20">
-    <el-col :span="12" :offset="0">
+  <el-row :gutter="10">
+    <el-col
+      :span="6"
+      :offset="0"
+      :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
+    >
+      级别
       <el-select
         style="width: 100%"
         v-model="level"
@@ -19,7 +24,12 @@
         </el-option>
       </el-select>
     </el-col>
-    <el-col :span="12" :offset="0">
+    <el-col
+      :span="6"
+      :offset="0"
+      :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
+    >
+      类别
       <el-select
         style="width: 100%"
         v-model="type"
@@ -39,9 +49,12 @@
         </el-option>
       </el-select>
     </el-col>
-  </el-row>
-  <el-row :gutter="20" style="margin-top: 20px">
-    <el-col :span="12" :offset="0">
+    <el-col
+      :span="9"
+      :offset="0"
+      :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
+    >
+      时间
       <el-date-picker
         v-model="date"
         type="datetimerange"
@@ -53,10 +66,16 @@
       >
       </el-date-picker>
     </el-col>
-    <el-col :span="12" :offset="0" align="center">
+    <el-col
+      :span="3"
+      :offset="0"
+      align="center"
+      :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
+    >
       <el-button type="primary" @click="search">搜索</el-button>
     </el-col>
   </el-row>
+
   <el-card
     shadow="always"
     :body-style="{ padding: '0px' }"
@@ -65,7 +84,7 @@
     <template #header>
       <span>告警信息</span>
     </template>
-    <el-table :data="warningMessage" :height="maxHeight" stripe>
+    <el-table :data="warningMessage" stripe>
       <el-table-column
         type="index"
         label="#"
@@ -100,7 +119,7 @@
       </el-table-column>
       <el-table-column label="确认时间">
         <template #default="scope">
-          <span>{{ scope.row?.ackTime }}</span>
+          <span>{{ formatAckTime(scope.row?.ackTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="确认人">
@@ -261,6 +280,11 @@ export default {
       await sleep(800);
       state.isLoading = false;
     }
+
+    function formatAckTime(ackTime) {
+      if (!ackTime) return "";
+      return formatDate(new Date(ackTime), "yyyy-MM-dd");
+    }
     return {
       onLevelChange,
       onTypeChange,
@@ -270,6 +294,7 @@ export default {
       onPageSizeChange,
       onPageNumberChange,
       levelsDict,
+      formatAckTime,
     };
   },
 };
