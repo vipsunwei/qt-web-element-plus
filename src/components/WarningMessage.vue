@@ -128,32 +128,65 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      style="margin-top: 20px; margin-bottom: 20px"
-      @size-change="onPageSizeChange"
-      @current-change="onPageNumberChange"
-      :current-page="pageNumber"
-      :page-sizes="[20, 40, 80, 100]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="totalCount"
-      background
+
+    <div
+      :style="{
+        marginTop: '20px',
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+      }"
     >
-    </el-pagination>
+      <el-pagination
+        @size-change="onPageSizeChange"
+        @current-change="onPageNumberChange"
+        :current-page="pageNumber"
+        :page-sizes="[20, 40, 80, 100]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+        background
+      >
+      </el-pagination>
+      <el-button
+        :style="{ marginLeft: '10px' }"
+        type="primary"
+        size="mini"
+        @click="goFirst"
+        :disabled="disabledGoFirst"
+      >
+        首页
+      </el-button>
+      <el-button
+        type="primary"
+        size="mini"
+        @click="goLast"
+        :disabled="disabledGoLast"
+      >
+        末页
+      </el-button>
+    </div>
   </el-card>
 </template>
 
 <script>
-import { debounce, formatDate, sleep } from "./../utils/utils";
+import { debounce, formatDate } from "./../utils/utils";
 import {
   getWarningAlarmLevel,
   getWarningAlarmComponent,
   getWarningMessage,
   levelsDict,
 } from "../api/index";
-import { onMounted, onUnmounted, reactive, toRefs } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  reactive,
+  toRefs,
+} from "vue";
 import { ElMessage } from "element-plus";
-export default {
+export default defineComponent({
   name: "WarningMessage",
   setup() {
     onMounted(() => {
@@ -175,6 +208,10 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       isLoading: false,
+      disabledGoFirst: computed(() => state.pageNumber === 1),
+      disabledGoLast: computed(
+        () => state.pageNumber === Math.ceil(state.totalCount / state.pageSize)
+      ),
     });
     const getMaxHeight = debounce(function () {
       const viewHeight = document.body.offsetHeight;
@@ -198,9 +235,10 @@ export default {
       }
       return arr;
     }
-    async function getLevels() {
-      const result = await getWarningAlarmLevel();
-      state.levels = formatLevels(result);
+    function getLevels() {
+      getWarningAlarmLevel().then((result) => {
+        state.levels = formatLevels(result);
+      });
     }
     function onLevelChange(curLevel) {
       console.log("cur level -- ", curLevel, "state.level", state.level);
@@ -223,9 +261,10 @@ export default {
       }
       return arr;
     }
-    async function getTypes() {
-      const result = await getWarningAlarmComponent();
-      state.types = formatTypes(result);
+    function getTypes() {
+      getWarningAlarmComponent().then((result) => {
+        state.types = formatTypes(result);
+      });
     }
     function onTypeChange(curType) {
       console.log("type value -- ", curType, state.type);
@@ -260,13 +299,10 @@ export default {
         };
         getWarnings(option);
       } else {
-        ElMessage.error({
-          message: "时间范围必选",
-          showClose: true,
-        });
+        ElMessage.warning({ message: "时间范围必选" });
       }
     }
-    async function getWarnings(option) {
+    function getWarnings(option) {
       if (state.isLoading) {
         // ElMessage.warning({
         //   message: "您的操作太快了~",
@@ -274,16 +310,31 @@ export default {
         return;
       }
       state.isLoading = true;
-      const result = await getWarningMessage(option);
-      state.warningMessage = result?.dataArray?.slice(0, state.pageSize);
-      state.totalCount = result?.totalCount;
-      await sleep(800);
-      state.isLoading = false;
+      getWarningMessage(option)
+        .then((result) => {
+          state.warningMessage = result?.dataArray?.slice(0, state.pageSize);
+          state.totalCount = result?.totalCount;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
 
     function formatAckTime(ackTime) {
       if (!ackTime) return "";
       return formatDate(new Date(ackTime), "yyyy-MM-dd");
+    }
+
+    function goFirst() {
+      if (state.pageNumber === 1) return;
+      state.pageNumber = 1;
+      search();
+    }
+    function goLast() {
+      const last = Math.ceil(state.totalCount / state.pageSize);
+      if (last === state.pageNumber) return;
+      state.pageNumber = last;
+      search();
     }
     return {
       onLevelChange,
@@ -295,9 +346,11 @@ export default {
       onPageNumberChange,
       levelsDict,
       formatAckTime,
+      goFirst,
+      goLast,
     };
   },
-};
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

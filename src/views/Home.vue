@@ -93,17 +93,37 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        style="margin-top: 20px"
-        @size-change="handlePageSizeChange"
-        @current-change="handlePageNumberChange"
-        :page-sizes="[20, 40, 80, 100]"
-        :page-size="pageSize"
-        :current-page="pageNumber"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalCount"
-        background
-      ></el-pagination>
+      <div
+        :style="{ marginTop: '20px', display: 'flex', alignItems: 'center' }"
+      >
+        <el-pagination
+          @size-change="handlePageSizeChange"
+          @current-change="handlePageNumberChange"
+          :page-sizes="[20, 40, 80, 100]"
+          :page-size="pageSize"
+          :current-page="pageNumber"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalCount"
+          background
+        ></el-pagination>
+        <el-button
+          :style="{ marginLeft: '10px' }"
+          type="primary"
+          size="mini"
+          @click="goFirst"
+          :disabled="disabledGoFirst"
+        >
+          首页
+        </el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="goLast"
+          :disabled="disabledGoLast"
+        >
+          末页
+        </el-button>
+      </div>
     </div>
 
     <div v-show="isSSZ" style="margin-top: 20px">
@@ -305,7 +325,6 @@ export default {
     const tkyData = ref({
       dataArray: [],
       totalCount: 0,
-      pageSize: 20,
     });
     const state = reactive({
       dateForTCSJ: "",
@@ -315,6 +334,10 @@ export default {
       pageNumber: 1,
       isShowTable: false,
       isLoading: false,
+      disabledGoFirst: computed(() => state.pageNumber === 1),
+      disabledGoLast: computed(
+        () => state.pageNumber === Math.ceil(totalCount.value / state.pageSize)
+      ),
     });
     const tableData = computed(
       () => tkyData.value?.dataArray?.slice(0, state.pageSize) || []
@@ -350,6 +373,17 @@ export default {
       state.pageNumber = value;
       showTkyData();
     });
+    function goFirst() {
+      if (state.pageNumber === 1) return;
+      state.pageNumber = 1;
+      showTkyData();
+    }
+    function goLast() {
+      const last = Math.ceil(totalCount.value / state.pageSize);
+      if (last === state.pageNumber) return;
+      state.pageNumber = last;
+      showTkyData();
+    }
     const tkyDataColumns = [
       {
         prop: "tkyid",
@@ -524,6 +558,8 @@ export default {
       disabledDate,
       maxHeight,
       formatDate,
+      goFirst,
+      goLast,
     };
   },
 };
