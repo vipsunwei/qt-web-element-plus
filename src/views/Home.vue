@@ -52,7 +52,7 @@
     </div>
 
     <div v-show="isTCSJ" style="margin-top: 20px">
-      <el-date-picker
+      <!-- <el-date-picker
         v-model="dateForTCSJ"
         type="datetimerange"
         range-separator="至"
@@ -61,10 +61,9 @@
         unlink-panels
         :disabled-date="disabledDate"
         @change="handleDateForTCSJChange"
-      ></el-date-picker>
+      ></el-date-picker> -->
       <el-table
         :data="tableData"
-        :max-height="maxHeight"
         border
         stripe
         style="width: 100%; margin-top: 20px"
