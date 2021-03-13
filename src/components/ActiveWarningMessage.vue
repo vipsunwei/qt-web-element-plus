@@ -50,12 +50,14 @@ import emitter from "../hooks/useMitt";
 export default {
   name: "ActiveWarningMessage",
   setup() {
-    const IS_MOCK = true;
+    const IS_MOCK = false;
 
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();
-      getTableData();
+      getTableData().then((result) => {
+        emitter.emit("alarm", result);
+      });
     });
     onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
     const getMaxHeight = debounce(function () {
@@ -63,12 +65,17 @@ export default {
       state.maxHeight = viewHeight * 0.3;
       // console.log(state.maxHeight, typeof state.maxHeight);
     });
-    async function getTableData() {
+    function getTableData() {
       state.isLoading = true;
-      const result = await getActiveWarningMessage();
-      state.tableData = result;
-      state.isLoading = false;
-      emitter.emit("alarm", result);
+      return getActiveWarningMessage()
+        .then((result) => {
+          state.tableData = result;
+          // emitter.emit("alarm", result);
+          return result;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
     const state = reactive({
       tableData: [],
