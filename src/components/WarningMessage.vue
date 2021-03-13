@@ -224,9 +224,11 @@ export default defineComponent({
       pageSize: 20,
       pageNumber: 1,
       isLoading: false,
-      disabledGoFirst: computed(() => state.pageNumber === 1),
-      disabledGoLast: computed(
-        () => state.pageNumber === Math.ceil(state.totalCount / state.pageSize)
+      disabledGoFirst: computed(
+        () => state.totalCount === 0 || state.pageNumber === 1
+      ),
+      disabledGoLast: computed(() =>
+        [0, 1, state.pageNumber].includes(lastPage.value)
       ),
     });
     const { date, disabledStartDate, disabledEndDate } = useDatepicker();
@@ -356,14 +358,16 @@ export default defineComponent({
     }
 
     function goFirst() {
-      if (state.pageNumber === 1) return;
+      if (state.totalCount === 0 || state.pageNumber === 1) return;
       state.pageNumber = 1;
       search();
     }
+    const lastPage = computed(() =>
+      Math.ceil(state.totalCount / state.pageSize)
+    );
     function goLast() {
-      const last = Math.ceil(state.totalCount / state.pageSize);
-      if (last === state.pageNumber) return;
-      state.pageNumber = last;
+      if ([0, 1, state.pageNumber].includes(lastPage.value)) return;
+      state.pageNumber = lastPage.value;
       search();
     }
     return {
