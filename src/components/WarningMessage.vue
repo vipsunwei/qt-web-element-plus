@@ -98,7 +98,7 @@
       </el-table-column>
       <el-table-column label="报警级别">
         <template #default="scope">
-          <span>{{ levelsDict[scope.row?.alarm?.alarmLevel] }}</span>
+          <span>{{ levelsDict[scope.row?.alarm?.alarmLevel].text }}</span>
         </template>
       </el-table-column>
       <el-table-column label="报警名称">
@@ -220,11 +220,17 @@ export default defineComponent({
     function formatLevelItem(o) {
       const tempObject = {};
       for (const key in o) {
-        if (+o[key] >= 0) {
+        if (Object.hasOwnProperty.call(o, key)) {
           tempObject.levelCode = o[key];
-          tempObject.levelText = "等级 " + o[key];
+          tempObject.levelText = levelsDict[key].text;
         }
       }
+      // for (const key in o) {
+      //   if (+o[key] >= 0) {
+      //     tempObject.levelCode = o[key];
+      //     tempObject.levelText = "等级 " + o[key];
+      //   }
+      // }
       return tempObject;
     }
     function formatLevels(levelArr) {
