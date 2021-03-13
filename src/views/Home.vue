@@ -67,6 +67,139 @@
     </div>
 
     <div v-show="isTCSJ" style="margin-top: 20px">
+      <el-table :data="tableData" border stripe :max-height="maxHeight">
+        <el-table-column type="index" label="#" width="60" align="center" fixed>
+        </el-table-column>
+        <el-table-column
+          prop="tkyid"
+          label="探空仪编号"
+          width="100"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="stationNumber"
+          label="台站号"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="freqz"
+          label="频率值"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="dataTime"
+          label="数据时间"
+          width="180"
+          sortable
+          show-overflow-tooltip
+          :formatter="dataTimeFormatter"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="lng"
+          label="经度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="lat"
+          label="纬度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="altitude"
+          label="海拔高度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="nspeed"
+          label="北向速度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="espeed"
+          label="东向速度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="vspeed"
+          label="垂直速度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="satellitesNum"
+          label="卫星数"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="temperature"
+          label="气温"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="humidity"
+          label="湿度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="pressure"
+          label="气压"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="batteryVol"
+          label="电池电压"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="boxTemperature"
+          label="盒内温度"
+          width="100"
+          sortable
+          show-overflow-tooltip
+        >
+        </el-table-column>
+      </el-table>
+
       <!-- <el-date-picker
         v-if="0"
         v-model="dateForTCSJ"
@@ -78,7 +211,7 @@
         :disabled-date="disabledDate"
         @change="handleDateForTCSJChange"
       ></el-date-picker> -->
-      <el-table :data="tableData" border stripe style="margin-top: 20px">
+      <!-- <el-table :data="tableData" border stripe style="margin-top: 20px">
         <el-table-column
           type="index"
           width="60"
@@ -102,7 +235,7 @@
             <span v-else>{{ scope.row[col.prop] }}</span>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
       <div
         :style="{ marginTop: '20px', display: 'flex', alignItems: 'center' }"
       >
@@ -161,7 +294,7 @@
 
 <script>
 import { computed, onMounted, onUnmounted, reactive, ref, toRefs } from "vue";
-import { debounce, formatDate, sleep } from "../utils/utils.js";
+import { debounce, formatDate } from "../utils/utils.js";
 import {
   getBaseTestReport,
   getInstantInfo,
@@ -180,7 +313,11 @@ export default {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();
     });
-    onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
+    onUnmounted(() => {
+      window.removeEventListener("resize", getMaxHeight);
+      console.log("onUnmounted...");
+    });
+
     const getMaxHeight = debounce(function () {
       const viewHeight = window.document.body.offsetHeight;
       maxHeight.value = viewHeight * 0.7;
@@ -235,7 +372,7 @@ export default {
     function handleTkyidChange(curTkyid) {
       // tkyid.value = curTkyid;
       dataType.value = "";
-      state.dateForTCSJ = "";
+      // state.dateForTCSJ = "";
       state.pageSize = 20;
       state.pageNumber = 1;
     }
@@ -282,33 +419,36 @@ export default {
       // cTime: "创建时间",
     };
     const baseTestReport = ref(null);
-    async function showBaseTestReport() {
+    function showBaseTestReport() {
       if (state.isLoading) return;
       state.isLoading = true;
-      const result = await getBaseTestReport(tkyid.value);
-      const jcResultRecord = result?.jcResultRecord;
-      if (!jcResultRecord.ctime) {
-        jcResultRecord.ctime = result?.ctime;
-      }
-      if (!jcResultRecord.jcResultStatus) {
-        jcResultRecord.jcResultStatus = result?.jcResultStatus;
-      }
-      jcResultRecord.cTime = formatDate(
-        new Date(jcResultRecord.ctime),
-        "yyyy-MM-dd HH:mm:ss"
-      );
-      const baseTestReportFormatted = [];
-      for (const key in jcResultRecord) {
-        if (jcResultRecordColumns[key]) {
-          baseTestReportFormatted.push({
-            label: jcResultRecordColumns[key],
-            value: passedfilter(key, jcResultRecord[key]),
-          });
-        }
-      }
-      baseTestReport.value = baseTestReportFormatted;
-      // await sleep(500);
-      state.isLoading = false;
+      getBaseTestReport(tkyid.value)
+        .then((result) => {
+          const jcResultRecord = result?.jcResultRecord;
+          if (!jcResultRecord.ctime) {
+            jcResultRecord.ctime = result?.ctime;
+          }
+          if (!jcResultRecord.jcResultStatus) {
+            jcResultRecord.jcResultStatus = result?.jcResultStatus;
+          }
+          jcResultRecord.cTime = formatDate(
+            new Date(jcResultRecord.ctime),
+            "yyyy-MM-dd HH:mm:ss"
+          );
+          const baseTestReportFormatted = [];
+          for (const key in jcResultRecord) {
+            if (jcResultRecordColumns[key]) {
+              baseTestReportFormatted.push({
+                label: jcResultRecordColumns[key],
+                value: passedfilter(key, jcResultRecord[key]),
+              });
+            }
+          }
+          baseTestReport.value = baseTestReportFormatted;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
     function passedfilter(key, value) {
       if (key.startsWith("passed")) {
@@ -333,24 +473,27 @@ export default {
       ctime: "创建时间",
     };
     const instantInfo = ref(null);
-    async function showInstantInfo() {
+    function showInstantInfo() {
       if (state.isLoading) return;
       state.isLoading = true;
-      const result = await getInstantInfo(tkyid.value);
-      const data = result;
-      data.ctime = formatDate(new Date(data.ctime), "yyyy-MM-dd HH:mm:ss");
-      const instantInfoFormatted = [];
-      for (const key in data) {
-        if (instantInfoColumns[key]) {
-          instantInfoFormatted.push({
-            label: instantInfoColumns[key],
-            value: data[key],
-          });
-        }
-      }
-      instantInfo.value = instantInfoFormatted;
-      // await sleep(500);
-      state.isLoading = false;
+      getInstantInfo(tkyid.value)
+        .then((result) => {
+          const data = result;
+          data.ctime = formatDate(new Date(data.ctime), "yyyy-MM-dd HH:mm:ss");
+          const instantInfoFormatted = [];
+          for (const key in data) {
+            if (instantInfoColumns[key]) {
+              instantInfoFormatted.push({
+                label: instantInfoColumns[key],
+                value: data[key],
+              });
+            }
+          }
+          instantInfo.value = instantInfoFormatted;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     }
     /** 探测数据 start */
     const tkyData = ref({
@@ -358,42 +501,44 @@ export default {
       totalCount: 0,
     });
     const state = reactive({
-      dateForTCSJ: "",
+      // dateForTCSJ: "",
       startTime: "",
       endTime: "",
       pageSize: 20,
       pageNumber: 1,
       isShowTable: false,
       isLoading: false,
-      disabledGoFirst: computed(() => state.pageNumber === 1),
-      disabledGoLast: computed(
-        () => state.pageNumber === Math.ceil(totalCount.value / state.pageSize)
+      disabledGoFirst: computed(
+        () => totalCount.value === 0 || state.pageNumber === 1
+      ),
+      disabledGoLast: computed(() =>
+        [0, 1, state.pageNumber].includes(lastPage.value)
       ),
     });
     const tableData = computed(
       () => tkyData.value?.dataArray?.slice(0, state.pageSize) || []
     );
-    const totalCount = computed(() => tkyData.value?.totalCount || 0);
+    const totalCount = computed(() => tkyData.value?.totalCount - 0 || 0);
     const maxHeight = ref(null);
     /** 探测数据 - 时间选择框 */
-    function handleDateForTCSJChange(dates) {
-      if (!dates) {
-        return;
-      }
-      // const [st, et] = dates;
-      // state.startTime = formatDate(st, "yyyy-MM-dd HH:mm:ss");
-      // state.endTime = formatDate(et, "yyyy-MM-dd HH:mm:ss");
-      state.pageNumber = 1;
-      showTkyData();
-    }
-    function disabledDate(time) {
-      if (!date.value) {
-        return false;
-      }
-      let st = date.value[0]?.getTime();
-      let et = date.value[1]?.getTime();
-      return time.getTime() > et || time.getTime() < st;
-    }
+    // function handleDateForTCSJChange(dates) {
+    //   if (!dates) {
+    //     return;
+    //   }
+    //   // const [st, et] = dates;
+    //   // state.startTime = formatDate(st, "yyyy-MM-dd HH:mm:ss");
+    //   // state.endTime = formatDate(et, "yyyy-MM-dd HH:mm:ss");
+    //   state.pageNumber = 1;
+    //   showTkyData();
+    // }
+    // function disabledDate(time) {
+    //   if (!date.value) {
+    //     return false;
+    //   }
+    //   let st = date.value[0]?.getTime();
+    //   let et = date.value[1]?.getTime();
+    //   return time.getTime() > et || time.getTime() < st;
+    // }
     /** 探测数据 - 分页器 */
     function handlePageSizeChange(value) {
       state.pageSize = value;
@@ -405,16 +550,19 @@ export default {
       showTkyData();
     });
     function goFirst() {
-      if (state.pageNumber === 1) return;
+      if (totalCount.value === 0 || state.pageNumber === 1) return;
       state.pageNumber = 1;
       showTkyData();
     }
+    const lastPage = computed(() =>
+      Math.ceil(totalCount.value / state.pageSize)
+    );
     function goLast() {
-      const last = Math.ceil(totalCount.value / state.pageSize);
-      if (last === state.pageNumber) return;
-      state.pageNumber = last;
+      if ([0, 1, state.pageNumber].includes(lastPage.value)) return;
+      state.pageNumber = lastPage.value;
       showTkyData();
     }
+    /**
     const tkyDataColumns = [
       {
         prop: "tkyid",
@@ -481,6 +629,7 @@ export default {
         label: "盒内温度",
       },
     ];
+    /**/
     function showTkyData() {
       if (state.isLoading) return;
       state.isLoading = true;
@@ -565,7 +714,12 @@ export default {
         });
     }
 
+    function dataTimeFormatter(row, column) {
+      return formatDate(new Date(row[column.property]), "yyyy-MM-dd HH:mm:ss");
+    }
+
     return {
+      dataTimeFormatter,
       ...toRefs(date),
       disabledStartDate,
       disabledEndDate,
@@ -587,12 +741,12 @@ export default {
       instantInfo,
       ...toRefs(state),
       tableData,
-      tkyDataColumns,
+      // tkyDataColumns,
       totalCount,
-      handleDateForTCSJChange,
+      // handleDateForTCSJChange,
       handlePageSizeChange,
       handlePageNumberChange,
-      disabledDate,
+      // disabledDate,
       maxHeight,
       formatDate,
       goFirst,

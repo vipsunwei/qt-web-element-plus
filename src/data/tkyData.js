@@ -5,7 +5,7 @@ const data = {
     {
       id: 104516,
       deviceDiIdVersion: "YSRP_001_001",
-      stationNumber: "56688",
+      stationNumber: "56687",
       length: 0,
       freqz: 403.0,
       rssi: 53,
@@ -71,7 +71,7 @@ const data = {
     {
       id: 104740,
       deviceDiIdVersion: "YSRP_001_001",
-      stationNumber: "56688",
+      stationNumber: "56686",
       length: 0,
       freqz: 403.0,
       rssi: 53,
@@ -203,7 +203,7 @@ const data = {
     {
       id: 104995,
       deviceDiIdVersion: "YSRP_001_001",
-      stationNumber: "56688",
+      stationNumber: "56689",
       length: 0,
       freqz: 403.0,
       rssi: 53,
