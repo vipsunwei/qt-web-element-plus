@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const IS_MOCK = false;
@@ -7,6 +8,18 @@ const request = axios.create({
   baseURL: host,
   timeout: 10 * 1000,
 });
+
+request.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    ElMessage({
+      type: "error",
+      message: error.message,
+      duration: 3000,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export const userDict = {
   id: "ID",
@@ -88,9 +101,7 @@ export function getUserList() {
         params: {
           token,
         },
-      })
-        .then((res) => res.data)
-        .catch((error) => error);
+      });
 }
 
 /**
@@ -113,9 +124,7 @@ export function getRoleNameList() {
         params: {
           token,
         },
-      })
-        .then((res) => res.data)
-        .catch((error) => error);
+      });
 }
 
 /**

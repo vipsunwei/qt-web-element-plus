@@ -139,6 +139,7 @@ import {
   updateUser,
 } from "../api/usersManager";
 import { ElMessage } from "element-plus";
+import { showMessage } from "../utils/utils";
 export default {
   setup() {
     onMounted(async () => {
@@ -237,26 +238,8 @@ export default {
       options.roles = options.roles.join(",");
       addUser(options)
         .then((res) => {
-          if (res.addUser === true) {
-            ElMessage({
-              type: "success",
-              message: "添加成功",
-              duration: 2000,
-            });
-            getUser();
-          } else if (res.addUser === false) {
-            ElMessage({
-              type: "error",
-              message: "添加失败",
-              duration: 3000,
-            });
-          } else {
-            ElMessage({
-              type: "warning",
-              message: res.addUser,
-              duration: 3000,
-            });
-          }
+          showMessage(res.addUser);
+          res.addUser === true && getUser();
         })
         .finally(() => {
           addUserState.isShowAddUser = false;
@@ -306,26 +289,8 @@ export default {
       }
       updateUser(options)
         .then((res) => {
-          if (res.updateUser === true) {
-            ElMessage({
-              type: "success",
-              message: "修改成功",
-              duration: 2000,
-            });
-            getUser();
-          } else if (res.updateUser === false) {
-            ElMessage({
-              type: "error",
-              message: "修改失败",
-              duration: 3000,
-            });
-          } else {
-            ElMessage({
-              type: "warning",
-              message: res.updateUser,
-              duration: 3000,
-            });
-          }
+          showMessage(res.updateUser);
+          res.updateUser === true && getUser();
         })
         .finally(() => (updateUserState.isShowUpdateUser = false));
     }

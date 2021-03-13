@@ -176,58 +176,101 @@
       style="border: 1px solid #dcdfe6; padding: 20px"
       ref="thresholdRef"
     >
-      <el-row>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="氢气浓度上限(0-9999Ppm):" prop="hydrogen">
-            <el-input v-model.number="threshold.hydrogen"></el-input>
-          </el-form-item>
-          <el-button type="primary" @click="hydrogenFn(threshold.hydrogen)">
-            保存
-          </el-button>
-          <el-button type="primary" @click="getHydrogenInquire">
-            查询
-          </el-button>
-          <el-form-item label="管道压力上限(0-30000kPa):" prop="press">
-            <el-input v-model.number="threshold.press"></el-input>
-          </el-form-item>
-          <el-button type="primary" @click="pressFn(threshold.press)">
-            保存
-          </el-button>
-          <el-button type="primary" @click="getPressInquire"> 查询 </el-button>
-
-          <el-form-item label="轻微氢气警告阈值:" prop="lowHydrogen">
-            <el-input v-model.number="threshold.lowHydrogen"></el-input>
-          </el-form-item>
-          <el-button
-            type="primary"
-            @click="lowHydrogenFn(threshold.lowHydrogen)"
+      <el-row type="flex" align="middle" justify="center">
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="氢气浓度上限(0-9999Ppm):"
+            prop="hydrogen"
           >
-            保存
-          </el-button>
+            <el-input v-model.number="threshold.hydrogen"></el-input>
+            <el-button type="primary" @click="hydrogenFn(threshold.hydrogen)">
+              保存
+            </el-button>
+            <el-button type="primary" @click="getHydrogenInquire">
+              查询
+            </el-button>
+          </el-form-item>
         </el-col>
-        <el-col :span="12" :offset="0">
-          <el-form-item label="烟雾报警器上限(0-5000Ppm):" prop="smoke">
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="管道压力上限(0-30000kPa):"
+            prop="press"
+          >
+            <el-input v-model.number="threshold.press"></el-input>
+            <el-button type="primary" @click="pressFn(threshold.press)">
+              保存
+            </el-button>
+            <el-button type="primary" @click="getPressInquire">
+              查询
+            </el-button>
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="烟雾报警器上限(0-5000Ppm):"
+            prop="smoke"
+          >
             <el-input v-model.number="threshold.smoke"></el-input>
+
+            <el-button type="primary" @click="smokeFn(threshold.smoke)">
+              保存
+            </el-button>
+            <el-button type="primary" @click="getSmokeInquire">
+              查询
+            </el-button>
           </el-form-item>
-          <el-button type="primary" @click="smokeFn(threshold.smoke)">
-            保存
-          </el-button>
-          <el-button type="primary" @click="getSmokeInquire"> 查询 </el-button>
-          <el-form-item label="开启时间上限设置(0-1800S):" prop="openTime">
+        </el-col>
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="开启时间上限设置(0-1800S):"
+            prop="openTime"
+          >
             <el-input v-model.number="threshold.openTime"></el-input>
+            <el-button type="primary" @click="openTimeFn(threshold.openTime)">
+              保存
+            </el-button>
+            <el-button type="primary" @click="getOpenTimeInquire">
+              查询
+            </el-button>
           </el-form-item>
-          <el-button type="primary" @click="openTimeFn(threshold.openTime)">
-            保存
-          </el-button>
-          <el-button type="primary" @click="getOpenTimeInquire">
-            查询
-          </el-button>
-          <el-form-item label="轻微压力警告阈值:" prop="lowPress">
+        </el-col>
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="轻微氢气警告阈值:"
+            prop="lowHydrogen"
+          >
+            <el-input v-model.number="threshold.lowHydrogen"></el-input>
+            <el-button
+              type="primary"
+              @click="lowHydrogenFn(threshold.lowHydrogen)"
+            >
+              保存
+            </el-button>
+            <el-button type="primary" :style="{ visibility: 'hidden' }">
+              查询
+            </el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12" :offset="0">
+          <el-form-item
+            class="el_form_item"
+            label="轻微压力警告阈值:"
+            prop="lowPress"
+          >
             <el-input v-model.number="threshold.lowPress"></el-input>
+            <el-button type="primary" @click="lowPressFn(threshold.lowPress)">
+              保存
+            </el-button>
+            <el-button type="primary" :style="{ visibility: 'hidden' }">
+              查询
+            </el-button>
           </el-form-item>
-          <el-button type="primary" @click="lowPressFn(threshold.lowPress)">
-            保存
-          </el-button>
         </el-col>
       </el-row>
       <!-- <el-form-item style="margin-bottom: 0">
@@ -479,5 +522,12 @@ export default {
 }
 .border-top {
   border-top: 1px solid #dcdfe6;
+}
+.el_form_item {
+  white-space: nowrap;
+  ::v-deep(.el-form-item__content .el-input) {
+    margin-right: 10px;
+    width: 100px;
+  }
 }
 </style>

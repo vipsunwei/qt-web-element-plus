@@ -59,6 +59,7 @@ export default {
     SettingDOM.style.top = "50%";
     SettingDOM.style.right = "16px";
     SettingDOM.style.transform = "translateY(-50%)";
+    SettingDOM.style.zIndex = "10";
 
     document.body.appendChild(SettingDOM);
 

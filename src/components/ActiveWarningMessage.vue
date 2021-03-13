@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column label="报警级别">
         <template #default="scope">
-          {{ levelsDict[scope.row?.alarm?.alarmLevel] }}
+          {{ levelsDict[scope.row?.alarm?.alarmLevel].text }}
         </template>
       </el-table-column>
       <el-table-column label="报警名称">
@@ -50,7 +50,7 @@ import emitter from "../hooks/useMitt";
 export default {
   name: "ActiveWarningMessage",
   setup() {
-    const IS_MOCK = false;
+    const IS_MOCK = true;
 
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);

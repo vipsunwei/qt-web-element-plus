@@ -5,7 +5,7 @@ import { getToken } from "../utils/utils";
 const host = process.env.VUE_APP_HOST;
 console.log("🚀 ~ file: index.js ~ host", host);
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
-const IS_MOCK = false; // 切换假数据开关
+const IS_MOCK = true; // 切换假数据开关
 
 const request = axios.create({
   baseURL: host,
@@ -261,9 +261,9 @@ export function ackAlarm(id) {
 }
 
 export const levelsDict = {
-  INFO: "等级 0",
-  SLIGHT: "等级 1",
-  GENERAL: "等级 2",
-  SERIOUS: "等级 3",
-  VERY_SERIOUS: "等级 4",
+  INFO: { number: "等级 0", text: "运行信息", key: "INFO" },
+  SLIGHT: { number: "等级 1", text: "轻微", key: "SLIGHT" },
+  GENERAL: { number: "等级 2", text: "一般", key: "GENERAL" },
+  SERIOUS: { number: "等级 3", text: "严重", key: "SERIOUS" },
+  VERY_SERIOUS: { number: "等级 4", text: "非常严重", key: "VERY+SERIOUS" },
 };
