@@ -21,10 +21,10 @@ export const envInfo = {
   domeWindDirection: null, // 仓顶秒风风向（度）
   alarmInfo: "branch1ValveStatus", // 报警信息(哪个要素出现报警哪个要素出现在列表中以空格分隔)
   // alarmInfo: null, // 报警信息(哪个要素出现报警哪个要素出现在列表中以空格分隔)
-  branch1ValveStatus: 0, // 支路1阀门状态
-  branch2ValveStatus: 0, // 支路2阀门状态
-  mainValveStatus: 1, // 总阀门状态
-  safetyValveStatus: 1, // 安全阀状态
+  branch1ValveStatus: 2, // 支路1阀门状态 3开4关2故障
+  branch2ValveStatus: 4, // 支路2阀门状态 3开4关2故障
+  mainValveStatus: 3, // 总阀门状态 3开4关2故障
+  safetyValveStatus: 3, // 安全阀状态 3开4关2故障
   ctime: 1608798953203,
 };
 
