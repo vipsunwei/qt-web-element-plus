@@ -259,11 +259,36 @@ export function ackAlarm(id) {
         },
       });
 }
-
+/**
+ * 报警级别字典
+ */
 export const levelsDict = {
   INFO: { number: "等级 0", text: "运行信息", key: "INFO" },
   SLIGHT: { number: "等级 1", text: "轻微", key: "SLIGHT" },
   GENERAL: { number: "等级 2", text: "一般", key: "GENERAL" },
   SERIOUS: { number: "等级 3", text: "严重", key: "SERIOUS" },
   VERY_SERIOUS: { number: "等级 4", text: "非常严重", key: "VERY+SERIOUS" },
+};
+/**
+ * 报警源名字字典
+ */
+export const componentNameDict = {
+  SYSTEM: { text: "自动探空系统", key: "SYSTEM" },
+  RECEIVER: { text: "接收机", key: "RECEIVER" },
+  JCX: { text: "基测箱", key: "JCX" },
+  AWS: { text: "自动气象站", key: "AWS" },
+  GPS: { text: "GPS", key: "GPS" },
+  P7: { text: "七针激活装置", key: "P7" },
+  POWER_CONTROL: { text: "电源管理模块", key: "POWER_CONTROL" },
+  GAS_CHARGING: { text: "充气系统", key: "GAS_CHARGING" },
+  GAS_CHECHING: { text: "环境检测系统", key: "GAS_CHECHING" },
+  GAS_CHECHING_SHELTER: {
+    text: "环境检测系统-放舱",
+    key: "GAS_CHECHING_SHELTER",
+  },
+  GAS_CHECHING_GAS_ROOM: {
+    text: "环境检测系统-氢气房",
+    key: "GAS_CHECHING_GAS_ROOM",
+  },
+  GAS_CHECHING_VALVE: { text: "环境检测系统-阀门", key: "GAS_CHECHING_VALVE" },
 };
