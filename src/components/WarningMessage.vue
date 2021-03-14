@@ -108,7 +108,9 @@
       ></el-table-column>
       <el-table-column label="报警源">
         <template #default="scope">
-          <span>{{ scope.row?.alarm?.alarmComponent }}</span>
+          <span>{{
+            componentNameDict[scope.row?.alarm?.alarmComponent].text
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="报警级别">
@@ -191,6 +193,7 @@ import {
   getWarningAlarmComponent,
   getWarningMessage,
   levelsDict,
+  componentNameDict,
 } from "../api/index";
 import {
   computed,
@@ -382,6 +385,7 @@ export default defineComponent({
       onPageSizeChange,
       onPageNumberChange,
       levelsDict,
+      componentNameDict,
       formatAckTime,
       goFirst,
       goLast,

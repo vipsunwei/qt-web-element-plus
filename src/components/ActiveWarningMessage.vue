@@ -12,7 +12,7 @@
       </el-table-column>
       <el-table-column label="报警源">
         <template #default="scope">
-          {{ scope.row?.alarm?.alarmComponent }}
+          {{ componentNameDict[scope.row?.alarm?.alarmComponent].text }}
         </template>
       </el-table-column>
       <el-table-column label="报警级别">
@@ -43,7 +43,12 @@
 
 <script>
 import { onMounted, onUnmounted, reactive, toRefs } from "vue";
-import { ackAlarm, getActiveWarningMessage, levelsDict } from "../api/index";
+import {
+  ackAlarm,
+  getActiveWarningMessage,
+  levelsDict,
+  componentNameDict,
+} from "../api/index";
 import { debounce, sleep } from "../utils/utils";
 import { ElMessage } from "element-plus";
 import emitter from "../hooks/useMitt";
@@ -109,7 +114,7 @@ export default {
       state.tableData = state.tableData.filter((item) => item.id !== id);
     }
 
-    return { ...toRefs(state), onClickAckAlarm, levelsDict };
+    return { ...toRefs(state), onClickAckAlarm, levelsDict, componentNameDict };
   },
 };
 </script>

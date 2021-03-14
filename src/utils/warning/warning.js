@@ -4,6 +4,7 @@ import useMyAudio from "@/hooks/useMyAudio.js";
 import emitter from "@/hooks/useMitt";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { getMuted } from "@/utils/utils.js";
+import { componentNameDict } from "../../api/index";
 let orignalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, newValue) {
   let setItemEvent = new Event("storageChange");
@@ -106,8 +107,8 @@ async function showWarnings(o) {
   //   VERY_SERIOUS: { background: "#f40", color: "#fff" },
   // };
   notificationInstance = ElNotification({
-    title: alarm.alarmComponent,
-    type: "info",
+    title: componentNameDict[alarm.alarmComponent].text,
+    // type: "info",
     message: `<div style="display:inline-block;color:#f40;">${alarm.alarmName}</div>`,
     // message: `<div style="display:inline-block;background-color: ${
     //   colorMap[alarm.alarmLevel].background
