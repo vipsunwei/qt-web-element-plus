@@ -323,6 +323,7 @@ export default {
       maxHeight.value = viewHeight * 0.7;
     });
     /** 时间选择框 */
+    const oldDate = { st: "", et: "" };
     const { date, disabledStartDate, disabledEndDate } = useDatepicker();
     // const date = ref("");
     const timeType = ref("");
@@ -343,6 +344,8 @@ export default {
       tkyid.value = "";
       const st = formatDate(date.startDate, "yyyy-MM-dd HH:mm:ss");
       const et = formatDate(date.endDate, "yyyy-MM-dd HH:mm:ss");
+      oldDate.st = st;
+      oldDate.et = et;
       if (state.isLoading) return;
       state.isLoading = true;
       if (timeType.value === "放球时间") {
@@ -379,10 +382,18 @@ export default {
     /** 选择查询数据类型 */
     const isRadioDisabled = computed(() => !tkyid.value);
     const dataType = ref("");
-    const isTCSJ = computed(() => dataType.value === "探测数据");
-    const isSSZ = computed(() => dataType.value === "瞬时值");
-    const isJCBG = computed(() => dataType.value === "基测报告");
-    const isCheckReport = computed(() => dataType.value === "检测报告");
+    const isTCSJ = computed(
+      () => !isRadioDisabled.value && dataType.value === "探测数据"
+    );
+    const isSSZ = computed(
+      () => !isRadioDisabled.value && dataType.value === "瞬时值"
+    );
+    const isJCBG = computed(
+      () => !isRadioDisabled.value && dataType.value === "基测报告"
+    );
+    const isCheckReport = computed(
+      () => !isRadioDisabled.value && dataType.value === "检测报告"
+    );
     function handleDataTypeChange(value) {
       switch (value) {
         case "基测报告":
@@ -502,8 +513,8 @@ export default {
     });
     const state = reactive({
       // dateForTCSJ: "",
-      startTime: "",
-      endTime: "",
+      // startTime: "",
+      // endTime: "",
       pageSize: 20,
       pageNumber: 1,
       isShowTable: false,
@@ -638,8 +649,8 @@ export default {
       // state.endTime = formatDate(state.dateForTCSJ[1], "yyyy-MM-dd HH:mm:ss");
       const option = {
         tkyid: tkyid.value,
-        startTime: formatDate(date.startDate, "yyyy-MM-dd HH:mm:ss"),
-        endTime: formatDate(date.endDate, "yyyy-MM-dd HH:mm:ss"),
+        startTime: oldDate.st,
+        endTime: oldDate.et,
         pageSize: state.pageSize,
         pageNumber: state.pageNumber,
       };
