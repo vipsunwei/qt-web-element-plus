@@ -47,7 +47,7 @@ export default function useEventBus(channel, callback, mockOptions) {
         times--;
       }
       const mockData = require("../data/eventbus").default[mockDataName];
-      console.warn(`模拟eventbus -- ${channel}: `, mockData);
+      console.info(`模拟eventbus -- ${channel}: `, mockData);
       callback && typeof callback === "function" && callback(mockData);
       sendMockData();
     }, timeout);

@@ -423,6 +423,7 @@ export default {
     useEventBus("EnvironmentalInfo", handleEventBusMsg, {
       IS_MOCK,
       mockDataName: "envInfo",
+      times: Infinity,
     });
     function handleEventBusMsg(envInfo) {
       handleEnvInfo(envInfo);

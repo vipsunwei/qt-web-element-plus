@@ -70,7 +70,8 @@ export default function useValve(IS_MOCK) {
     if (valveState.warning[param]) return;
     setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
       console.log("setValveState result: ", r, ebData);
-      if (IS_MOCK) ebData[param] = value ? 1 : 0;
+      if (IS_MOCK)
+        ebData[param] = value ? VALVE_STATE_DICT.OPEN : VALVE_STATE_DICT.CLOSE;
 
       ElMessage({
         type: r.setValveState ? "success" : "error",
@@ -92,28 +93,44 @@ export default function useValve(IS_MOCK) {
       }
     }
   }
+  const VALVE_STATE_DICT = {
+    ERROR: 2, // 故障
+    OPEN: 3, // 开
+    CLOSE: 4, // 关
+  };
   /**
    * 更新阀门开关状态
    */
   async function handleValveStatus(info) {
-    const { alarmInfo } = info;
-    handleAlarm(alarmInfo);
+    // const { alarmInfo } = info;
+    // handleAlarm(alarmInfo);
     const valveStatusObj = {
-      branch1ValveStatus: info.branch1ValveStatus,
-      branch2ValveStatus: info.branch2ValveStatus,
-      mainValveStatus: info.mainValveStatus,
-      safetyValveStatus: info.safetyValveStatus,
+      branch1ValveStatus: +info.branch1ValveStatus,
+      branch2ValveStatus: +info.branch2ValveStatus,
+      mainValveStatus: +info.mainValveStatus,
+      safetyValveStatus: +info.safetyValveStatus,
     };
     const [l, r] = valveState.valve;
     for (const key in valveStatusObj) {
       const a = l.find((value) => value.param === key);
       if (a) {
-        a.status = !!valveStatusObj[key];
+        a.status =
+          valveStatusObj[key] === VALVE_STATE_DICT.OPEN
+            ? true
+            : valveStatusObj[key] === VALVE_STATE_DICT.CLOSE
+            ? false
+            : a.status;
       }
       const b = r.find((value) => value.param === key);
       if (b) {
-        b.status = !!valveStatusObj[key];
+        b.status =
+          valveStatusObj[key] === VALVE_STATE_DICT.OPEN
+            ? true
+            : valveStatusObj[key] === VALVE_STATE_DICT.CLOSE
+            ? false
+            : b.status;
       }
+      valveStatusObj[key] === VALVE_STATE_DICT.ERROR && handleAlarm(key);
     }
   }
   return {

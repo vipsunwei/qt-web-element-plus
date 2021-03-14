@@ -37,7 +37,7 @@ let isPlaying = false;
 let isError = false;
 let queueTimer = [];
 export function startCheckQueue() {
-  console.info("audio queue length -- ", queue.getLength());
+  // console.info("audio queue length -- ", queue.getLength());
   if (!isError && queue.getLength()) {
     queueTimer.map((timer) => clearTimeout(timer));
     console.info("get length", queue.getLength());
