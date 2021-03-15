@@ -9,7 +9,7 @@
         :key="item.id"
       ></el-step>
     </el-steps>
-    <el-button type="primary" size="mini" @click="reset"> 重置步序 </el-button>
+    <!-- <el-button type="primary" size="mini" @click="reset"> 重置步序 </el-button> -->
   </div>
 </template>
 
