@@ -357,7 +357,7 @@ export default defineComponent({
 
     function formatAckTime(ackTime) {
       if (!ackTime) return "";
-      return formatDate(new Date(ackTime), "yyyy-MM-dd");
+      return formatDate(new Date(ackTime), "yyyy-MM-dd HH:mm:ss");
     }
 
     function goFirst() {
