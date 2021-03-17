@@ -274,7 +274,7 @@ export default defineComponent({
     function formatTypeItem(o) {
       const tempObject = {};
       for (const key in o) {
-        if (o[key]) {
+        if (Object.hasOwnProperty.call(o, key)) {
           tempObject.typeCode = o[key];
           tempObject.typeText = key;
         }
