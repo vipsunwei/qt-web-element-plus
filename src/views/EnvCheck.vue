@@ -242,7 +242,7 @@
         <el-col :lg="12" :offset="0">
           <el-form-item
             class="el_form_item"
-            label="轻微氢气警告阈值:"
+            label="轻微氢气浓度警告阈值:"
             prop="lowHydrogen"
           >
             <el-input v-model.number="threshold.lowHydrogen"></el-input>
@@ -260,7 +260,7 @@
         <el-col :lg="12" :offset="0">
           <el-form-item
             class="el_form_item"
-            label="轻微压力警告阈值:"
+            label="轻微管道压力警告阈值:"
             prop="lowPress"
           >
             <el-input v-model.number="threshold.lowPress"></el-input>
