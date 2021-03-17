@@ -1,5 +1,6 @@
 // /api/CheckSurvey/getCheckSurveyCriteion?token=123
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const IS_MOCK = false;
@@ -8,6 +9,18 @@ const request = axios.create({
   baseURL: host,
   timeout: 10 * 1000,
 });
+
+request.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    ElMessage({
+      type: "error",
+      message: error.message,
+      duration: 3000,
+    });
+    return Promise.reject(error);
+  }
+);
 
 export const paramsDict = {
   mustBeJcTky: "是否需要基测",
@@ -39,6 +52,9 @@ export function getCheckSurveyCriteion() {
           diffLng: 0.2,
           diffLat: 0.2,
           diffAlt: 20.0,
+          a: null,
+          b: { a: 1 },
+          c: [1, 2, 3],
         },
       })
     : request({
@@ -47,9 +63,7 @@ export function getCheckSurveyCriteion() {
         params: {
           token,
         },
-      })
-        .then((res) => res.data)
-        .catch((error) => error);
+      });
 }
 
 export function setCheckSurveyCriteion(params = {}) {
@@ -58,13 +72,10 @@ export function setCheckSurveyCriteion(params = {}) {
   let url = "/api/CheckSurvey/setCheckSurveyCriteion";
   return IS_MOCK
     ? Promise.resolve({ setCheckSurveyCriteion: true })
-    : request
-        .get(url, {
-          params: {
-            token,
-            ...params,
-          },
-        })
-        .then((res) => res.data)
-        .catch((error) => error);
+    : request.get(url, {
+        params: {
+          token,
+          ...params,
+        },
+      });
 }

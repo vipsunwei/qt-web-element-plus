@@ -40,6 +40,7 @@ import {
   paramsDict,
 } from "../api/checkParams";
 import { ElMessage } from "element-plus";
+import { showMessage } from "../utils/utils";
 export default {
   setup() {
     onMounted(() => getData());
@@ -48,34 +49,27 @@ export default {
     });
     function getData() {
       getCheckSurveyCriteion().then((res) => {
-        console.info(res.CheckSurveyCriteionInfo);
-        state.params = res.CheckSurveyCriteionInfo;
+        state.params = formatData(res.CheckSurveyCriteionInfo);
       });
     }
+    function formatData(o) {
+      const obj = {};
+      for (const key in o) {
+        if (
+          Object.hasOwnProperty.call(o, key) &&
+          Object.hasOwnProperty.call(paramsDict, key)
+        ) {
+          const element = o[key];
+          obj[key] = element;
+        }
+      }
+      return obj;
+    }
     function onSubmit() {
-      console.info("formdata", state.params);
       const options = toRaw(state.params);
       console.log("rawdata -- ", options);
       setCheckSurveyCriteion(options).then((res) => {
-        if (res.setCheckSurveyCriteion === true) {
-          ElMessage({
-            type: "success",
-            message: "操作成功",
-            duration: 2000,
-          });
-        } else if (res.setCheckSurveyCriteion === false) {
-          ElMessage({
-            type: "error",
-            message: "操作失败",
-            duration: 3000,
-          });
-        } else {
-          ElMessage({
-            type: "warning",
-            message: res.setCheckSurveyCriteion,
-            duration: 3000,
-          });
-        }
+        showMessage(res.setCheckSurveyCriteion);
       });
     }
     return { ...toRefs(state), onSubmit, paramsDict };
