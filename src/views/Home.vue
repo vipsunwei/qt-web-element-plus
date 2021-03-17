@@ -711,7 +711,10 @@ export default {
 
           const checkReportFormatted = [];
           for (const key in checkResultRecord) {
-            if (checkResultRecordColumns[key]) {
+            if (
+              Object.hasOwnProperty.call(checkResultRecord, key) &&
+              Object.hasOwnProperty.call(checkResultRecordColumns, key)
+            ) {
               checkReportFormatted.push({
                 label: checkResultRecordColumns[key],
                 value: passedfilter(key, checkResultRecord[key]),
