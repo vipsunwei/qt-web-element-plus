@@ -12,7 +12,6 @@
         placeholder="请选择级别(等级越高级别越高)"
         clearable
         filterable
-        @change="onLevelChange"
       >
         <el-option label="所有" value=""></el-option>
         <el-option
@@ -36,7 +35,6 @@
         placeholder="请选择类别"
         clearable
         filterable
-        @change="onTypeChange"
       >
         <el-option label="所有" value=""></el-option>
 
@@ -87,7 +85,7 @@
       align="center"
       :style="{ display: 'flex', whiteSpace: 'nowrap', alignItems: 'center' }"
     >
-      <el-button type="primary" @click="search">搜索</el-button>
+      <el-button type="primary" @click="onClickSearch">搜索</el-button>
     </el-col>
   </el-row>
 
@@ -268,9 +266,9 @@ export default defineComponent({
         state.levels = formatLevels(result);
       });
     }
-    function onLevelChange(curLevel) {
-      console.log("cur level -- ", curLevel, "state.level", state.level);
-    }
+    // function onLevelChange(curLevel) {
+    //   console.log("cur level -- ", curLevel, "state.level", state.level);
+    // }
     function formatTypeItem(o) {
       const tempObject = {};
       for (const key in o) {
@@ -294,16 +292,16 @@ export default defineComponent({
         state.types = formatTypes(result);
       });
     }
-    function onTypeChange(curType) {
-      console.log("type value -- ", curType, state.type);
-    }
-    function onDateChange(dates) {
-      if (!dates) return;
-      let [st, et] = dates;
-      st = formatDate(st, "yyyy-MM-dd HH:mm:ss");
-      et = formatDate(et, "yyyy-MM-dd HH:mm:ss");
-      console.log("st", st, "et", et);
-    }
+    // function onTypeChange(curType) {
+    //   console.log("type value -- ", curType, state.type);
+    // }
+    // function onDateChange(dates) {
+    //   if (!dates) return;
+    //   let [st, et] = dates;
+    //   st = formatDate(st, "yyyy-MM-dd HH:mm:ss");
+    //   et = formatDate(et, "yyyy-MM-dd HH:mm:ss");
+    //   console.log("st", st, "et", et);
+    // }
     function onPageSizeChange(curPageSize) {
       console.log(state.pageSize, "curPageSize", curPageSize);
       state.pageSize = curPageSize;
@@ -373,15 +371,31 @@ export default defineComponent({
       state.pageNumber = lastPage.value;
       search();
     }
+    function onClickSearch() {
+      if (!date.startDate || !date.endDate) {
+        ElMessage({
+          type: "warning",
+          message: !date.startDate
+            ? "请选择开始日期"
+            : !date.endDate
+            ? "请选择结束日期"
+            : "",
+        });
+        return;
+      }
+
+      state.pageNumber = 1;
+      search();
+    }
     return {
-      onLevelChange,
-      onTypeChange,
+      // onLevelChange,
+      // onTypeChange,
       ...toRefs(state),
       ...toRefs(date),
       disabledStartDate,
       disabledEndDate,
-      onDateChange,
-      search,
+      // onDateChange,
+      onClickSearch,
       onPageSizeChange,
       onPageNumberChange,
       levelsDict,
