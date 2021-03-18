@@ -19,6 +19,11 @@ export function getEnableResetDataMap() {
     GNL: { id: 10, param: "GNL", name: "氢气房管道压力1", status: false },
     GNM: { id: 11, param: "GNM", name: "氢气房管道压力2", status: false },
     GNC: { id: 12, param: "GNC", name: "氢气房管道压力总", status: false },
+
+    raA: { id: 13, param: "raA", name: "支路1阀门", status: false },
+    raB: { id: 14, param: "raB", name: "支路2阀门", status: false },
+    raC: { id: 15, param: "raC", name: "总阀门", status: false },
+    rX: { id: 16, param: "rX", name: "安全阀", status: false },
   };
 }
 

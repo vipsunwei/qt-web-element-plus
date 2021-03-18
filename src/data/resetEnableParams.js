@@ -11,6 +11,11 @@ const data = [
   { param: "GNL" },
   { param: "GNM" },
   { param: "GNC" },
+
+  { param: "raA" },
+  { param: "raB" },
+  { param: "raC" },
+  { param: "rX" },
 ];
 
 export default data;
