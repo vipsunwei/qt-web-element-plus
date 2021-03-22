@@ -79,7 +79,7 @@ export const alarmInfo = {
   id: 6,
   alarm: {
     alarmComponent: "RECEIVER",
-    alarmLevel: "VERY_SERIOUS",
+    alarmLevel: "INFO",
     alarmName: "充气装置称重设备状态错误报警",
     key: "1_4_接收机频谱数据到报率不足",
   },
@@ -99,7 +99,7 @@ export const warning = [
     id: 7,
     alarm: {
       alarmComponent: "RECEIVER",
-      alarmLevel: "VERY_SERIOUS",
+      alarmLevel: "INFO",
       alarmName: "自动气象站数据到报率不足",
       key: "1_4_接收机频谱数据到报率不足",
     },
@@ -116,7 +116,7 @@ export const warning = [
     id: 8,
     alarm: {
       alarmComponent: "RECEIVER",
-      alarmLevel: "VERY_SERIOUS",
+      alarmLevel: "SLIGHT",
       alarmName: "环境检测装置风速值错误",
       key: "1_4_接收机频谱数据到报率不足",
     },

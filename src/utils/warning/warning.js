@@ -103,20 +103,26 @@ emitter.on("alarm", emitterFn);
 let notificationInstance = null;
 async function showWarnings(o) {
   const alarm = o.alarm;
-  // const colorMap = {
-  //   VERY_SERIOUS: { background: "#f40", color: "#fff" },
-  // };
+  const alarmDict = {
+    INFO: { background: "#FFFFFF", color: "#67C23A", duration: 8000 },
+    SLIGHT: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
+    GENERAL: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
+    SERIOUS: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
+    VERY_SERIOUS: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
+  };
   notificationInstance = ElNotification({
     title: componentNameDict[alarm.alarmComponent].text,
     // type: "info",
-    message: `<div style="display:inline-block;color:#f40;">${alarm.alarmName}</div>`,
+    message: `<div style="display:inline-block;color:${
+      alarmDict[alarm.alarmLevel].color
+    };">${alarm.alarmName}</div>`,
     // message: `<div style="display:inline-block;background-color: ${
     //   colorMap[alarm.alarmLevel].background
     // };color: ${colorMap[alarm.alarmLevel].color};">${
     //   alarm.alarmName
     // }</div>`,
     dangerouslyUseHTMLString: true,
-    duration: 3000,
+    duration: alarmDict[alarm.alarmLevel].duration,
     onClick: function() {
       closeWarnings();
     },

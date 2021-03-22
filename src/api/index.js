@@ -267,7 +267,7 @@ export const levelsDict = {
   SLIGHT: { number: "等级 1", text: "轻微", key: "SLIGHT" },
   GENERAL: { number: "等级 2", text: "一般", key: "GENERAL" },
   SERIOUS: { number: "等级 3", text: "严重", key: "SERIOUS" },
-  VERY_SERIOUS: { number: "等级 4", text: "非常严重", key: "VERY+SERIOUS" },
+  VERY_SERIOUS: { number: "等级 4", text: "非常严重", key: "VERY_SERIOUS" },
 };
 /**
  * 报警源名字字典
