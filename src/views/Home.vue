@@ -91,6 +91,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -108,6 +109,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -116,6 +118,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -124,6 +127,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -132,6 +136,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -140,6 +145,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -148,6 +154,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -156,6 +163,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -164,6 +172,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -172,6 +181,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -180,6 +190,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -188,6 +199,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
         <el-table-column
@@ -196,6 +208,7 @@
           width="100"
           sortable
           show-overflow-tooltip
+          :formatter="toFixedFormatter"
         >
         </el-table-column>
       </el-table>
@@ -286,7 +299,10 @@
     <div v-show="isCheckReport" :style="{ marginTop: '20px' }">
       <el-table :data="checkReportData" :show-header="false" border stripe>
         <el-table-column prop="label"></el-table-column>
-        <el-table-column prop="value"></el-table-column>
+        <el-table-column
+          prop="value"
+          :formatter="toFixedFormatter"
+        ></el-table-column>
       </el-table>
     </div>
   </div>
@@ -294,7 +310,7 @@
 
 <script>
 import { computed, onMounted, onUnmounted, reactive, ref, toRefs } from "vue";
-import { debounce, formatDate } from "../utils/utils.js";
+import { debounce, formatDate, toFixedFilter } from "../utils/utils.js";
 import {
   getBaseTestReport,
   getInstantInfo,
@@ -302,6 +318,7 @@ import {
   getTkyInfo,
   getTkyInfoByJCTime,
   getCheckReport,
+  toFixedPropertyDict,
 } from "../api/index.js";
 import useDatepicker from "../hooks/useDatepicker.js";
 import { ElMessage } from "element-plus";
@@ -448,7 +465,12 @@ export default {
           );
           const baseTestReportFormatted = [];
           for (const key in jcResultRecord) {
-            if (jcResultRecordColumns[key]) {
+            if (Object.hasOwnProperty.call(jcResultRecordColumns, key)) {
+              if (Object.hasOwnProperty.call(toFixedPropertyDict, key)) {
+                const n = toFixedPropertyDict[key];
+                const v = jcResultRecord[key];
+                jcResultRecord[key] = toFixedFilter(v, n);
+              }
               baseTestReportFormatted.push({
                 label: jcResultRecordColumns[key],
                 value: passedfilter(key, jcResultRecord[key]),
@@ -493,7 +515,12 @@ export default {
           data.ctime = formatDate(new Date(data.ctime), "yyyy-MM-dd HH:mm:ss");
           const instantInfoFormatted = [];
           for (const key in data) {
-            if (instantInfoColumns[key]) {
+            if (Object.hasOwnProperty.call(instantInfoColumns, key)) {
+              if (Object.hasOwnProperty.call(toFixedPropertyDict, key)) {
+                const n = toFixedPropertyDict[key];
+                const v = data[key];
+                data[key] = toFixedFilter(v, n);
+              }
               instantInfoFormatted.push({
                 label: instantInfoColumns[key],
                 value: data[key],
@@ -715,6 +742,11 @@ export default {
               Object.hasOwnProperty.call(checkResultRecord, key) &&
               Object.hasOwnProperty.call(checkResultRecordColumns, key)
             ) {
+              if (Object.hasOwnProperty.call(toFixedPropertyDict, key)) {
+                const n = toFixedPropertyDict[key];
+                const v = checkResultRecord[key];
+                checkResultRecord[key] = toFixedFilter(v, n);
+              }
               checkReportFormatted.push({
                 label: checkResultRecordColumns[key],
                 value: passedfilter(key, checkResultRecord[key]),
@@ -727,12 +759,21 @@ export default {
           state.isLoading = false;
         });
     }
-
+    // 格式化时间戳为时间字符串
     function dataTimeFormatter(row, column) {
       return formatDate(new Date(row[column.property]), "yyyy-MM-dd HH:mm:ss");
     }
+    // 探测数据 根据字典信息中定义的数据，保留n位小数点
+    function toFixedFormatter(row, column) {
+      const v = row[column.property];
+      if (!Object.hasOwnProperty.call(toFixedPropertyDict, column.property))
+        return v;
+      const n = toFixedPropertyDict[column.property];
+      return toFixedFilter(v, n);
+    }
 
     return {
+      toFixedFormatter,
       dataTimeFormatter,
       ...toRefs(date),
       disabledStartDate,
