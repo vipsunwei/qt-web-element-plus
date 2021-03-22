@@ -7,7 +7,7 @@
  */
 export function getUpsParamDataMap() {
   return {
-    MAIN: { id: 1, param: "MAIN", name: "关闭所有电源", status: false },
+    MAIN: { id: 1, param: "MAIN", name: "主电源", status: false },
     LIGHT: { id: 2, param: "LIGHT", name: "通风照明电源", status: false },
     WORK_ROOM_POWER: {
       id: 3,
