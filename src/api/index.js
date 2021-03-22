@@ -292,3 +292,48 @@ export const componentNameDict = {
   },
   GAS_CHECHING_VALVE: { text: "环境检测系统-阀门", key: "GAS_CHECHING_VALVE" },
 };
+
+/**
+ * 保留几位小数的字典
+ */
+export const toFixedPropertyDict = {
+  // 探测数据
+  freqz: 2,
+  lng: 2,
+  lat: 2,
+  nspeed: 2,
+  espeed: 2,
+  vspeed: 2,
+  batteryVol: 2,
+  altitude: 1,
+  temperature: 1,
+  boxTemperature: 1,
+  humidity: 0,
+  pressure: 0,
+  satellitesNum: 0,
+  // 检测报告
+  envPressure: 0,
+  envTemperature: 1,
+  envHumidity: 0,
+  envLng: 2,
+  envLat: 2,
+  envAlt: 1,
+  tkyPressure: 0,
+  tkyTemperature: 1,
+  tkyHumidity: 0,
+  tkyLng: 2,
+  tkyLat: 2,
+  tkyAlt: 1,
+  // 基测报告
+  jcxPressure: 0,
+  jcxTemperature: 1,
+  jcxHumidity: 0,
+  tkyPressure: 0,
+  tkyTemperature: 1,
+  tkyHumidity: 0,
+  // 瞬时值
+  pressure: 0,
+  temperature: 1,
+  humidity: 0,
+  windSpeed: 2,
+};
