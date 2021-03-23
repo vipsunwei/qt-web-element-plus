@@ -25,6 +25,30 @@
           {{ scope.row?.alarm?.alarmName }}
         </template>
       </el-table-column>
+      <el-table-column label="开始时间">
+        <template #default="scope">
+          {{
+            (scope.row?.startTime &&
+              formatDate(
+                new Date(scope.row?.startTime),
+                "yyyy-MM-dd HH:mm:ss"
+              )) ||
+            ""
+          }}
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template #default="scope">
+          {{
+            (scope.row?.endTime &&
+              formatDate(
+                new Date(scope.row?.endTime),
+                "yyyy-MM-dd HH:mm:ss"
+              )) ||
+            ""
+          }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -49,7 +73,7 @@ import {
   levelsDict,
   componentNameDict,
 } from "../api/index";
-import { debounce, sleep } from "../utils/utils";
+import { debounce, formatDate } from "../utils/utils";
 import { ElMessage } from "element-plus";
 import emitter from "../hooks/useMitt";
 export default {
@@ -114,7 +138,13 @@ export default {
       state.tableData = state.tableData.filter((item) => item.id !== id);
     }
 
-    return { ...toRefs(state), onClickAckAlarm, levelsDict, componentNameDict };
+    return {
+      ...toRefs(state),
+      onClickAckAlarm,
+      levelsDict,
+      componentNameDict,
+      formatDate,
+    };
   },
 };
 </script>

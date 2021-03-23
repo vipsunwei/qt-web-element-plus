@@ -142,6 +142,34 @@
           <span>{{ scope.row?.ackUser }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="开始时间">
+        <template #default="scope">
+          <span>
+            {{
+              (scope.row?.startTime &&
+                formatDate(
+                  new Date(scope.row?.startTime),
+                  "yyyy-MM-dd HH:mm:ss"
+                )) ||
+              ""
+            }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template #default="scope">
+          <span>
+            {{
+              (scope.row?.endTime &&
+                formatDate(
+                  new Date(scope.row?.endTime),
+                  "yyyy-MM-dd HH:mm:ss"
+                )) ||
+              ""
+            }}
+          </span>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div
@@ -401,6 +429,7 @@ export default defineComponent({
       levelsDict,
       componentNameDict,
       formatAckTime,
+      formatDate,
       goFirst,
       goLast,
     };

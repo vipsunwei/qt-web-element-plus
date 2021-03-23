@@ -9,15 +9,6 @@ const routes = [
     meta: { name: "探空仪数据查询" },
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
   },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
   {
     path: "/alert",
     name: "Alert",
@@ -38,14 +29,14 @@ const routes = [
     name: "Ups",
     meta: { name: "电源管理" },
     hidden: false,
-    component: () => import(/* webpackChunkName "ups" */ "../views/Ups.vue"),
+    component: () => import(/* webpackChunkName: "ups" */ "../views/Ups.vue"),
   },
   {
     path: "/gps",
     name: "gps",
     meta: { name: "GPS" },
     hidden: false,
-    component: () => import(/* webpackChunkName "gps" */ "../views/Gps.vue"),
+    component: () => import(/* webpackChunkName: "gps" */ "../views/Gps.vue"),
   },
   {
     path: "/env",
