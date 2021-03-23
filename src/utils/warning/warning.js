@@ -104,25 +104,48 @@ let notificationInstance = null;
 async function showWarnings(o) {
   const alarm = o.alarm;
   const alarmDict = {
-    INFO: { background: "#FFFFFF", color: "#67C23A", duration: 8000 },
-    SLIGHT: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
-    GENERAL: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
-    SERIOUS: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
-    VERY_SERIOUS: { background: "#FFFFFF", color: "#F56C6C", duration: 8000 },
+    INFO: {
+      background: "#FFFFFF",
+      color: "#67C23A",
+      duration: 8000,
+      isShowDetail: true,
+    },
+    SLIGHT: {
+      background: "#FFFFFF",
+      color: "#F56C6C",
+      duration: 8000,
+      isShowDetail: false,
+    },
+    GENERAL: {
+      background: "#FFFFFF",
+      color: "#F56C6C",
+      duration: 8000,
+      isShowDetail: false,
+    },
+    SERIOUS: {
+      background: "#FFFFFF",
+      color: "#F56C6C",
+      duration: 8000,
+      isShowDetail: false,
+    },
+    VERY_SERIOUS: {
+      background: "#FFFFFF",
+      color: "#F56C6C",
+      duration: 8000,
+      isShowDetail: false,
+    },
   };
+  const curAlarmConf = alarmDict[alarm.alarmLevel];
   notificationInstance = ElNotification({
     title: componentNameDict[alarm.alarmComponent].text,
     // type: "info",
     message: `<div style="display:inline-block;color:${
-      alarmDict[alarm.alarmLevel].color
-    };">${alarm.alarmName}</div>`,
-    // message: `<div style="display:inline-block;background-color: ${
-    //   colorMap[alarm.alarmLevel].background
-    // };color: ${colorMap[alarm.alarmLevel].color};">${
-    //   alarm.alarmName
-    // }</div>`,
+      curAlarmConf.color
+    };"><p>${alarm.alarmName}</p><p style="color: #333;${
+      curAlarmConf.isShowDetail ? "" : "display:none;"
+    }">${o.alarmDetail || ""}</p></div>`,
     dangerouslyUseHTMLString: true,
-    duration: alarmDict[alarm.alarmLevel].duration,
+    duration: curAlarmConf.duration,
     onClick: function() {
       closeWarnings();
     },
