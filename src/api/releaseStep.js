@@ -1,6 +1,7 @@
 // /api/environment/getReleaseStep
 
 import axios from "axios";
+import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
@@ -13,19 +14,26 @@ const request = axios.create({
 });
 request.interceptors.response.use(
   (res) => res.data,
-  (err) => Promise.reject(err)
+  (err) => {
+    ElMessage({
+      type: "error",
+      message: err.message,
+      duration: 3000,
+    });
+    return Promise.reject(err);
+  }
 );
 
 export function getReleaseStep() {
-  const url = `/api/environment/getReleaseStep?token=${getToken()}`;
+  const url = `/api/environment/getReleaseStep`;
   return IS_MOCK
     ? Promise.resolve({ ReleaseStep: "SOUNDING_TERMINATED" })
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
 
 export function resetReleaseStep() {
-  const url = `/api/environment/resetReleaseStep?token=${getToken()}`;
+  const url = `/api/environment/resetReleaseStep`;
   return IS_MOCK
     ? Promise.resolve({ resetReleaseStep: true })
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
