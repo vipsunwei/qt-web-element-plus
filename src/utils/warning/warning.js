@@ -80,7 +80,12 @@ function onError(e) {
   console.info("播放出错了 -- ", getMediaErrorMessage(e));
   console.info("onError -- ", isPlaying);
   ElMessageBox.confirm("允许播放告警语音吗？", "提示", {
-    showCancelButton: false,
+    showCancelButton: true,
+    closeOnPressEscape: false,
+    closeOnClickModal: false,
+    showClose: false,
+    confirmButtonText: "是",
+    cancelButtonText: "否",
   }).then((res) => {
     console.info(res);
     isPlaying = false;
