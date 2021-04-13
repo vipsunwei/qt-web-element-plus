@@ -31,8 +31,10 @@ request.interceptors.response.use(
  * @returns 返回值:{"powerOn":true}
  */
 export function powerOn() {
-  const url = `/api/sevenPin/powerOn?token=${getToken()}`;
-  return IS_MOCK ? Promise.resolve({ powerOn: true }) : request.get(url);
+  const url = `/api/sevenPin/powerOn`;
+  return IS_MOCK
+    ? Promise.resolve({ powerOn: true })
+    : request.get(url, { params: { token: getToken() } });
 }
 
 /**
@@ -41,8 +43,10 @@ export function powerOn() {
  * @returns 返回值:{"powerOff":true}
  */
 export function powerOff() {
-  const url = `/api/sevenPin/powerOff?token=${getToken()}`;
-  return IS_MOCK ? Promise.resolve({ powerOff: true }) : request.get(url);
+  const url = `/api/sevenPin/powerOff`;
+  return IS_MOCK
+    ? Promise.resolve({ powerOff: true })
+    : request.get(url, { params: { token: getToken() } });
 }
 
 /**
@@ -51,8 +55,10 @@ export function powerOff() {
  * @returns 返回值:{"SondeFreq":403.452}
  */
 export function getSondeFreq() {
-  const url = `/api/sevenPin/getSondeFreq?token=${getToken()}`;
-  return IS_MOCK ? Promise.resolve({ SondeFreq: 403.452 }) : request.get(url);
+  const url = `/api/sevenPin/getSondeFreq`;
+  return IS_MOCK
+    ? Promise.resolve({ SondeFreq: 403.452 })
+    : request.get(url, { params: { token: getToken() } });
 }
 
 /**
@@ -61,10 +67,10 @@ export function getSondeFreq() {
  * @returns 返回值:{"SondeId":"2983472397434"}
  */
 export function getSondeId() {
-  const url = `/api/sevenPin/getSondeId?token=${getToken()}`;
+  const url = `/api/sevenPin/getSondeId`;
   return IS_MOCK
     ? Promise.resolve({ SondeId: "2983472397434" })
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
 
 /**
@@ -73,11 +79,12 @@ export function getSondeId() {
  * @returns 返回值:{"setSondeFreq":true}
  */
 export function setSondeFreq(sondeFreq) {
-  const url = `/api/sevenPin/setSondeFreq?token=${getToken()}`;
+  const url = `/api/sevenPin/setSondeFreq`;
   return IS_MOCK
     ? Promise.resolve({ setSondeFreq: true })
     : request.get(url, {
         params: {
+          token: getToken(),
           sondeFreq,
         },
       });
