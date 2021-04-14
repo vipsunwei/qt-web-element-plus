@@ -32,6 +32,7 @@
     >
       <el-option label="放球时间" value="放球时间"> </el-option>
       <el-option label="基测时间" value="基测时间"> </el-option>
+      <el-option label="检测时间" value="检测时间"> </el-option>
     </el-select>
     <el-button type="primary" @click="onClickSearch"> 搜索 </el-button>
 
@@ -315,8 +316,9 @@ import {
   getBaseTestReport,
   getInstantInfo,
   getTkyData,
-  getTkyInfo,
+  getTkyInfoByFQTime,
   getTkyInfoByJCTime,
+  getTkyInfoByCheckTime,
   getCheckReport,
   toFixedPropertyDict,
 } from "../api/index.js";
@@ -344,6 +346,15 @@ export default {
     const { date, disabledStartDate, disabledEndDate } = useDatepicker();
     // const date = ref("");
     const timeType = ref("");
+
+    /**
+     * 根据不同时间类型获取探空仪id列表的函数Map
+     */
+    const getTkyInfoFnMap = new Map([
+      ["放球时间", getTkyInfoByFQTime],
+      ["基测时间", getTkyInfoByJCTime],
+      ["检测时间", getTkyInfoByCheckTime],
+    ]);
     function onClickSearch() {
       if (!date.startDate || !date.endDate || !timeType.value) {
         ElMessage({
@@ -365,25 +376,43 @@ export default {
       oldDate.et = et;
       if (state.isLoading) return;
       state.isLoading = true;
-      if (timeType.value === "放球时间") {
-        getTkyInfo(st, et)
-          .then((result) => {
-            console.log("根据放球时间获取探空仪id -- ", result);
-            tkyids.value = result;
-          })
-          .finally(() => {
-            state.isLoading = false;
-          });
-      } else if (timeType.value === "基测时间") {
-        getTkyInfoByJCTime(st, et)
-          .then((result) => {
-            console.log("根据基测时间获取探空仪id", result);
-            tkyids.value = result;
-          })
-          .finally(() => {
-            state.isLoading = false;
-          });
-      }
+      getTkyInfoFnMap
+        .get(timeType.value)(st, et)
+        .then((result) => {
+          console.log(`根据${timeType.value}获取探空仪id列表`, result);
+          tkyids.value = result;
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
+      // if (timeType.value === "放球时间") {
+      //   getTkyInfoByFQTime(st, et)
+      //     .then((result) => {
+      //       console.log("根据放球时间获取探空仪id -- ", result);
+      //       tkyids.value = result;
+      //     })
+      //     .finally(() => {
+      //       state.isLoading = false;
+      //     });
+      // } else if (timeType.value === "基测时间") {
+      //   getTkyInfoByJCTime(st, et)
+      //     .then((result) => {
+      //       console.log("根据基测时间获取探空仪id", result);
+      //       tkyids.value = result;
+      //     })
+      //     .finally(() => {
+      //       state.isLoading = false;
+      //     });
+      // } else if (timeType.value === "检测时间") {
+      //   getTkyInfoByCheckTime(st, et)
+      //     .then((result) => {
+      //       console.log("根据检测时间获取探空仪id列表", result);
+      //       tkyids.value = result;
+      //     })
+      //     .finally(() => {
+      //       state.isLoading = false;
+      //     });
+      // }
     }
     /** 探空仪编号 */
     const tkyids = ref([]);
@@ -411,21 +440,29 @@ export default {
     const isCheckReport = computed(
       () => !isRadioDisabled.value && dataType.value === "检测报告"
     );
+
+    const tabMap = new Map([
+      ["探测数据", showTkyData],
+      ["瞬时值", showInstantInfo],
+      ["基测报告", showBaseTestReport],
+      ["检测报告", showCheckReport],
+    ]);
     function handleDataTypeChange(value) {
-      switch (value) {
-        case "基测报告":
-          showBaseTestReport();
-          break;
-        case "瞬时值":
-          showInstantInfo();
-          break;
-        case "探测数据":
-          showTkyData();
-          break;
-        case "检测报告":
-          showCheckReport();
-          break;
-      }
+      tabMap.get(value)();
+      // switch (value) {
+      //   case "基测报告":
+      //     showBaseTestReport();
+      //     break;
+      //   case "瞬时值":
+      //     showInstantInfo();
+      //     break;
+      //   case "探测数据":
+      //     showTkyData();
+      //     break;
+      //   case "检测报告":
+      //     showCheckReport();
+      //     break;
+      // }
     }
     /** 基测报告 start */
     const jcResultRecordColumns = {

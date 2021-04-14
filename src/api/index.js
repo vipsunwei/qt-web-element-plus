@@ -24,7 +24,13 @@ request.interceptors.response.use(
 );
 
 // /api/history/getTkyInfo?startTime=2020-11-11 12:23:23&endTime=2020-11-19 23:00:15
-export const getTkyInfo = (st, et) => {
+/**
+ * 根据放球时间获取探空仪id列表
+ * @param {string} st 开始时间
+ * @param {string} et 结束时间
+ * @returns [{探空仪id: '123123'}]
+ */
+export const getTkyInfoByFQTime = (st, et) => {
   const token = getToken();
   const url = `/api/history/getTkyInfo`;
   return IS_MOCK
@@ -46,40 +52,7 @@ export function getTkyInfoByJCTime(st, et) {
   const token = getToken();
   const url = "/api/history/getTkyInfoByJCTime";
   return IS_MOCK
-    ? Promise.resolve([
-        {
-          id: 1,
-          tkyid: "20070909",
-          tkyType: 1,
-          tkyFrequencyPoint: 401.0,
-          status: 1,
-          jcStatusTime: 1605124800000,
-          checkResult: 1,
-          checkResultTime: 1605125100000,
-          fqStartTime: 1605125400000,
-          fqEndTime: 1605139198000,
-          tkyFirm: 30,
-          sensorType: 1,
-          ctime: 1605124800000,
-          mtime: 1605139199000,
-        },
-        {
-          id: 2,
-          tkyid: "20070901",
-          tkyType: 1,
-          tkyFrequencyPoint: 401.131,
-          status: 1,
-          jcStatusTime: 1605211200000,
-          checkResult: 1,
-          checkResultTime: 1605211500000,
-          fqStartTime: 1605211800000,
-          fqEndTime: 1605225598000,
-          tkyFirm: 30,
-          sensorType: 1,
-          ctime: 1605211200000,
-          mtime: 1605225599000,
-        },
-      ])
+    ? Promise.resolve(require("../data/tkyidarr").tkyidarr)
     : request.get(url, {
         params: {
           token,
@@ -87,6 +60,18 @@ export function getTkyInfoByJCTime(st, et) {
           endTime: et,
         },
       });
+}
+/**
+ * 根据检测时间获取探空仪id列表
+ * @param {string} st 开始时间
+ * @param {string} et 结束时间
+ */
+export function getTkyInfoByCheckTime(st, et) {
+  const token = getToken();
+  const url = "/api/history/getTkyInfoByCheckTime";
+  return IS_MOCK
+    ? Promise.resolve(require("../data/tkyidarr").tkyidarr)
+    : request.get(url, { params: { token, startTime: st, endTime: et } });
 }
 
 /**
@@ -139,6 +124,11 @@ export function getCheckReport(tkyid) {
 }
 
 // /api/history/getBaseTestReport?tkyid=11
+/**
+ * 获取基测报告
+ * @param {string} tkyid 探空仪id
+ * @returns
+ */
 export const getBaseTestReport = (tkyid) => {
   console.log("tkyid: ", tkyid);
   const token = getToken();
@@ -154,6 +144,11 @@ export const getBaseTestReport = (tkyid) => {
 };
 
 // /api/history/getInstantInfo?tkyid=11
+/**
+ * 瞬时值
+ * @param {string} tkyid 探空仪id
+ * @returns
+ */
 export const getInstantInfo = (tkyid) => {
   console.log("tkyid: ", tkyid);
   const url = `/api/history/getInstantInfo`;
@@ -170,6 +165,16 @@ export const getInstantInfo = (tkyid) => {
 
 // /api/history/getTkyData?
 // tkyid=00230067&startTime=2020-11-18 02:23:23&endTime=2020-11-20 18:00:15&pageSize=10&pageNumber=1
+/**
+ * 获取探空仪数据
+ * @param {object} param 参数对象
+ * @param {object} param.tkyid 探空仪id
+ * @param {object} param.startTime 开始时间
+ * @param {object} param.endTime 结束时间
+ * @param {object} param.pageSize 每页条数
+ * @param {object} param.pageNumber 页数
+ * @returns
+ */
 export const getTkyData = ({
   tkyid,
   startTime,
