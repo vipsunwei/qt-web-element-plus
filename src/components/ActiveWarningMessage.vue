@@ -49,6 +49,7 @@
           }}
         </template>
       </el-table-column>
+      <!-- <el-table-column prop="ackUser" label="确认人"> </el-table-column> -->
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, reactive, toRefs } from "vue";
+import { onMounted, onUnmounted, reactive, toRaw, toRefs } from "vue";
 import {
   ackAlarm,
   getActiveWarningMessage,
@@ -94,12 +95,18 @@ export default {
       state.maxHeight = viewHeight * 0.3;
       // console.log(state.maxHeight, typeof state.maxHeight);
     });
+    // 获取当前存活的告警信息
     function getTableData() {
       state.isLoading = true;
       return getActiveWarningMessage()
         .then((result) => {
           state.tableData = result;
+          console.log(
+            "🚀 ~ file: ActiveWarningMessage.vue ~ line 102 ~ .then ~ result",
+            result
+          );
           // emitter.emit("alarm", result);
+
           return result;
         })
         .finally(() => {
@@ -118,7 +125,7 @@ export default {
       ackAlarm(id).then((res) => {
         console.log(res);
         if (res.ackAlarm) {
-          IS_MOCK ? refreshTableData(id) : getTableData();
+          !IS_MOCK ? refreshTableData(id) : getTableData();
           ElMessage({
             type: "success",
             message: "操作成功",
@@ -134,8 +141,26 @@ export default {
       });
     }
 
+    // 假数据刷新当前存活的告警信息
     function refreshTableData(id) {
-      state.tableData = state.tableData.filter((item) => item.id !== id);
+      state.tableData.map((item) => {
+        if (item.id === id) {
+          item.ackTime = new Date() - 0;
+          item.ackUser = "username";
+        }
+        return item;
+      });
+      // console.log(state.tableData);
+      // const rawData = toRaw(state.tableData);
+      // state.tableData = rawData.map((item) => {
+      //   if (item.id === id) {
+      //     item.ackUser = "username";
+      //     item.ackTime = new Date() - 0;
+      //   }
+      //   return item;
+      // });
+      // console.log(state.tableData, rawData);
+      // state.tableData = state.tableData.filter((item) => item.id !== id);
     }
 
     return {
