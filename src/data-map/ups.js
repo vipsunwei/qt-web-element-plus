@@ -39,6 +39,7 @@ export function getUpsParamDataMap() {
       name: "环境检测电源",
       status: false,
     },
+    EM_STOP: { id: 8, param: "EM_STOP", name: "紧急停止", status: false },
   };
 }
 

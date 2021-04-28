@@ -6,6 +6,7 @@ const data = [
   { param: "WORK_ROOM_AIR_CONDITIONER" },
   { param: "CAMERA_POWER" },
   { param: "YEMS_POWER" },
+  { param: "EM_STOP" },
 ];
 
 const state = [
@@ -16,6 +17,7 @@ const state = [
   { CAMERA_POWER: false },
   { MAIN: true },
   { YEMS_POWER: false },
+  { EM_STOP: false },
 ];
 
 export default { data, state };
