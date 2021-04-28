@@ -134,8 +134,8 @@ async function showWarnings(o) {
       isShowDetail: false,
     },
     VERY_SERIOUS: {
-      background: "#FFFFFF",
-      color: "#F56C6C",
+      background: "#F56C6C",
+      color: "#FFFFFF",
       duration: 8000,
       isShowDetail: false,
     },
@@ -144,11 +144,23 @@ async function showWarnings(o) {
   notificationInstance = ElNotification({
     title: componentNameDict[alarm.alarmComponent].text,
     // type: "info",
-    message: `<div style="display:inline-block;color:${
-      curAlarmConf.color
-    };"><p>${alarm.alarmName}</p><p style="color: #333;${
-      curAlarmConf.isShowDetail ? "" : "display:none;"
-    }">${o.alarmDetail || ""}</p></div>`,
+    message: `<div 
+      style="width:100%;height:100%;
+      display:block;background-color:${curAlarmConf.background}"
+    >
+
+      <div style="width:100%;height:100%;
+        position:absolute;left:0;top:0;z-index:-1;
+        background-color:${curAlarmConf.background}"
+      ></div>
+      
+      <p style="color:${curAlarmConf.color};">${alarm.alarmName}</p>
+      <p 
+        style="color: #333;${curAlarmConf.isShowDetail ? "" : "display:none;"}"
+      >
+        ${o.alarmDetail || ""}
+      </p>
+    </div>`,
     dangerouslyUseHTMLString: true,
     duration: curAlarmConf.duration,
     onClick: function() {
