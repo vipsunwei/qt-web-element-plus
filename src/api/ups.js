@@ -14,36 +14,38 @@ request.interceptors.response.use(
 );
 
 export function getPowerParam() {
-  const url = `/api/power/getPowerParam?token=${getToken()}`;
+  const url = `/api/power/getPowerParam`;
   return IS_MOCK
     ? Promise.resolve(require("../data/ups").default.data)
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
 
 export function getPowerStatus() {
-  const url = `/api/power/getPowerStatus?token=${getToken()}`;
+  const url = `/api/power/getPowerStatus`;
   return IS_MOCK
     ? Promise.resolve(require("../data/ups").default.state)
-    : request.get(url);
+    : request.get(url, { params: { token: getToken() } });
 }
 
 export function powerOn(powerType) {
-  const url = `/api/power/powerOn?token=${getToken()}`;
+  const url = `/api/power/powerOn`;
   return IS_MOCK
     ? Promise.resolve({ powerOn: true })
     : request.get(url, {
         params: {
+          token: getToken(),
           powerType,
         },
       });
 }
 
 export function powerOff(powerType) {
-  const url = `/api/power/powerOff?token=${getToken()}`;
+  const url = `/api/power/powerOff`;
   return IS_MOCK
     ? Promise.resolve({ powerOff: true })
     : request.get(url, {
         params: {
+          token: getToken(),
           powerType,
         },
       });
