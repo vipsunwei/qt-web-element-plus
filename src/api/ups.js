@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getToken } from "../utils/utils";
+import upsMockData from "../data/ups";
 
 const host = process.env.VUE_APP_HOST;
 let IS_MOCK = false;
@@ -16,14 +17,14 @@ request.interceptors.response.use(
 export function getPowerParam() {
   const url = `/api/power/getPowerParam`;
   return IS_MOCK
-    ? Promise.resolve(require("../data/ups").default.data)
+    ? Promise.resolve(upsMockData.data)
     : request.get(url, { params: { token: getToken() } });
 }
 
 export function getPowerStatus() {
   const url = `/api/power/getPowerStatus`;
   return IS_MOCK
-    ? Promise.resolve(require("../data/ups").default.state)
+    ? Promise.resolve(upsMockData.state)
     : request.get(url, { params: { token: getToken() } });
 }
 
@@ -49,4 +50,13 @@ export function powerOff(powerType) {
           powerType,
         },
       });
+}
+/**
+ * 获取电源管理实时数据临近最后一条
+ */
+export function getTkPowerData() {
+  const url = "/api/history/getTkPowerData";
+  return IS_MOCK
+    ? Promise.resolve(upsMockData.tkPowerData)
+    : request.get(url, { params: { token: getToken() } });
 }

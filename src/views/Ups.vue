@@ -44,20 +44,15 @@
 </template>
 
 <script>
-import {
-  toRefs,
-  onMounted,
-  onUnmounted,
-  reactive,
-  watch,
-  watchEffect,
-} from "vue";
-import eventbusClient from "vertx3-eventbus-client";
-import { useRouter } from "vue-router";
+import { toRefs, reactive, onMounted } from "vue";
+// import eventbusClient from "vertx3-eventbus-client";
+// import { useRouter } from "vue-router";
 import useUps from "../hooks/useUps";
 import useEventBus from "../hooks/useEventBus";
 import { getUpsInfoMap } from "../data-map/ups";
 import { toFixedFilter } from "../utils/utils";
+import { getTkPowerData } from "../api/ups";
+
 export default {
   name: "Ups",
   setup() {
@@ -65,12 +60,13 @@ export default {
     useEventBus("PowerInfo", handleUpsInfo, {
       IS_MOCK,
       mockDataName: "upsInfo",
+      timeout: 10 * 1000,
     });
     const { upsState, onUpsChange } = useUps();
-    const router = useRouter();
-    function back() {
-      router.go(-1);
-    }
+    // const router = useRouter();
+    // function back() {
+    //   router.go(-1);
+    // }
     const upsInfoState = reactive({
       upsInfo: upsInfoInit(),
     });
@@ -86,7 +82,17 @@ export default {
       }
     }
 
-    return { ...toRefs(upsState), onUpsChange, back, ...toRefs(upsInfoState) };
+    onMounted(() => {
+      getLastPowerData();
+    });
+    // 进页面后拉取一次电源信息，
+    function getLastPowerData() {
+      getTkPowerData().then((lastPowerData) => {
+        handleUpsInfo(lastPowerData);
+      });
+    }
+
+    return { ...toRefs(upsState), onUpsChange, ...toRefs(upsInfoState) };
   },
 };
 </script>
