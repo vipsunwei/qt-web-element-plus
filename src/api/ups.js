@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getToken } from "../utils/utils";
 import upsMockData from "../data/ups";
+import { ElMessage } from "element-plus";
 
 const host = process.env.VUE_APP_HOST;
 let IS_MOCK = false;
@@ -11,7 +12,16 @@ const request = axios.create({
 
 request.interceptors.response.use(
   (res) => res.data,
-  (err) => Promise.reject(err)
+  (err) => {
+    const res = err.response;
+    const message = `${res?.config?.url}\n${res?.status}\n${res?.statusText}`;
+    ElMessage({
+      type: "error",
+      message,
+      duration: 3000,
+    });
+    return Promise.reject(err);
+  }
 );
 
 export function getPowerParam() {

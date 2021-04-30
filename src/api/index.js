@@ -14,9 +14,11 @@ const request = axios.create({
 request.interceptors.response.use(
   (res) => res.data,
   (err) => {
+    const res = err.response;
+    const message = `${res?.config?.url}\n${res?.status}\n${res?.statusText}`;
     ElMessage({
       type: "error",
-      message: err.message,
+      message,
       duration: 3000,
     });
     return Promise.reject(err);
