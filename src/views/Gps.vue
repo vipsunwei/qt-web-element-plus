@@ -16,19 +16,21 @@
       >
         <span class="name">{{ item.name }}:</span>
         <span>{{ item.value }}</span>
+        <span v-show="item.value && item.unit">{{ item.unit }}</span>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
+import { defineComponent, reactive, toRefs } from "vue";
+// import { useRouter } from "vue-router";
 import { getGpsInfoMap } from "../data-map/gps";
-import useEnableReset from "../hooks/useEnableReset";
+// import useEnableReset from "../hooks/useEnableReset";
 import useEventBus from "../hooks/useEventBus";
+import { toFixedFilter } from "../utils/utils";
 
-export default {
+export default defineComponent({
   name: "Gps",
   setup() {
     const IS_MOCK = false;
@@ -36,26 +38,32 @@ export default {
       IS_MOCK,
       mockDataName: "gpsInfo",
     });
-
+    const len6 = ["latitude", "longitude"];
+    const len2 = ["altitude"];
     function handleGpsInfo(gpsInfo) {
       for (const key in gpsInfo) {
         const cur = gpsInfoState.gpsInfo.find((value) => value.key === key);
-        cur && (cur.value = gpsInfo[key]);
+        cur &&
+          (cur.value = len6.includes(key)
+            ? toFixedFilter(gpsInfo[key], 6)
+            : len2.includes(key)
+            ? toFixedFilter(gpsInfo[key], 2)
+            : gpsInfo[key]);
       }
     }
     const gpsInfoState = reactive({
       gpsInfo: gpsInfoInit(),
     });
-    const router = useRouter();
-    function back() {
-      router.go(-1);
-    }
+    // const router = useRouter();
+    // function back() {
+    //   router.go(-1);
+    // }
     function gpsInfoInit() {
       return Object.values(getGpsInfoMap());
     }
-    return { ...toRefs(gpsInfoState), back };
+    return { ...toRefs(gpsInfoState) };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
