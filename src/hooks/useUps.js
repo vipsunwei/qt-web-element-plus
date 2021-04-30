@@ -5,9 +5,12 @@ import { getUpsParamDataMap } from "../data-map/ups";
 
 export default function useUps() {
   onMounted(() => getData());
+  const upsDefault = () => Object.values(getUpsParamDataMap());
   const upsState = reactive({
-    ups: [],
+    ups: upsDefault(),
     loading: false,
+    isOffline: false,
+    offlineText: "设备离线",
     disabled: computed(() => {
       let r = false;
       //   const main = upsState.ups.find((value) => value.param === "MAIN");
@@ -19,8 +22,18 @@ export default function useUps() {
   });
 
   async function getData() {
-    let params = await getPowerParam();
-    if (!(params && Array.isArray(params))) return;
+    upsState.loading = true;
+    let params;
+    try {
+      params = await getPowerParam();
+    } catch (error) {
+      console.log(error.toJSON());
+    }
+    if (!(params && Array.isArray(params))) {
+      upsState.isOffline = true;
+      upsState.loading = false;
+      return;
+    }
     params = params.map(({ param }) => {
       const item = getUpsParamDataMap()[param];
       return {
@@ -39,6 +52,8 @@ export default function useUps() {
       }
     });
     upsState.ups = params;
+    upsState.isOffline = false;
+    upsState.loading = false;
   }
   function open(v, item) {
     powerOn(item.param).then((res) => {

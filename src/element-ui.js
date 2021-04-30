@@ -31,6 +31,8 @@ import {
   ElDrawer,
   ElDialog,
   ElCheckbox,
+  ElTooltip,
+  ElIcon,
 } from "element-plus";
 
 const components = [
@@ -66,6 +68,8 @@ const components = [
   ElDrawer,
   ElDialog,
   ElCheckbox,
+  ElTooltip,
+  ElIcon,
 ];
 
 function useElementUi(app) {

@@ -31,13 +31,24 @@
       >
         <span class="ups-name">{{ item.name }}：</span>
         <el-switch
-          :disabled="disabled && item.param !== 'MAIN'"
+          v-if="!isOffline"
           v-model="item.status"
           active-text="开"
           inactive-text="关"
           @change="onUpsChange($event, item)"
         >
         </el-switch>
+        <el-tooltip v-else :content="offlineText" placement="top" effect="dark">
+          <div style="outline: 0">
+            <el-switch
+              :disabled="isOffline"
+              v-model="item.status"
+              active-text="开"
+              inactive-text="关"
+            >
+            </el-switch>
+          </div>
+        </el-tooltip>
       </el-col>
     </el-row>
   </div>
@@ -82,9 +93,7 @@ export default {
       }
     }
 
-    onMounted(() => {
-      getLastPowerData();
-    });
+    onMounted(() => getLastPowerData());
     // 进页面后拉取一次电源信息，
     function getLastPowerData() {
       getTkPowerData().then((lastPowerData) => {

@@ -9,15 +9,15 @@
     "build:deploy": "yarn build && cross-env DEPLOY_ENV=vipsunwei DEPLOY_METHOD=delete node ./deploy.js"
   },
   "dependencies": {
-    "axios": "^0.20.0-0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.2-beta.34",
+    "element-plus": "^1.0.2-beta.41",
     "howler": "^2.2.1",
     "lodash-es": "^4.17.20",
     "mitt": "^2.1.0",
     "vertx3-eventbus-client": "^3.9.4",
-    "vue": "^3.0.7",
-    "vue-router": "^4.0.4",
+    "vue": "^3.0.11",
+    "vue-router": "^4.0.6",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
@@ -25,7 +25,7 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.7",
+    "@vue/compiler-sfc": "^3.0.11",
     "babel-plugin-component": "^1.1.1",
     "mockjs": "^1.1.0",
     "sass": "^1.26.5",
