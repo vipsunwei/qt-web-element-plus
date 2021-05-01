@@ -2,10 +2,26 @@
   <div :style="{ marginTop: '20px' }">
     <el-card shadow="always" :body-style="{ padding: '20px' }">
       <template #header>
-        <div class="title">检测参数配置</div>
+        <div style="padding: 20px">
+          <span class="title">检测参数配置</span>
+          <div v-if="isOffline" style="display: inline">
+            [
+            <span style="color: #f56c6c; text-shadow: 0 0 4px #f56c6c">
+              {{ offlineText }}
+            </span>
+            ]
+          </div>
+        </div>
       </template>
       <!-- card body -->
-      <el-form :model="params" ref="form" label-width="180px" :inline="false">
+      <el-form
+        v-loading="loading"
+        :model="params"
+        ref="form"
+        label-width="180px"
+        :inline="false"
+        :disabled="isOffline"
+      >
         <el-form-item
           :label="paramsDict[key]"
           v-for="(value, key) in params"
@@ -39,18 +55,30 @@ import {
   setCheckSurveyCriteion,
   paramsDict,
 } from "../api/checkParams";
-import { ElMessage } from "element-plus";
+import { checkParamsInit } from "../data-map/checkParams";
 import { showMessage } from "../utils/utils";
 export default {
   setup() {
     onMounted(() => getData());
     const state = reactive({
-      params: {},
+      params: checkParamsInit(),
+      loading: false,
+      isOffline: false,
+      offlineText: "设备离线",
     });
     function getData() {
-      getCheckSurveyCriteion().then((res) => {
-        state.params = formatData(res.CheckSurveyCriteionInfo);
-      });
+      state.loading = true;
+      getCheckSurveyCriteion()
+        .then((res) => {
+          state.params = formatData(res.CheckSurveyCriteionInfo);
+        })
+        .catch((error) => {
+          console.dir(error);
+          state.isOffline = true;
+        })
+        .finally(() => {
+          state.loading = false;
+        });
     }
     function formatData(o) {
       const obj = {};
@@ -82,6 +110,5 @@ export default {
   font-weight: bold;
   font-size: 18px;
   color: #606266;
-  padding: 20px;
 }
 </style>
