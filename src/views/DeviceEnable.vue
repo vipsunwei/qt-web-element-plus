@@ -3,6 +3,7 @@
   <div>
     <div class="title">设备使能开关</div>
     <el-form
+      v-loading="loading"
       label-width="300px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
@@ -16,6 +17,7 @@
         >
           <el-form-item :label="item.label + '(' + item.name + ')'">
             <el-switch
+              v-if="!isOffline"
               v-model="item.status"
               active-text="停用"
               inactive-text="启用"
@@ -26,6 +28,26 @@
               @change="onEnableChange($event, item)"
             >
             </el-switch>
+            <el-tooltip
+              v-else
+              :content="offlineText"
+              placement="top"
+              effect="dark"
+            >
+              <div style="outline: 0; display: inline">
+                <el-switch
+                  v-model="item.status"
+                  active-text="停用"
+                  inactive-text="启用"
+                  :active-value="false"
+                  :inactive-value="true"
+                  inactive-color="#409EFF"
+                  active-color="#DCDFE6"
+                  :disabled="isOffline"
+                >
+                </el-switch>
+              </div>
+            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,20 +62,35 @@ import {
   closeDeviceEnable,
   deviceEnableDict,
 } from "../api/deviceEnable";
+import { getDeviceEnableMap } from "../data-map/deviceEnable";
 import { onMounted, reactive, toRefs } from "vue";
 
 import { showMessage } from "../utils/utils";
 export default {
   setup() {
     onMounted(() => deviceEnable());
+    const deviceEnableInit = () => Object.values(getDeviceEnableMap());
     const deviceEnableState = reactive({
-      deviceEnable: [],
+      deviceEnable: deviceEnableInit(),
+      loading: false,
+      isOffline: false,
+      offlineText: "设备离线",
     });
+
     // 获取全部设备使能
     function deviceEnable() {
-      getDeviceEnable().then((data) => {
-        deviceEnableState.deviceEnable = formatDeviceEnable(data);
-      });
+      deviceEnableState.loading = true;
+      getDeviceEnable()
+        .then((data) => {
+          deviceEnableState.deviceEnable = formatDeviceEnable(data);
+        })
+        .catch((error) => {
+          console.dir(error);
+          deviceEnableState.isOffline = true;
+        })
+        .finally(() => {
+          deviceEnableState.loading = false;
+        });
     }
     function formatDeviceEnable(data) {
       return data.map((item) => {
