@@ -410,12 +410,13 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, toRefs } from "vue";
+import { onMounted, toRefs } from "vue";
 import useEnvInfo from "../hooks/useEnvInfo";
 import useThreshold from "../hooks/useThreshold";
 import useValve from "../hooks/useValve";
 import useEnableReset from "../hooks/useEnableReset";
 import useEventBus from "../hooks/useEventBus";
+import { getGasCheckingData } from "../api/envCheck";
 
 export default {
   setup() {
@@ -424,10 +425,15 @@ export default {
       IS_MOCK,
       mockDataName: "envInfo",
       times: Infinity,
+      timeout: 10 * 1000,
     });
     function handleEventBusMsg(envInfo) {
       handleEnvInfo(envInfo);
       handleValveStatus(envInfo);
+    }
+    onMounted(() => getLastEnvCheckData());
+    function getLastEnvCheckData() {
+      getGasCheckingData().then((result) => handleEventBusMsg(result));
     }
     // 环境监测要素
     const {

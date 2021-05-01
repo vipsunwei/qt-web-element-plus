@@ -137,4 +137,33 @@ const tableData = [
   },
 ];
 
-export { tableData };
+const envData = {
+  id: 6895,
+  deviceDiIdVersion: "YEMS_001_001",
+  stationNumber: "54511",
+  gasThickness1: 0,
+  gasThickness2: 0,
+  pipePressure: 1,
+  smokeDetector1: 0,
+  smokeDetector2: 0,
+  status: 0,
+  temperature: null,
+  humidity: null,
+  waterLeakSensor: 0,
+  roomGasThickness1: 0,
+  roomGasThickness2: 0,
+  roomPipePressure1: 58,
+  roomPipePressure2: 57,
+  roomSmokeDetector1: 0,
+  roomWaterLeakSensor: 0,
+  domeWindSpeed: 2.6,
+  domeWindDirection: 21.1,
+  alarmInfo: null,
+  branch1ValveStatus: 4,
+  branch2ValveStatus: 4,
+  mainValveStatus: 4,
+  safetyValveStatus: 4,
+  ctime: 1619690299000,
+};
+
+export { tableData, envData };

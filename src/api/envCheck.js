@@ -282,3 +282,14 @@ export function setReset(param) {
     ? Promise.resolve({ setReset: true })
     : request.get(url, { params: { token, param } });
 }
+
+/**
+ * 获取环境监测实时数据最近一条数据
+ * @returns
+ */
+export function getGasCheckingData() {
+  const url = "/api/history/getGasCheckingData";
+  return IS_MOCK
+    ? import("../data/envCheck.js").then((result) => result.envData)
+    : request.get(url, { params: { token: getToken() } });
+}
