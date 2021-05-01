@@ -396,7 +396,7 @@
                     placement="top"
                     effect="dark"
                   >
-                    <div style="outline: 0">
+                    <div style="outline: 0; display: inline">
                       <el-switch
                         v-model="item.status"
                         active-text="开"
