@@ -14,11 +14,16 @@ import { getEnableResetDataMap } from "../data-map/envCheck";
  */
 export default function useEnableReset() {
   onMounted(() => getEnableData());
+  const enableResetDataInit = () =>
+    splitArr(Object.values(getEnableResetDataMap()));
   // 使能复位数据定义
   const enableResetState = reactive({
     isEnableLoading: false,
     isResetLoading: false,
-    enableResetData: [],
+    enableResetData: enableResetDataInit(),
+    isOffline: false,
+    loading: false,
+    offlineText: "设备离线",
   });
   /**
    * 设置使能开关
@@ -68,8 +73,18 @@ export default function useEnableReset() {
    * 获取全部使能和存活使能
    */
   async function getEnableData() {
-    let params = await getResetEnableParam();
-    if (!(params && Array.isArray(params))) return;
+    enableResetState.loading = true;
+    let params;
+    try {
+      params = await getResetEnableParam();
+    } catch (error) {
+      console.dir(error);
+      enableResetState.loading = false;
+    }
+    if (!(params && Array.isArray(params))) {
+      enableResetState.isOffline = true;
+      return;
+    }
     params = params.map(({ param }) => {
       const item = getEnableResetDataMap()[param];
       return {
@@ -88,6 +103,7 @@ export default function useEnableReset() {
     });
 
     enableResetState.enableResetData = splitArr(params);
+    enableResetState.loading = false;
   }
   // 分割数组，分成两半儿
   function splitArr(arr) {

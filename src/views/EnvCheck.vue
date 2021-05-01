@@ -362,6 +362,7 @@
   <div style="margin-top: 20px">
     <div class="title">报警使能复位开关</div>
     <el-form
+      v-loading="loading"
       label-width="240px"
       :inline="false"
       style="border: 1px solid #dcdfe6; padding: 20px"
@@ -382,12 +383,29 @@
               <el-col :span="12" :offset="0">
                 <el-form-item :prop="item.param">
                   <el-switch
+                    v-if="!isOffline"
                     v-model="item.status"
                     active-text="开"
                     inactive-text="关"
                     @change="onEnableChange($event, item)"
                   >
                   </el-switch>
+                  <el-tooltip
+                    v-else
+                    :content="offlineText"
+                    placement="top"
+                    effect="dark"
+                  >
+                    <div style="outline: 0">
+                      <el-switch
+                        v-model="item.status"
+                        active-text="开"
+                        inactive-text="关"
+                        :disabled="isOffline"
+                      >
+                      </el-switch>
+                    </div>
+                  </el-tooltip>
                 </el-form-item>
               </el-col>
               <el-col :span="12" :offset="0">
@@ -395,7 +413,7 @@
                   round
                   size="small"
                   type="primary"
-                  :disabled="!item.status"
+                  :disabled="isOffline || !item.status"
                   @click="onResetClick(item)"
                 >
                   复位
