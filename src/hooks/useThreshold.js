@@ -141,25 +141,29 @@ export default function useThreshold() {
       thresholdState.threshold.smoke = res.Threshold;
       oldThresholdData.smoke = res.Threshold;
     });
-    getPressThreshold().then((res) => {
-      thresholdState.threshold.press = res.Threshold;
-      oldThresholdData.press = res.Threshold;
-    });
-    getHydrogenThreshold().then((res) => {
-      thresholdState.threshold.hydrogen = res.Threshold;
-      oldThresholdData.hydrogen = res.Threshold;
-    });
+    getPressThreshold()
+      .then((res) => {
+        thresholdState.threshold.press = res.Threshold;
+        oldThresholdData.press = res.Threshold;
+        return getLowPressThreshold();
+      })
+      .then((res) => {
+        thresholdState.threshold.lowPress = res.Threshold;
+        oldThresholdData.lowPress = res.Threshold;
+      });
+    getHydrogenThreshold()
+      .then((res) => {
+        thresholdState.threshold.hydrogen = res.Threshold;
+        oldThresholdData.hydrogen = res.Threshold;
+        return getLowHydrogenThreshold();
+      })
+      .then((res) => {
+        thresholdState.threshold.lowHydrogen = res.Threshold;
+        oldThresholdData.lowHydrogen = res.Threshold;
+      });
     getOpenTimeThreshold().then((res) => {
       thresholdState.threshold.openTime = res.Threshold;
       oldThresholdData.openTime = res.Threshold;
-    });
-    getLowHydrogenThreshold().then((res) => {
-      thresholdState.threshold.lowHydrogen = res.Threshold;
-      oldThresholdData.lowHydrogen = res.Threshold;
-    });
-    getLowPressThreshold().then((res) => {
-      thresholdState.threshold.lowPress = res.Threshold;
-      oldThresholdData.lowPress = res.Threshold;
     });
   }
   /**
