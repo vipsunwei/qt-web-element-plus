@@ -77,7 +77,11 @@ export function throttle(fn, gapTime = 300) {
   };
 }
 
-// 睡眠 单位：毫秒
+/**
+ * 睡眠 单位：毫秒
+ * @param {number} t 时间 单位毫秒
+ * @returns {promise}
+ */
 export const sleep = (t) =>
   new Promise((resolve) => setTimeout(() => resolve(), t));
 
