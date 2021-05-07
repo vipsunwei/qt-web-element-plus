@@ -38,6 +38,10 @@ export default defineComponent({
       IS_MOCK,
       mockDataName: "gpsInfo",
     });
+    useEventBus("GPS_LOCATION", handleGpsInfo, {
+      IS_MOCK,
+      mockDataName: "locationInfo",
+    });
     const len6 = ["latitude", "longitude"];
     const len2 = ["altitude"];
     function handleGpsInfo(gpsInfo) {

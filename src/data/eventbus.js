@@ -73,7 +73,9 @@ export const gpsInfo = {
   dayOfWeek: "WEDNESDAY",
   dayOfYear: 6,
   chronology: { id: "ISO", calendarType: "iso8601" },
+};
 
+export const locationInfo = {
   latitude: 39.80656366666667, // 维度 保留6位小数 单位：度
   longitude: 116.47008566666666, // 经度 保留6位小数 单位：度
   altitude: 36.9, // 海拔 保留2位小数 单位：米
@@ -186,6 +188,7 @@ export default {
   envInfo,
   upsInfo,
   gpsInfo,
+  locationInfo,
   alarmInfo,
   systemMode,
   releaseStep,
