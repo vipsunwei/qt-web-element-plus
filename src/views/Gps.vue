@@ -7,11 +7,16 @@
 
   <div class="gps">
     <el-row>
+      <el-col :span="24" :offset="0">
+        <span> 时间（UTC）： </span> <span>{{ utcTime }}</span>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col
         class="col"
         :span="12"
         :offset="0"
-        v-for="item in gpsInfo"
+        v-for="item in locationInfo"
         :key="item.key"
       >
         <span class="name">{{ item.name }}:</span>
@@ -23,9 +28,9 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from "vue";
+import { computed, defineComponent, reactive, toRefs } from "vue";
 // import { useRouter } from "vue-router";
-import { getGpsInfoMap } from "../data-map/gps";
+import { getGpsInfoMap, getGpsLocationInfoMap } from "../data-map/gps";
 // import useEnableReset from "../hooks/useEnableReset";
 import useEventBus from "../hooks/useEventBus";
 import { toFixedFilter } from "../utils/utils";
@@ -38,30 +43,58 @@ export default defineComponent({
       IS_MOCK,
       mockDataName: "gpsInfo",
     });
-    useEventBus("GPS_LOCATION", handleGpsInfo, {
+    useEventBus("GPS_LOCATION", handleLocationInfo, {
       IS_MOCK,
       mockDataName: "locationInfo",
     });
     const len6 = ["latitude", "longitude"];
     const len2 = ["altitude"];
+    function handleLocationInfo(locationInfo) {
+      for (const key in locationInfo) {
+        const cur = gpsInfoState.locationInfo.find(
+          (value) => value.key === key
+        );
+        cur &&
+          (cur.value = len6.includes(key)
+            ? toFixedFilter(locationInfo[key], 6)
+            : len2.includes(key)
+            ? toFixedFilter(locationInfo[key], 2)
+            : locationInfo[key]);
+      }
+    }
     function handleGpsInfo(gpsInfo) {
       for (const key in gpsInfo) {
         const cur = gpsInfoState.gpsInfo.find((value) => value.key === key);
-        cur &&
-          (cur.value = len6.includes(key)
-            ? toFixedFilter(gpsInfo[key], 6)
-            : len2.includes(key)
-            ? toFixedFilter(gpsInfo[key], 2)
-            : gpsInfo[key]);
+        cur && (cur.value = gpsInfo[key]);
       }
     }
     const gpsInfoState = reactive({
       gpsInfo: gpsInfoInit(),
+      locationInfo: locationInfoInit(),
+      utcTime: computed(() => {
+        let Y, M, D, h, m, s;
+        for (let i = 0, l = gpsInfoState.gpsInfo.length; i < l; i++) {
+          const item = gpsInfoState.gpsInfo[i];
+          // console.log(456);
+          if (!item.value) return "";
+          item.key === "year" && (Y = item.value + item.name);
+          item.key === "monthValue" && (M = item.value + item.name);
+          item.key === "dayOfMonth" && (D = item.value + item.name);
+          item.key === "hour" && (h = item.value + item.name);
+          item.key === "minute" && (m = item.value + item.name);
+          item.key === "second" && (s = item.value + item.name);
+        }
+        // console.log(123);
+        return Y + M + D + " " + h + m + s;
+      }),
     });
     // const router = useRouter();
     // function back() {
     //   router.go(-1);
     // }
+    function locationInfoInit() {
+      return Object.values(getGpsLocationInfoMap());
+    }
     function gpsInfoInit() {
       return Object.values(getGpsInfoMap());
     }
