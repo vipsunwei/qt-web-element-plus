@@ -30,10 +30,10 @@
           :disabled="isDisabled()"
           @click="onGetTkyFreqClick"
         >
-          获取探空仪频点
+          获取探空仪频点(MHZ)
         </el-button>
         <span style="padding-left: 15px" v-show="sondeFreq">
-          {{ sondeFreq }}MHZ
+          {{ sondeFreq }}
         </span>
       </el-col>
       <el-col :span="12" :offset="0">
