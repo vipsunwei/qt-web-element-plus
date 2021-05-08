@@ -1,30 +1,17 @@
 <template>
-  <el-row :gutter="20" v-if="false">
-    <el-col :span="24" :offset="0">
-      <el-button type="primary" @click="back"> 返回 </el-button>
-    </el-col>
-  </el-row>
-
-  <div class="gps">
-    <el-row>
-      <el-col :span="24" :offset="0">
-        <span> 时间（UTC）： </span> <span>{{ utcTime }}</span>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col
-        class="col"
-        :span="12"
-        :offset="0"
-        v-for="item in locationInfo"
-        :key="item.key"
-      >
-        <span class="name">{{ item.name }}:</span>
+  <el-descriptions column="3" border direction="vertical">
+    <el-descriptions-item label="时间（UTC）" span="3">
+      {{ utcTime }}
+    </el-descriptions-item>
+    <template v-for="item in locationInfo" :key="item.key">
+      <el-descriptions-item :label="item.name" span="1">
         <span>{{ item.value }}</span>
-        <span v-show="item.value && item.unit">{{ item.unit }}</span>
-      </el-col>
-    </el-row>
-  </div>
+        <span v-show="item.value && item.unit">
+          {{ item.unit }}
+        </span>
+      </el-descriptions-item>
+    </template>
+  </el-descriptions>
 </template>
 
 <script>
