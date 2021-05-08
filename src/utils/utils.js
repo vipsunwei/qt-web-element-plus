@@ -135,10 +135,14 @@ export function getToken() {
   return sessionStorage.getItem("qt-token");
 }
 
-export function showMessage(value) {
+export function showMessage(value, message) {
+  if (!message) {
+    message =
+      value === true ? "操作成功" : value === false ? "操作失败" : value;
+  }
   ElMessage({
     type: value === true ? "success" : value === false ? "error" : "warning",
-    message: value === true ? "操作成功" : value === false ? "操作失败" : value,
+    message,
     duration: value === true ? 2000 : 3000,
   });
 }
