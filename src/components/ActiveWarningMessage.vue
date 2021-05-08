@@ -88,15 +88,21 @@ export default {
       getTableData().then((result) => {
         emitter.emit("alarm", result);
       });
+      // 挂在后监听eventbus收到实时报警时发过来的拉取一次当前存活报警列表的消息
+      emitter.on("get-active-warning-message", getTableData);
     });
-    onUnmounted(() => window.removeEventListener("resize", getMaxHeight));
+    onUnmounted(() => {
+      window.removeEventListener("resize", getMaxHeight);
+      emitter.off("get-active-warning-message", getTableData);
+    });
     const getMaxHeight = debounce(function () {
       const viewHeight = document.body.offsetHeight;
       state.maxHeight = viewHeight * 0.3;
       // console.log(state.maxHeight, typeof state.maxHeight);
     });
     // 获取当前存活的告警信息
-    function getTableData() {
+    function getTableData(e) {
+      console.log("from warning emitter", e);
       state.isLoading = true;
       return getActiveWarningMessage()
         .then((result) => {

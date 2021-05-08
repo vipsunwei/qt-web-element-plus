@@ -181,4 +181,5 @@ function add(o) {
 export function ebHandler(alarmInfo) {
   console.info("eventbus来消息了！");
   add(alarmInfo);
+  emitter.emit("get-active-warning-message", "I am warning ");
 }
