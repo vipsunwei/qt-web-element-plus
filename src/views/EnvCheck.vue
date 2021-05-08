@@ -385,8 +385,12 @@
                   <el-switch
                     v-if="!isOffline"
                     v-model="item.status"
-                    active-text="开"
-                    inactive-text="关"
+                    active-text="停用"
+                    inactive-text="启用"
+                    :active-value="false"
+                    :inactive-value="true"
+                    inactive-color="#409EFF"
+                    active-color="#DCDFE6"
                     @change="onEnableChange($event, item)"
                   >
                   </el-switch>
