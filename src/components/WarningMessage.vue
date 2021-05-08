@@ -106,19 +106,31 @@
       ></el-table-column>
       <el-table-column label="报警源">
         <template #default="scope">
-          <span>{{
-            componentNameDict[scope.row?.alarm?.alarmComponent].text
-          }}</span>
+          <span>
+            {{
+              (scope.row?.alarm?.alarmComponent &&
+                componentNameDict[scope.row?.alarm?.alarmComponent].text) ||
+              ""
+            }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="报警级别">
         <template #default="scope">
-          <span>{{ levelsDict[scope.row?.alarm?.alarmLevel].text }}</span>
+          <span>
+            {{
+              (scope.row?.alarm?.alarmLevel &&
+                levelsDict[scope.row?.alarm?.alarmLevel].text) ||
+              ""
+            }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="报警名称">
         <template #default="scope">
-          <span>{{ scope.row?.alarm?.alarmName }}</span>
+          <span>
+            {{ scope.row?.alarm?.alarmName || "" }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="状态">

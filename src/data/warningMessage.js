@@ -4,12 +4,7 @@ const data = {
   dataArray: [
     {
       id: 1,
-      alarm: {
-        alarmComponent: "JCX",
-        alarmLevel: "GENERAL",
-        alarmName: "基测箱无数据",
-        key: "2_2_基测箱无数据",
-      },
+      alarm: null,
       startTime: 1606378308000,
       endTime: 1606481927000,
       alarmDetail: null,
