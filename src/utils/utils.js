@@ -134,7 +134,11 @@ export function getQueryObject(url) {
 export function getToken() {
   return sessionStorage.getItem("qt-token");
 }
-
+/**
+ * 基于elementui的message组件包装的弹出提示
+ * @param {boolean|string} value 成功或失败结果的布尔值或者是接口返回的报错信息
+ * @param {string} message 根据场景自定义的提示语
+ */
 export function showMessage(value, message) {
   if (!message) {
     message =
