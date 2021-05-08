@@ -467,7 +467,7 @@ export default {
     /** 基测报告 start */
     const jcResultRecordColumns = {
       tkyid: "探空仪id",
-      jcResultStatus: "基测结果状态",
+      // jcResultStatus: "基测结果状态",
       jcxPressure: "基测箱压力",
       jcxTemperature: "基测箱温度",
       jcxHumidity: "基测箱湿度",
