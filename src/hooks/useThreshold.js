@@ -18,7 +18,7 @@ import {
   getHydrogenThresholdInquire,
   getOpenTimeThresholdInquire,
 } from "../api/envCheck";
-import { debounce } from "../utils/utils";
+import { debounce, showMessage } from "../utils/utils";
 
 /**
  * 阈值范围
@@ -296,33 +296,57 @@ export default function useThreshold() {
    * 查询设备烟雾阈值
    */
   function getSmokeInquire() {
-    getSmokeThresholdInquire().then((res) => {
-      thresholdState.threshold.smoke = res.ThresholdInquire;
-    });
+    getSmokeThresholdInquire()
+      .then((res) => {
+        thresholdState.threshold.smoke = res.ThresholdInquire;
+        showMessage(true, "查询成功");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage(false, "查询失败");
+      });
   }
   /**
    * 查询设备时间阈值
    */
   function getOpenTimeInquire() {
-    getOpenTimeThresholdInquire().then((res) => {
-      thresholdState.threshold.openTime = res.ThresholdInquire;
-    });
+    getOpenTimeThresholdInquire()
+      .then((res) => {
+        thresholdState.threshold.openTime = res.ThresholdInquire;
+        showMessage(true, "查询成功");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage(false, "查询失败");
+      });
   }
   /**
    * 查询设备氢气阈值
    */
   function getHydrogenInquire() {
-    getHydrogenThresholdInquire().then((res) => {
-      thresholdState.threshold.hydrogen = res.ThresholdInquire;
-    });
+    getHydrogenThresholdInquire()
+      .then((res) => {
+        thresholdState.threshold.hydrogen = res.ThresholdInquire;
+        showMessage(true, "查询成功");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage(false, "查询失败");
+      });
   }
   /**
    * 查询设备压力阈值
    */
   function getPressInquire() {
-    getPressThresholdInquire().then((res) => {
-      thresholdState.threshold.press = res.ThresholdInquire;
-    });
+    getPressThresholdInquire()
+      .then((res) => {
+        thresholdState.threshold.press = res.ThresholdInquire;
+        showMessage(true, "查询成功");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage(false, "查询失败");
+      });
   }
   /**
    * 阈值项与处理设置阈值的函数的对应关系
