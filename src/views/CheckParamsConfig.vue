@@ -95,7 +95,6 @@ export default {
     }
     function onSubmit() {
       const options = toRaw(state.params);
-      console.log("rawdata -- ", options);
       setCheckSurveyCriteion(options).then((res) => {
         showMessage(res.setCheckSurveyCriteion);
       });

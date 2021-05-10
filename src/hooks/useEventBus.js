@@ -47,7 +47,6 @@ export default function useEventBus(channel, callback, mockOptions) {
         times--;
       }
       const mockData = require("../data/eventbus").default[mockDataName];
-      console.info(`模拟eventbus -- ${channel}: `, mockData);
       callback && typeof callback === "function" && callback(mockData);
       sendMockData();
     }, timeout);
@@ -86,8 +85,6 @@ export default function useEventBus(channel, callback, mockOptions) {
       eb.onopen = function() {
         // 监听数据
         eb.registerHandler(channel, function(err, msg) {
-          console.log(`${channel} err -- `, err);
-          console.log(`${channel} message -- `, JSON.parse(msg.body)); // 在这里对接收的数据进行一些操作
           callback &&
             typeof callback === "function" &&
             callback(JSON.parse(msg.body));
@@ -95,10 +92,7 @@ export default function useEventBus(channel, callback, mockOptions) {
         });
         // eb.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
       };
-      eb.onreconnect = function(err, msg) {
-        console.log("onreconnect err -- ", err);
-        console.log("onreconnect msg -- ", msg);
-      }; // Optional, will only be called on reconnections
+      eb.onreconnect = function(err, msg) {}; // Optional, will only be called on reconnections
       eb.onerror = function(err, msg) {
         console.log("onerror err -- ", err);
         console.log("onerror msg -- ", msg);

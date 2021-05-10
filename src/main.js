@@ -12,7 +12,7 @@ import useElementUi from "./element-ui.js";
 // 设置语言
 locale.use(lang);
 // 模拟eventbus开关
-const IS_MOCK = false;
+const IS_MOCK = true;
 const app = createApp(App);
 
 useElementUi(app);

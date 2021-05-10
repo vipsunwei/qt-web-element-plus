@@ -3,9 +3,8 @@ import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
-console.log("🚀 ~ file: index.js ~ host", host);
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
-const IS_MOCK = false; // 切换假数据开关
+const IS_MOCK = true; // 切换假数据开关
 
 const request = axios.create({
   baseURL: host,
@@ -132,7 +131,6 @@ export function getCheckReport(tkyid) {
  * @returns
  */
 export const getBaseTestReport = (tkyid) => {
-  console.log("tkyid: ", tkyid);
   const token = getToken();
   const url = `/api/history/getBaseTestReport`;
   return IS_MOCK
@@ -152,7 +150,6 @@ export const getBaseTestReport = (tkyid) => {
  * @returns
  */
 export const getInstantInfo = (tkyid) => {
-  console.log("tkyid: ", tkyid);
   const url = `/api/history/getInstantInfo`;
   const token = getToken();
   return IS_MOCK
@@ -184,7 +181,6 @@ export const getTkyData = ({
   pageSize,
   pageNumber,
 }) => {
-  console.log(tkyid, startTime, endTime, pageSize, pageNumber);
   const url = `/api/history/getTkyData`;
   const token = getToken();
   return IS_MOCK
@@ -233,7 +229,6 @@ export function getWarningMessage({
   pageNumber,
   pageSize,
 }) {
-  console.log(startTime, endTime, level, typeCode, pageNumber, pageSize);
   const url = `/api/history/getWarningMessage`;
   return IS_MOCK
     ? Promise.resolve(require("../data/warningMessage").default.data)

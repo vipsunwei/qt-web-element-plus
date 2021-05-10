@@ -41,6 +41,7 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const routes = router.getRoutes();
+    routes.pop();
     // function navTo(path) {
     //   router.push({ path });
     // }

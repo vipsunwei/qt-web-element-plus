@@ -4,7 +4,7 @@ import upsMockData from "../data/ups";
 import { ElMessage } from "element-plus";
 
 const host = process.env.VUE_APP_HOST;
-let IS_MOCK = false;
+let IS_MOCK = true;
 const request = axios.create({
   timeout: 10 * 1000,
   baseURL: host,

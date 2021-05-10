@@ -191,7 +191,6 @@ export default function useThreshold() {
   function smokeFn(smoke) {
     if (smoke == oldThresholdData.smoke) return;
     setSmokeThreshold(smoke).then((res) => {
-      console.log("set smoke result -- ", res);
       if (res.setSmokeThreshold) {
         oldThresholdData.smoke = smoke;
       } else {
@@ -209,7 +208,6 @@ export default function useThreshold() {
   function pressFn(press) {
     if (press == oldThresholdData.press) return;
     setPressThreshold(press).then((res) => {
-      console.log("set press result -- ", res);
       if (res.setPressThreshold) {
         oldThresholdData.press = press;
       } else {
@@ -227,7 +225,6 @@ export default function useThreshold() {
   function hydrogenFn(hydrogen) {
     if (hydrogen == oldThresholdData.hydrogen) return;
     setHydrogenThreshold(hydrogen).then((res) => {
-      console.log("set hydrogen result -- ", res);
       if (res.setHydrogenThreshold) {
         oldThresholdData.hydrogen = hydrogen;
       } else {
@@ -245,7 +242,6 @@ export default function useThreshold() {
   function openTimeFn(openTime) {
     if (openTime == oldThresholdData.openTime) return;
     setOpenTimeThreshold(openTime).then((res) => {
-      console.log("set open time result -- ", res);
       if (res.setOpenTimeThreshold) {
         oldThresholdData.openTime = openTime;
       } else {
@@ -263,7 +259,6 @@ export default function useThreshold() {
   function lowHydrogenFn(lowHydrogen) {
     if (lowHydrogen == oldThresholdData.lowHydrogen) return;
     setLowHydrogenThreshold(lowHydrogen).then((res) => {
-      console.log(res);
       if (res.setLowHydrogenThreshold) {
         oldThresholdData.lowHydrogen = lowHydrogen;
       }
@@ -279,7 +274,6 @@ export default function useThreshold() {
   function lowPressFn(lowPress) {
     if (lowPress == oldThresholdData.lowPress) return;
     setLowPressThreshold(lowPress).then((res) => {
-      console.log(res);
       if (res.setLowPressThreshold) {
         oldThresholdData.lowPress = lowPress;
       }
@@ -302,7 +296,7 @@ export default function useThreshold() {
         showMessage(true, "查询成功");
       })
       .catch((err) => {
-        console.log(err);
+        
         showMessage(false, "查询失败");
       });
   }
@@ -316,7 +310,7 @@ export default function useThreshold() {
         showMessage(true, "查询成功");
       })
       .catch((err) => {
-        console.log(err);
+        
         showMessage(false, "查询失败");
       });
   }
@@ -330,7 +324,7 @@ export default function useThreshold() {
         showMessage(true, "查询成功");
       })
       .catch((err) => {
-        console.log(err);
+        
         showMessage(false, "查询失败");
       });
   }
@@ -344,7 +338,7 @@ export default function useThreshold() {
         showMessage(true, "查询成功");
       })
       .catch((err) => {
-        console.log(err);
+        
         showMessage(false, "查询失败");
       });
   }

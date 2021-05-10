@@ -29,7 +29,6 @@ export default function useEnableReset() {
    * 设置使能开关
    */
   function onEnableChange(value, item) {
-    console.log(item.param, ":", value);
     let arr = [
       ...enableResetState.enableResetData[0],
       ...enableResetState.enableResetData[1],
@@ -40,9 +39,7 @@ export default function useEnableReset() {
       }
       return prev;
     }, "");
-    console.log("string: ", s);
     setEnable(s).then((res) => {
-      console.log(res);
       if (!res.setEnable) {
         item.status = !value;
       }

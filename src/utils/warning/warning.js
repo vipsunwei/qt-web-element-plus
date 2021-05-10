@@ -40,12 +40,10 @@ export function startCheckQueue() {
   // console.info("audio queue length -- ", queue.getLength());
   if (!isError && queue.getLength()) {
     queueTimer.map((timer) => clearTimeout(timer));
-    console.info("get length", queue.getLength());
     handleAlarm();
     return;
   }
   const timer = setTimeout(() => {
-    console.info("audio queue length is ", queue.getLength(), " !");
     startCheckQueue();
   }, 3000);
   queueTimer.push(timer);
@@ -58,27 +56,22 @@ export function startCheckQueue() {
 // }
 
 function handleAlarm() {
-  console.info("handleAlarm isPlaying  ", isPlaying);
   if (isPlaying) return;
   const o = queue.get();
   // if (!o) return;
   isPlaying = true;
   const src = o.src;
   // if (!src) return;
-  console.info("alarm level -- ", o.alarm.alarmLevel);
   audio1.setSrc(src);
   !isError && showWarnings(o);
 }
 
 function onEnded() {
-  console.info("current audio play finished");
   isPlaying = false;
   startCheckQueue();
 }
 function onError(e) {
   isError = true;
-  console.info("播放出错了 -- ", getMediaErrorMessage(e));
-  console.info("onError -- ", isPlaying);
   ElMessageBox.confirm("允许播放告警语音吗？", "提示", {
     showCancelButton: true,
     closeOnPressEscape: false,
@@ -87,7 +80,6 @@ function onError(e) {
     confirmButtonText: "是",
     cancelButtonText: "否",
   }).then((res) => {
-    console.info(res);
     isPlaying = false;
     isError = false;
     if (res === "confirm") {
@@ -179,7 +171,6 @@ function add(o) {
 }
 
 export function ebHandler(alarmInfo) {
-  console.info("eventbus来消息了！");
   add(alarmInfo);
   emitter.emit("get-active-warning-message", "I am warning ");
 }

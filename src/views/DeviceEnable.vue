@@ -121,7 +121,6 @@ export default {
 
     // 使能变化
     function onEnableChange(e, item) {
-      console.log("onEnableChange -- ", e, item);
       e ? openEnable({ Dtype: item.name }) : closeEnable({ Dtype: item.name });
     }
 

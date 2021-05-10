@@ -56,7 +56,7 @@ export default {
     // function closeWarnings() {
     //   notificationInstance.close();
     // }
-    // const IS_MOCK = false;
+    // const IS_MOCK = true;
     // useEventBus("Warning", ebHandler, {
     //   IS_MOCK,
     //   mockDataName: "alarmInfo",

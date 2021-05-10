@@ -442,7 +442,7 @@ import { getGasCheckingData } from "../api/envCheck";
 
 export default {
   setup() {
-    const IS_MOCK = false;
+    const IS_MOCK = true;
     useEventBus("EnvironmentalInfo", handleEventBusMsg, {
       IS_MOCK,
       mockDataName: "envInfo",

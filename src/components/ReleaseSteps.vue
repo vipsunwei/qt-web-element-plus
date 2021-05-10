@@ -29,7 +29,6 @@ export default {
 
     function reset() {
       resetReleaseStep().then((res) => {
-        console.info(res);
         if (res.resetReleaseStep) {
           ElMessage({
             type: "success",

@@ -1,15 +1,18 @@
 <template>
   <layout></layout>
   <setting></setting>
+  <PlayWarning />
 </template>
 
 <script>
 import Layout from "./views/Layout.vue";
 import Setting from "./views/Setting.vue";
+import PlayWarning from "./components/PlayWarning.vue";
 export default {
   components: {
     Layout,
     Setting,
+    PlayWarning,
   },
 };
 </script>

@@ -343,13 +343,11 @@ export default defineComponent({
     //   console.log("st", st, "et", et);
     // }
     function onPageSizeChange(curPageSize) {
-      console.log(state.pageSize, "curPageSize", curPageSize);
       state.pageSize = curPageSize;
       state.pageNumber = 1;
       search();
     }
     const onPageNumberChange = debounce(function (curPageNumber) {
-      console.log(state.pageNumber, "curPageNumber", curPageNumber);
       state.pageNumber = curPageNumber;
       search();
     }, 500);

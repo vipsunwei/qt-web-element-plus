@@ -2,7 +2,7 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { getToken } from "../utils/utils";
 
-const IS_MOCK = false;
+const IS_MOCK = true;
 const host = process.env.VUE_APP_HOST;
 const request = axios.create({
   baseURL: host,

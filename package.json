@@ -11,8 +11,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.2-beta.41",
-    "howler": "^2.2.1",
+    "element-plus": "^1.0.2-beta.42",
     "lodash-es": "^4.17.20",
     "mitt": "^2.1.0",
     "vertx3-eventbus-client": "^3.9.4",

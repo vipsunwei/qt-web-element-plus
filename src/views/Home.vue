@@ -334,7 +334,6 @@ export default {
     });
     onUnmounted(() => {
       window.removeEventListener("resize", getMaxHeight);
-      console.log("onUnmounted...");
     });
 
     const getMaxHeight = debounce(function () {
@@ -379,7 +378,6 @@ export default {
       getTkyInfoFnMap
         .get(timeType.value)(st, et)
         .then((result) => {
-          console.log(`根据${timeType.value}获取探空仪id列表`, result);
           tkyids.value = result;
         })
         .finally(() => {
@@ -764,7 +762,6 @@ export default {
       state.isLoading = true;
       getCheckReport(tkyid.value)
         .then((result) => {
-          console.log(result, "show check report");
           const checkResultRecord = result;
           if (result.ctime) {
             checkResultRecord.ctime = formatDate(

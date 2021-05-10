@@ -14,8 +14,6 @@ function registerHandler(eb, channels) {
     }
     const { channel, handler } = item;
     eb.registerHandler(channel, function(err, msg) {
-      console.log(`${channel} err -- `, err);
-      console.log(`${channel} message -- `, JSON.parse(msg.body)); // 在这里对接收的数据进行一些操作
       handler && typeof handler === "function" && handler(JSON.parse(msg.body));
     });
   }
@@ -94,10 +92,7 @@ export default function install(app, args) {
     //   });
     //   // eventbus.publish("chat.to.server","RequestTrailData");//这行代码可以发送信息给服务端
     // };
-    eventbus.onreconnect = function(err, msg) {
-      console.log("onreconnect err -- ", err);
-      console.log("onreconnect msg -- ", msg);
-    }; // Optional, will only be called on reconnections
+    eventbus.onreconnect = function(err, msg) {}; // Optional, will only be called on reconnections
     eventbus.onerror = function(err, msg) {
       console.log("onerror err -- ", err);
       console.log("onerror msg -- ", msg);

@@ -25,7 +25,7 @@ import { toFixedFilter } from "../utils/utils";
 export default defineComponent({
   name: "Gps",
   setup() {
-    const IS_MOCK = false;
+    const IS_MOCK = true;
     useEventBus("GPS", handleGpsInfo, {
       IS_MOCK,
       mockDataName: "gpsInfo",

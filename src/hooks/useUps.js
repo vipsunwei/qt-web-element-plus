@@ -27,7 +27,7 @@ export default function useUps() {
     try {
       params = await getPowerParam();
     } catch (error) {
-      console.log(error.toJSON());
+      console.warn(error.toJSON());
     }
     if (!(params && Array.isArray(params))) {
       upsState.isOffline = true;
@@ -57,7 +57,6 @@ export default function useUps() {
   }
   function open(v, item) {
     powerOn(item.param).then((res) => {
-      console.log("powerOn -- ", res);
       upsState.loading = false;
       if (res.powerOn) {
         item.status = v;
@@ -71,7 +70,6 @@ export default function useUps() {
   }
   function close(v, item) {
     powerOff(item.param).then((res) => {
-      console.log("powerOff -- ", res);
       upsState.loading = false;
       if (res.powerOff) {
         item.status = v;
@@ -88,7 +86,6 @@ export default function useUps() {
     if (upsState.loading) return;
     upsState.loading = true;
     item.status = !v;
-    console.log(v, item);
     v ? open(v, item) : close(v, item);
   }
 

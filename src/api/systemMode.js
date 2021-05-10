@@ -4,7 +4,7 @@ import { getToken } from "../utils/utils";
 
 const host = process.env.VUE_APP_HOST;
 // const IS_DEV = ["development", "dev"].includes(process.env.NODE_ENV);
-const IS_MOCK = false; // 切换假数据开关
+const IS_MOCK = true; // 切换假数据开关
 
 const request = axios.create({
   baseURL: host,

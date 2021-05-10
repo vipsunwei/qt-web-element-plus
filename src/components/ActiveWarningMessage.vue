@@ -77,16 +77,18 @@ import {
 import { debounce, formatDate } from "../utils/utils";
 import { ElMessage } from "element-plus";
 import emitter from "../hooks/useMitt";
+import { useStore } from "vuex";
 export default {
   name: "ActiveWarningMessage",
   setup() {
-    const IS_MOCK = false;
-
+    const IS_MOCK = true;
+    const store = useStore();
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
       getMaxHeight();
       getTableData().then((result) => {
-        emitter.emit("alarm", result);
+        // emitter.emit("alarm", result);
+        store.dispatch("addWarning", result);
       });
       // 挂在后监听eventbus收到实时报警时发过来的拉取一次当前存活报警列表的消息
       emitter.on("get-active-warning-message", getTableData);
@@ -98,19 +100,14 @@ export default {
     const getMaxHeight = debounce(function () {
       const viewHeight = document.body.offsetHeight;
       state.maxHeight = viewHeight * 0.3;
-      // console.log(state.maxHeight, typeof state.maxHeight);
     });
     // 获取当前存活的告警信息
     function getTableData(e) {
-      console.log("from warning emitter", e);
       state.isLoading = true;
       return getActiveWarningMessage()
         .then((result) => {
           state.tableData = result;
-          console.log(
-            "🚀 ~ file: ActiveWarningMessage.vue ~ line 102 ~ .then ~ result",
-            result
-          );
+
           // emitter.emit("alarm", result);
 
           return result;
@@ -126,10 +123,8 @@ export default {
     });
 
     function onClickAckAlarm(id) {
-      console.log("alarm id - ", id);
       if (!id) return;
       ackAlarm(id).then((res) => {
-        console.log(res);
         if (res.ackAlarm) {
           !IS_MOCK ? refreshTableData(id) : getTableData();
           ElMessage({

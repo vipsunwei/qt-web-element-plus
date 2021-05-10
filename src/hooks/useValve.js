@@ -45,7 +45,6 @@ export default function useValve(IS_MOCK) {
     const param = item.param;
     if (valveState.warning[param]) return;
     setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
-      console.log("setValveState result: ", r, ebData);
       if (IS_MOCK) ebData[param] = value ? 1 : 0;
       if (!r.setValveState) {
         // 还原开关之前的状态
@@ -69,7 +68,6 @@ export default function useValve(IS_MOCK) {
     const param = item.param;
     if (valveState.warning[param]) return;
     setValveState(getValveTypes()[param].type, value ? 1 : 0).then((r) => {
-      console.log("setValveState result: ", r, ebData);
       if (IS_MOCK)
         ebData[param] = value ? VALVE_STATE_DICT.OPEN : VALVE_STATE_DICT.CLOSE;
 

@@ -67,7 +67,7 @@ import { getTkPowerData } from "../api/ups";
 export default {
   name: "Ups",
   setup() {
-    const IS_MOCK = false;
+    const IS_MOCK = true;
     useEventBus("PowerInfo", handleUpsInfo, {
       IS_MOCK,
       mockDataName: "upsInfo",
@@ -85,7 +85,6 @@ export default {
       return Object.values(getUpsInfoMap());
     }
     function handleUpsInfo(upsInfo) {
-      console.log(upsInfo);
       for (const key in upsInfo) {
         const cur = upsInfoState.upsInfo.find((value) => value.param === key);
         // cur && (cur.value = upsInfo[key]);

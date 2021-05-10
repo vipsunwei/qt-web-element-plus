@@ -1,13 +1,13 @@
 import store from "../store/index";
-import { sleep } from "../utils/utils";
-import { ebHandler, startCheckQueue } from "@/utils/warning/warning.js";
+// import { sleep } from "../utils/utils";
+// import { ebHandler, startCheckQueue } from "@/utils/warning/warning.js";
 
-const ms = 10 * 1000;
-(async () => {
-  console.info(ms + "毫秒开始");
-  await sleep(ms);
-  startCheckQueue();
-})();
+// const ms = 10 * 1000;
+// (async () => {
+//   console.info(ms + "毫秒开始");
+//   await sleep(ms);
+//   startCheckQueue();
+// })();
 
 const channels = [
   {
@@ -31,8 +31,8 @@ const channels = [
   {
     channel: "Warning",
     handler: function(data) {
-      // console.info("Warning data -- ", data);
-      ebHandler(data);
+      // ebHandler(data);
+      store.dispatch("addWarning", [data]);
     },
   },
 ];
