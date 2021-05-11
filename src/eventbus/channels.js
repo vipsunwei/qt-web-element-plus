@@ -1,4 +1,5 @@
 import store from "../store/index";
+import emitter from "../hooks/useMitt";
 // import { sleep } from "../utils/utils";
 // import { ebHandler, startCheckQueue } from "@/utils/warning/warning.js";
 
@@ -33,6 +34,8 @@ const channels = [
     handler: function(data) {
       // ebHandler(data);
       store.dispatch("addWarning", [data]);
+
+      emitter.emit("get-active-warning-message");
     },
   },
 ];
@@ -52,7 +55,7 @@ export const mockOptions = {
   },
   Warning: {
     timer: null,
-    timeout: 100,
+    timeout: 3000,
     times: 3,
     mockDataName: "warning",
   },
