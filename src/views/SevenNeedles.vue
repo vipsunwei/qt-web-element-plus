@@ -68,7 +68,7 @@
             <el-button
               type="primary"
               plain
-              :disabled="isDisabled()"
+              :disabled="isSetSondeFreqDisabled()"
               @click="onSondeFreqSubmit"
             >
               设置探空仪频点
@@ -149,6 +149,9 @@ export default {
       const disableMode = ["AUTO", "SETTING", "INITIALIZING"];
       return disableMode.includes(store.state.systemMode);
     }
+    function isSetSondeFreqDisabled() {
+      return isDisabled() || !validateSondeFreq(state.formData.sondeFreq);
+    }
     function showMessage(result) {
       ElMessage({
         type:
@@ -207,6 +210,7 @@ export default {
       onSondeFreqSubmit,
       onGetSondePowerClick,
       isDisabled,
+      isSetSondeFreqDisabled,
     };
   },
 };
