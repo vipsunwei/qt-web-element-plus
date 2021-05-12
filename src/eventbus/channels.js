@@ -44,7 +44,7 @@ export const mockOptions = {
   SystemMode: {
     timer: null,
     timeout: 3000,
-    times: Infinity,
+    times: 4,
     mockDataName: "systemMode",
   },
   ReleaseStep: {

@@ -59,7 +59,7 @@
         >
           <el-form-item prop="sondeFreq">
             <el-input
-              v-model.number="formData.sondeFreq"
+              v-model="formData.sondeFreq"
               placeholder="频点取值范围400-406"
               :disabled="isDisabled()"
             ></el-input>
@@ -121,11 +121,11 @@ export default {
         sondeFreq: [
           {
             validator: function (rule, value, callback) {
-              // if (!value) return callback(new Error("请输入探空仪频点"));
-              if (
-                (value && (value < 400 || value > 406)) ||
-                typeof value !== "number"
-              ) {
+              const reg = /^[0-9]+([.]{1}[0-9]{1,3})?$/;
+              if (value && (value < 400 || value > 406)) {
+                return callback(new Error("取值范围400-406"));
+              }
+              if (value && !reg.test(value)) {
                 return callback(new Error("取值范围400-406"));
               }
               callback();
