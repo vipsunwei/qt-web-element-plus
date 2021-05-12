@@ -121,13 +121,16 @@ export default {
         sondeFreq: [
           {
             validator: function (rule, value, callback) {
-              const reg = /^[0-9]+([.]{1}[0-9]{1,3})?$/;
-              if (value && (value < 400 || value > 406)) {
+              if (!validateSondeFreq(value)) {
                 return callback(new Error("取值范围400-406"));
               }
-              if (value && !reg.test(value)) {
-                return callback(new Error("取值范围400-406"));
-              }
+              // const reg = /^[0-9]+([.]{1}[0-9]{1,3})?$/;
+              // if (value && (value < 400 || value > 406)) {
+              //   return callback(new Error("取值范围400-406"));
+              // }
+              // if (value && !reg.test(value)) {
+              //   return callback(new Error("取值范围400-406"));
+              // }
               callback();
             },
             trigger: ["change", "blur"],
@@ -135,6 +138,13 @@ export default {
         ],
       },
     });
+    function validateSondeFreq(value) {
+      const reg = /^[0-9]+([.]{1}[0-9]{1,3})?$/;
+      if (value && (value < 400 || value > 406 || !reg.test(value))) {
+        return false;
+      }
+      return true;
+    }
     function isDisabled() {
       const disableMode = ["AUTO", "SETTING", "INITIALIZING"];
       return disableMode.includes(store.state.systemMode);
@@ -177,6 +187,7 @@ export default {
     function onSondeFreqSubmit() {
       if (isDisabled()) return;
       if (!state.formData.sondeFreq) return;
+      if (!validateSondeFreq(state.formData.sondeFreq)) return;
       setSondeFreq(state.formData.sondeFreq).then((res) => {
         showMessage(res.setSondeFreq);
       });
