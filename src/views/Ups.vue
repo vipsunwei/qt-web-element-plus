@@ -67,7 +67,7 @@ import { getTkPowerData } from "../api/ups";
 export default {
   name: "Ups",
   setup() {
-    const IS_MOCK = true;
+    const IS_MOCK = false;
     useEventBus("PowerInfo", handleUpsInfo, {
       IS_MOCK,
       mockDataName: "upsInfo",
