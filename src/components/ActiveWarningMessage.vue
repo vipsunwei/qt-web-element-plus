@@ -81,7 +81,7 @@ import { useStore } from "vuex";
 export default {
   name: "ActiveWarningMessage",
   setup() {
-    const IS_MOCK = true;
+    const IS_MOCK = false;
     const store = useStore();
     onMounted(() => {
       window.addEventListener("resize", getMaxHeight);
