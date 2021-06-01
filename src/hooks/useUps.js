@@ -34,24 +34,36 @@ export default function useUps() {
       upsState.loading = false;
       return;
     }
-    params = params.map(({ param }) => {
-      const item = getUpsParamDataMap()[param];
-      return {
+    const upsParamDataObj = getUpsParamDataMap();
+    const newParams = [];
+    params.forEach(({ param }) => {
+      const item = upsParamDataObj[param];
+      if (!item) return;
+      newParams.push({
         id: item.id,
         name: item.name,
         status: item.status,
         param,
-      };
+      });
     });
+    // params = params.map(({ param }) => {
+    //   const item = getUpsParamDataMap()[param];
+    //   return {
+    //     id: item.id,
+    //     name: item.name,
+    //     status: item.status,
+    //     param,
+    //   };
+    // });
     const status = await getPowerStatus();
     if (!(status && Array.isArray(status))) return;
     status.map((item) => {
       for (const key in item) {
-        const cur = params.find((value) => value.param === key);
+        const cur = newParams.find((value) => value.param === key);
         cur && (cur.status = item[key]);
       }
     });
-    upsState.ups = params;
+    upsState.ups = newParams;
     upsState.isOffline = false;
     upsState.loading = false;
   }
