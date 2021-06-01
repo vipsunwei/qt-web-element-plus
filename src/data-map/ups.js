@@ -8,7 +8,7 @@
 export function getUpsParamDataMap() {
   return {
     MAIN: { id: 1, param: "MAIN", name: "主电源", status: false },
-    LIGHT: { id: 2, param: "LIGHT", name: "通风照明电源", status: false },
+    // LIGHT: { id: 2, param: "LIGHT", name: "通风照明电源", status: false },
     WORK_ROOM_POWER: {
       id: 3,
       param: "WORK_ROOM_POWER",
@@ -21,12 +21,12 @@ export function getUpsParamDataMap() {
       name: "氢气房电源",
       status: false,
     },
-    WORK_ROOM_AIR_CONDITIONER: {
-      id: 5,
-      param: "WORK_ROOM_AIR_CONDITIONER",
-      name: "工作室空调、控制室空调",
-      status: false,
-    },
+    // WORK_ROOM_AIR_CONDITIONER: {
+    //   id: 5,
+    //   param: "WORK_ROOM_AIR_CONDITIONER",
+    //   name: "工作室空调、控制室空调",
+    //   status: false,
+    // },
     CAMERA_POWER: {
       id: 6,
       param: "CAMERA_POWER",
