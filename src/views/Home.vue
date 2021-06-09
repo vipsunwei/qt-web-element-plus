@@ -740,6 +740,7 @@ export default {
       tkyLat: "探空仪纬度",
       tkyAlt: "探空仪海拔",
       tkyBatteryVol: "电池电压",
+      tkyPowerLevel: "功率级别",
       diffPressure: "气压差值",
       diffTemperature: "温度差值",
       diffHumidity: "湿度差值",
@@ -753,6 +754,8 @@ export default {
       passedLng: "经度是否通过",
       passedLat: "纬度是否通过",
       passedAlt: "海拔是否通过",
+      passedBatteryVol: "电池电压是否通过",
+      passedPowerLebel: "功率级别是否通过",
       passed: "是否通过",
       // ctime: "创建时间",
     };
