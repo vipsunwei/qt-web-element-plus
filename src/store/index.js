@@ -59,23 +59,28 @@ export default createStore({
       playStepsVioce(mapItem);
     },
     async getReleaseStep({ commit }) {
-      const result = await getReleaseStep();
       const arr = Object.values(releaseStepMap);
-      if (overStep.includes(result.ReleaseStep)) {
-        const overItem = arr.find((item) => item.isOver);
-        if (overItem) {
-          overItem.status = true;
-        }
-        commit("SET_STEPS", arr);
-      } else {
-        const cur = releaseStepMap[result.ReleaseStep];
-        arr.map((item) => {
-          item.status = !item.isOver && item.id <= cur.id;
-          return item;
+      getReleaseStep()
+        .then((result) => {
+          if (overStep.includes(result.ReleaseStep)) {
+            const overItem = arr.find((item) => item.isOver);
+            if (overItem) {
+              overItem.status = true;
+            }
+            commit("SET_STEPS", arr);
+          } else {
+            const cur = releaseStepMap[result.ReleaseStep];
+            arr.map((item) => {
+              item.status = !item.isOver && item.id <= cur.id;
+              return item;
+            });
+            commit("SET_STEPS", arr);
+          }
+        })
+        .catch((err) => {
+          console.dir(err);
+          commit("SET_STEPS", arr);
         });
-        commit("SET_STEPS", arr);
-      }
-      // console.info("steps from get method --", arr);
     },
     async setSystemMode({ commit }, value) {
       const result = await setSystemMode(value);
