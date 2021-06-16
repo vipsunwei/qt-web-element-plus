@@ -2342,9 +2342,8 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001164:
-  version "1.0.30001165"
-  resolved "https://registry.npm.taobao.org/caniuse-lite/download/caniuse-lite-1.0.30001165.tgz#32955490d2f60290bb186bb754f2981917fa744f"
-  integrity sha1-MpVUkNL2ApC7GGu3VPKYGRf6dE8=
+  version "1.0.30001237"
+  resolved "https://registry.nlark.com/caniuse-lite/download/caniuse-lite-1.0.30001237.tgz"
 
 case-sensitive-paths-webpack-plugin@^2.3.0:
   version "2.3.0"
