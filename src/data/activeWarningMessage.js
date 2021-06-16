@@ -54,7 +54,7 @@ const data = [
     id: 8,
     alarm: {
       alarmComponent: "AWS",
-      alarmLevel: "SERIOUS",
+      alarmLevel: "INFO",
       alarmName: "自动气象站数据到报率不足",
       key: "3_3_自动气象站数据到报率不足",
     },

@@ -1,5 +1,5 @@
 <template>
-  <el-descriptions column="3" border direction="vertical">
+  <el-descriptions :column="3" border direction="vertical">
     <el-descriptions-item label="时间（UTC）" span="3">
       {{ utcTime }}
     </el-descriptions-item>

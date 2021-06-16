@@ -126,16 +126,26 @@ export default {
     }
     function getWarningUrl(warning) {
       const alarm = warning.alarm;
-      if (!alarm || !alarm.alarmName || !voiceMap[alarm.alarmName]) {
+      if (
+        !alarm ||
+        !alarm.alarmName ||
+        (!voiceMap[alarm.alarmName] && alarm.alarmLevel !== "INFO")
+      ) {
         return voiceMap["未找到报警语音"];
+      }
+      if (alarm.alarmLevel === "INFO") {
+        return voiceMap["muted"];
       }
       return voiceMap[alarm.alarmName];
     }
     function handleAlarm() {
       if (isPlaying.value) return;
       curAlarm.value = store.getters.getOneWarning;
-      showWarnings(toRaw(curAlarm.value));
-      const url = getWarningUrl(curAlarm.value);
+      const rawAlarm = toRaw(curAlarm.value);
+      showWarnings(rawAlarm);
+      // console.log(rawAlarm);
+      const url = getWarningUrl(rawAlarm);
+      // console.log(url);
       isPlaying.value = true;
       warningUrl.value = url;
       document.querySelector("#warningVideo").load();
